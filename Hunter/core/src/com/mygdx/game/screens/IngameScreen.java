@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.handlers.LabelHandler;
@@ -38,17 +39,23 @@ public class IngameScreen implements Screen {
     private final TextButton minotaur_two_button;
     private final TextButton minotaur_three_button;
     private final Label playerCount;
+
+    private final boolean hunter;
+    private final int characterChoice;
+
     public IngameScreen(){
         this.batch = new SpriteBatch();
         this.stage = new Stage();
         this.stage.getViewport().setCamera(MyGdxGame.getInstance().getCamera());
 
-        this.root = new Table();
+        this.root = new Table().left().top();
         this.root.setBounds(0,0,800,600);
 
         final Skin skin = new Skin (Gdx.files.internal("uiskin.json"));
 
         this.playerCount = LabelHandler.INSTANCE.createLabel("0", 16, Color.BLACK);
+        this.hunter = false;
+        this.characterChoice = 0;
         this.ghost_one_button = new TextButton("Ghost One", skin);
         this.ghost_one_button.addListener(new ClickListener(){
             @Override
@@ -136,13 +143,13 @@ public class IngameScreen implements Screen {
 
     public void setToDefault(){
         this.root.clear();
-        this.root.add(ghost_one_button);
-        this.root.add(ghost_two_button);
-        this.root.add(ghost_three_button);
-        this.root.add(minotaur_one_button);
-        this.root.add(minotaur_two_button);
-        this.root.add(minotaur_three_button);
-        this.root.add(playerCount);
+        this.root.add(ghost_one_button).pad(5,5,5,5);
+        this.root.add(ghost_two_button).pad(5,5,5,5);
+        this.root.add(ghost_three_button).pad(5,5,5,5);
+        this.root.add(playerCount).row();
+        this.root.add(minotaur_one_button).pad(5,5,5,5);
+        this.root.add(minotaur_two_button).pad(5,5,5,5);
+        this.root.add(minotaur_three_button).pad(5,5,5,5);
 
     }
 
