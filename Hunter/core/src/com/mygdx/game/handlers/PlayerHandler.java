@@ -8,6 +8,7 @@ import java.util.LinkedList;
 public class PlayerHandler {
 
     public static final PlayerHandler INSTANCE = new PlayerHandler();
+
     private final LinkedList<Player> players = new LinkedList<>();
 
     public Player getPlayerByUsername(final String username){
@@ -34,5 +35,23 @@ public class PlayerHandler {
 
     public void addPlayer(final Player player){
         this.players.add(player);
+    }
+
+    public void removePlayer(final Player player){
+        this.players.remove(player);
+    }
+
+    public int[] getPlayerCount(){
+        int hunters = 0;
+        int ghosts = 0;
+        for(int i = 0; i < this.players.size(); i++){
+            if(Player.getIntByType(this.players.get(i).getPlayerType()) > 2){
+                hunters++;
+            }else{
+                ghosts++;
+            }
+        }
+        int[] players = {hunters,ghosts};
+        return players;
     }
 }

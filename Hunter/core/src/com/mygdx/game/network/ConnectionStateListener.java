@@ -8,16 +8,6 @@ import com.mygdx.game.screens.ConnectScreen;
 import com.mygdx.game.screens.IngameScreen;
 
 public class ConnectionStateListener extends Listener {
-    @Override
-    public void connected(Connection connection){
-        Gdx.app.postRunnable(new Runnable() {
-            @Override
-            public void run() {
-                MyGdxGame.getInstance().setScreen(IngameScreen.INSTANCE);
-            }
-        });
-        super.connected(connection);
-    }
 
     @Override
     public void disconnected(Connection connection){
@@ -25,7 +15,7 @@ public class ConnectionStateListener extends Listener {
             @Override
             public void run() {
                 MyGdxGame.getInstance().setScreen(ConnectScreen.INSTANCE);
-                ConnectScreen.INSTANCE.getErrorLabel().setText("Connection lost!");
+                //IngameScreen.INSTANCE.decrementPlayerCount();
             }
         });
         super.disconnected(connection);

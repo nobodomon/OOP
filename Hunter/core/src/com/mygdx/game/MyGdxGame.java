@@ -15,13 +15,8 @@ public class MyGdxGame extends Game {
 
 	private Client client;
 
-
-
 	@Override
 	public void create () {
-
-		ServerFoundation.main(null);
-
 		this.camera = new OrthographicCamera();
 		this.camera.setToOrtho(false,800,600);
 
