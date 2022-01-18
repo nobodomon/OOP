@@ -2,9 +2,15 @@ package com.mygdx.server.listeners;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.screens.IngameScreen;
 import com.mygdx.game.supers.Player;
+import com.mygdx.game.supers.PlayerState;
 import com.mygdx.global.MoveUpdateEvent;
 import com.mygdx.global.PlayerCharacterChangeEvent;
+import com.mygdx.global.PlayerHitEvent;
+import com.mygdx.global.PlayerKilledEvent;
+import com.mygdx.global.PlayerReadyEvent;
 import com.mygdx.server.handlers.PlayerHandler;
 import com.mygdx.server.supers.ServerPlayer;
 
@@ -24,6 +30,7 @@ public class EventListener extends Listener {
             serverPlayer.moveLeft = moveUpdateEvent.moveLeft;
             serverPlayer.moveRight = moveUpdateEvent.moveRight;
             serverPlayer.attack = moveUpdateEvent.attack;
+
         }else if(object instanceof PlayerCharacterChangeEvent){
             System.out.println("Attempting to change skin");
             final ServerPlayer serverPlayer = PlayerHandler.INSTANCE.getPlayerByConnection(connection);
@@ -33,6 +40,44 @@ public class EventListener extends Listener {
 
             final Player player = com.mygdx.game.handlers.PlayerHandler.INSTANCE.getPlayerByUsername(serverPlayer.getUsername());
             player.setPlayerType(Player.getTypeByInt(playerCharacterChangeEvent.characterType));
+        }else if(object instanceof PlayerReadyEvent){
+            final ServerPlayer serverPlayer = PlayerHandler.INSTANCE.getPlayerByConnection(connection);
+
+            final PlayerReadyEvent playerReadyEvent = (PlayerReadyEvent) object;
+            serverPlayer.setReady(playerReadyEvent.ready);
+
+            if(playerReadyEvent.ready){
+                System.out.println(serverPlayer.getUsername() + " is ready");
+            }else{
+                System.out.println(serverPlayer.getUsername() + " is not ready");
+            }
+
+            final Player player = com.mygdx.game.handlers.PlayerHandler.INSTANCE.getPlayerByUsername(serverPlayer.getUsername());
+            player.setReady(playerReadyEvent.ready);
+
+        }else if(object instanceof PlayerHitEvent){
+
+            final PlayerHitEvent playerHitEvent = (PlayerHitEvent) object;
+            final ServerPlayer serverPlayer = PlayerHandler.INSTANCE.getPlayerByUsername(playerHitEvent.username);
+            serverPlayer.hit = playerHitEvent.hit;
+            serverPlayer.setServerState(PlayerState.HIT);
+
+
+            final Player player = com.mygdx.game.handlers.PlayerHandler.INSTANCE.getPlayerByUsername(serverPlayer.getUsername());
+            player.setCurrentState(PlayerState.HIT);
+            System.out.println(serverPlayer.getUsername() + " is hit!");
+
+        }else if(object instanceof PlayerKilledEvent){
+
+            final PlayerKilledEvent playerKilledEvent = (PlayerKilledEvent) object;
+            final ServerPlayer serverPlayer = PlayerHandler.INSTANCE.getPlayerByUsername(playerKilledEvent.username);
+            serverPlayer.dead = playerKilledEvent.dead;
+            serverPlayer.setServerState(PlayerState.DEAD);
+
+            final Player player = com.mygdx.game.handlers.PlayerHandler.INSTANCE.getPlayerByUsername(serverPlayer.getUsername());
+            player.setCurrentState(PlayerState.DEAD);
+            player.setAlive(false);
+            System.out.println(serverPlayer.getUsername() + " is dead!");
         }
     }
 }

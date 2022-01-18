@@ -15,7 +15,6 @@ public class ConnectionStateListener extends Listener {
             @Override
             public void run() {
                 MyGdxGame.getInstance().setScreen(ConnectScreen.INSTANCE);
-                //IngameScreen.INSTANCE.decrementPlayerCount();
             }
         });
         super.disconnected(connection);

@@ -6,5 +6,7 @@ public enum PlayerState{
     MOVING_RIGHT,
     MOVING_UP,
     MOVING_DOWN,
-    ATTACKING
+    ATTACKING,
+    HIT,
+    DEAD,
 }

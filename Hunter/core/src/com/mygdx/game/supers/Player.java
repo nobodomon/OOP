@@ -1,14 +1,20 @@
 package com.mygdx.game.supers;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.handlers.FontSizeHandler;
 import com.mygdx.game.handlers.ResourceHandler;
+import com.mygdx.game.screens.IngameScreen;
+import com.mygdx.global.PlayerKilledEvent;
 
 
 public class Player {
@@ -16,21 +22,23 @@ public class Player {
     private final Vector2 serverPosition;
     private final Vector2 distance;
     private PlayerState currentState;
+    private PlayerState lockedState;
     private PlayerType playerType;
     private boolean lookingLeft;
 
     private final String username;
-
+    private double health;
+    private boolean alive;
+    private boolean ready;
     private final GlyphLayout layout;
     private final BitmapFont font;
 
-    private TextureRegion idleFrames;
-    private TextureRegion walkingFrames;
-    private TextureRegion attackFrames;
+    private Animation<TextureAtlas.AtlasRegion> generalFrame;
 
-    private float pastTime;
+    private Rectangle playerHitBox;
 
-    private float attackDuration;
+    private float animationTime;
+    private boolean animLock;
 
     public Player(final String username, final PlayerType playerType) {
         this.position = new Vector2();
@@ -40,6 +48,15 @@ public class Player {
         this.lookingLeft = false;
         this.username = username;
         this.playerType = PlayerType.GHOST_ONE;
+        this.currentState = PlayerState.IDLE;
+        this.health = 100;
+
+        this.alive = true;
+        this.ready = false;
+        this.playerHitBox = new Rectangle();
+
+        this.animLock = false;
+        this.animationTime = 0;
 
         this.layout = new GlyphLayout();
         this.font = FontSizeHandler.INSTANCE.getFont(18, Color.BLACK);
@@ -47,45 +64,112 @@ public class Player {
 
     public void render(final Batch batch) {
         //To color the player
-        //batch.setColor(this.color);
-        setFrames(pastTime);
+        //batch.setColor(this.color)
         TextureRegion frame;
         float positionX;
         float regionWidth;
+        String name = this.username;
+
+        // If player is dead set currentState to permanently dead
+        if (alive == false) {
+            currentState = PlayerState.DEAD;
+        }
+
         if (currentState == PlayerState.ATTACKING) {
-            frame = this.attackFrames;
-        } else {
-            if(currentState == PlayerState.MOVING_UP || currentState == PlayerState.MOVING_DOWN || currentState == PlayerState.MOVING_LEFT || currentState == PlayerState.MOVING_RIGHT){
-                frame = this.walkingFrames;
+            animationTime = 0;
+            if (animLock) {
+                if (!generalFrame.isAnimationFinished(animationTime)) {
+                } else {
+                    animLock = false;
+                }
+            } else {
+                animLock = true;
+                this.lockedState = this.currentState;
+            }
+        } else if (currentState == PlayerState.HIT) {
+            animationTime = 0;
+            if (animLock) {
+                if (!generalFrame.isAnimationFinished(animationTime)) {
+                } else {
+                    animLock = false;
+                }
+            } else {
+                animLock = true;
+                this.lockedState = this.currentState;
+            }
+        } else if (currentState == PlayerState.DEAD) {
+            animationTime = 0;
+            if (animLock) {
+                if (!generalFrame.isAnimationFinished(animationTime)) {
+                } else {
+                    animLock = false;
+                }
+            } else {
+                animLock = true;
+                this.lockedState = this.currentState;
+            }
+        } else if (currentState == PlayerState.MOVING_UP || currentState == PlayerState.MOVING_DOWN || currentState == PlayerState.MOVING_LEFT || currentState == PlayerState.MOVING_RIGHT) {
+            PlayerState lookingDirection = PlayerState.MOVING_LEFT;
+            if (!animLock) {
                 if (currentState == PlayerState.MOVING_LEFT) {
+                    this.lockedState = PlayerState.MOVING_LEFT;
+                    lookingDirection = PlayerState.MOVING_LEFT;
                     lookingLeft = true;
                 } else if (currentState == PlayerState.MOVING_RIGHT) {
+                    this.lockedState = PlayerState.MOVING_RIGHT;
+                    lookingDirection = PlayerState.MOVING_RIGHT;
                     lookingLeft = false;
                 }
-            }else if (currentState == PlayerState.IDLE) {
-                frame = this.idleFrames;
+                if (currentState == PlayerState.MOVING_UP) {
+                    this.lockedState = PlayerState.MOVING_UP;
+                }
+                if (currentState == PlayerState.MOVING_DOWN) {
+                    this.lockedState = PlayerState.MOVING_DOWN;
+                }
             } else {
-                frame = this.idleFrames;
+                if (!generalFrame.isAnimationFinished(animationTime)) {
+                    animLock = true;
+                } else {
+                    animLock = false;
+                    lockedState = lookingDirection;
+                }
+            }
+        } else if (currentState == PlayerState.IDLE) {
+            if (!animLock) {
+                lockedState = PlayerState.IDLE;
+            } else {
+                if (!generalFrame.isAnimationFinished(animationTime)) {
+                    animLock = true;
+                } else {
+                    animLock = false;
+                    lockedState = PlayerState.IDLE;
+                }
             }
         }
-        if(lookingLeft){
+        setFrames(this.lockedState);
+        System.out.println(this.lockedState.toString());
+        if (this.lockedState == PlayerState.ATTACKING || this.lockedState == PlayerState.HIT || this.lockedState == PlayerState.DEAD) {
+            frame = generalFrame.getKeyFrame(animationTime);
+        } else {
+            frame = generalFrame.getKeyFrame(animationTime, true);
+        }
+        if (lookingLeft) {
             positionX = this.position.x + frame.getRegionWidth();
             regionWidth = -frame.getRegionWidth();
-        }else{
+        } else {
             positionX = this.position.x;
             regionWidth = frame.getRegionWidth();
         }
+        this.playerHitBox = new Rectangle(this.position.x, this.position.y, frame.getRegionWidth(), frame.getRegionHeight());
         batch.draw(frame, positionX, this.position.y, regionWidth, frame.getRegionHeight());
-
         this.layout.setText(this.font, this.username);
 
-        this.font.draw(batch, this.username, this.position.x + frame.getRegionWidth() / 2F - this.layout.width / 2, this.position.y + frame.getRegionHeight() + 10);
+        this.font.draw(batch, name + " " + this.health + this.lockedState, this.position.x + frame.getRegionWidth() / 2F - this.layout.width / 2, this.position.y + frame.getRegionHeight() + 10);
 
     }
 
     public void update(final float delta) {
-        this.pastTime += delta;
-
+        this.animationTime += delta;
         final Vector2 interpolate = this.position.interpolate(this.serverPosition, 0.2F, Interpolation.smooth);
 
         this.distance.x = interpolate.x - serverPosition.x;
@@ -108,6 +192,10 @@ public class Player {
         currentState = state;
     }
 
+    public PlayerState getCurrentState() {
+        return currentState;
+    }
+
     public static PlayerState getStateByInt(int i) {
         PlayerState state;
         switch (i) {
@@ -125,6 +213,15 @@ public class Player {
                 break;
             case 4:
                 state = PlayerState.MOVING_DOWN;
+                break;
+            case 5:
+                state = PlayerState.DEAD;
+                break;
+            case 6:
+                state = PlayerState.HIT;
+                break;
+            case 7:
+                state = PlayerState.IDLE;
                 break;
             default:
                 state = PlayerState.IDLE;
@@ -151,14 +248,22 @@ public class Player {
             case MOVING_DOWN:
                 state = 4;
                 break;
-            default:
+            case DEAD:
                 state = 5;
                 break;
+            case HIT:
+                state = 6;
+                break;
+            case IDLE:
+                state = 7;
+                break;
+            default:
+                state = 7;
         }
         return state;
     }
 
-    public static PlayerType getTypeByInt(int i){
+    public static PlayerType getTypeByInt(int i) {
         PlayerType type;
         switch (i) {
             case 0:
@@ -186,7 +291,7 @@ public class Player {
         return type;
     }
 
-    public static int getIntByType(PlayerType type){
+    public static int getIntByType(PlayerType type) {
         int playerTypeInt;
         switch (type) {
             case GHOST_ONE:
@@ -214,37 +319,139 @@ public class Player {
         return playerTypeInt;
     }
 
-    public void setFrames(float pastTime){
-        switch(this.playerType){
+    public void setFrames(PlayerState state) {
+        switch (this.playerType) {
             case GHOST_ONE:
-                idleFrames = ResourceHandler.INSTANCE.ghost_one_idle.getKeyFrame(pastTime,true);
-                walkingFrames = ResourceHandler.INSTANCE.ghost_one_walk.getKeyFrame(pastTime,true);
-                attackFrames = ResourceHandler.INSTANCE.ghost_one_attack.getKeyFrame(pastTime,true);
+                switch (state) {
+                    case IDLE:
+                        this.generalFrame = ResourceHandler.INSTANCE.ghost_one_idle;
+                        break;
+                    case MOVING_DOWN:
+                    case MOVING_RIGHT:
+                    case MOVING_LEFT:
+                    case MOVING_UP:
+                        this.generalFrame = ResourceHandler.INSTANCE.ghost_one_walk;
+                        break;
+                    case ATTACKING:
+                        this.generalFrame = ResourceHandler.INSTANCE.ghost_one_attack;
+                        break;
+                    case DEAD:
+                        this.generalFrame = ResourceHandler.INSTANCE.ghost_one_dead;
+                        break;
+                    case HIT:
+                        this.generalFrame = ResourceHandler.INSTANCE.ghost_one_hit;
+                        break;
+                    default:
+                        this.generalFrame = ResourceHandler.INSTANCE.ghost_one_idle;
+                        break;
+                }
                 break;
             case GHOST_TWO:
-                idleFrames = ResourceHandler.INSTANCE.ghost_two_idle.getKeyFrame(pastTime,true);
-                walkingFrames = ResourceHandler.INSTANCE.ghost_two_walk.getKeyFrame(pastTime,true);
-                attackFrames = ResourceHandler.INSTANCE.ghost_two_attack.getKeyFrame(pastTime,true);
+                switch (state) {
+                    case IDLE:
+                        this.generalFrame = ResourceHandler.INSTANCE.ghost_two_idle;
+                        break;
+                    case MOVING_DOWN:
+                    case MOVING_RIGHT:
+                    case MOVING_LEFT:
+                    case MOVING_UP:
+                        this.generalFrame = ResourceHandler.INSTANCE.ghost_two_walk;
+                        break;
+                    case ATTACKING:
+                        this.generalFrame = ResourceHandler.INSTANCE.ghost_two_attack;
+                        break;
+                    case DEAD:
+                        this.generalFrame = ResourceHandler.INSTANCE.ghost_two_dead;
+                        break;
+                    case HIT:
+                        this.generalFrame = ResourceHandler.INSTANCE.ghost_two_hit;
+                        break;
+                    default:
+                        this.generalFrame = ResourceHandler.INSTANCE.ghost_two_idle;
+                        break;
+                }
                 break;
             case GHOST_THREE:
-                idleFrames = ResourceHandler.INSTANCE.ghost_three_idle.getKeyFrame(pastTime,true);
-                walkingFrames = ResourceHandler.INSTANCE.ghost_three_walk.getKeyFrame(pastTime,true);
-                attackFrames = ResourceHandler.INSTANCE.ghost_three_attack.getKeyFrame(pastTime,true);
+                switch (state) {
+                    case IDLE:
+                        this.generalFrame = ResourceHandler.INSTANCE.ghost_three_idle;
+                        break;
+                    case MOVING_DOWN:
+                    case MOVING_RIGHT:
+                    case MOVING_LEFT:
+                    case MOVING_UP:
+                        this.generalFrame = ResourceHandler.INSTANCE.ghost_three_walk;
+                        break;
+                    case ATTACKING:
+                        this.generalFrame = ResourceHandler.INSTANCE.ghost_three_attack;
+                        break;
+                    case DEAD:
+                        this.generalFrame = ResourceHandler.INSTANCE.ghost_three_dead;
+                        break;
+                    case HIT:
+                        this.generalFrame = ResourceHandler.INSTANCE.ghost_three_hit;
+                        break;
+                    default:
+                        this.generalFrame = ResourceHandler.INSTANCE.ghost_three_idle;
+                        break;
+                }
                 break;
             case MINOTAUR_ONE:
-                idleFrames = ResourceHandler.INSTANCE.minotaur_one_idle.getKeyFrame(pastTime,true);
-                walkingFrames = ResourceHandler.INSTANCE.minotaur_one_walk.getKeyFrame(pastTime,true);
-                attackFrames = ResourceHandler.INSTANCE.minotaur_one_attack.getKeyFrame(pastTime,true);
+                switch (state) {
+                    case IDLE:
+                        this.generalFrame = ResourceHandler.INSTANCE.minotaur_one_idle;
+                        break;
+                    case MOVING_DOWN:
+                    case MOVING_RIGHT:
+                    case MOVING_LEFT:
+                    case MOVING_UP:
+                        this.generalFrame = ResourceHandler.INSTANCE.minotaur_one_walk;
+                        break;
+                    case ATTACKING:
+                        this.generalFrame = ResourceHandler.INSTANCE.minotaur_one_attack;
+                        break;
+                    default:
+                        this.generalFrame = ResourceHandler.INSTANCE.minotaur_one_idle;
+                        break;
+                }
                 break;
             case MINOTAUR_TWO:
-                idleFrames = ResourceHandler.INSTANCE.minotaur_two_idle.getKeyFrame(pastTime,true);
-                walkingFrames = ResourceHandler.INSTANCE.minotaur_two_walk.getKeyFrame(pastTime,true);
-                attackFrames = ResourceHandler.INSTANCE.minotaur_two_attack.getKeyFrame(pastTime,true);
+                switch (state) {
+                    case IDLE:
+                        this.generalFrame = ResourceHandler.INSTANCE.minotaur_two_idle;
+                        break;
+                    case MOVING_DOWN:
+                    case MOVING_RIGHT:
+                    case MOVING_LEFT:
+                    case MOVING_UP:
+                        this.generalFrame = ResourceHandler.INSTANCE.minotaur_two_walk;
+                        break;
+                    case ATTACKING:
+                        this.generalFrame = ResourceHandler.INSTANCE.minotaur_two_attack;
+                        break;
+                    default:
+                        this.generalFrame = ResourceHandler.INSTANCE.minotaur_two_idle;
+                        break;
+                }
                 break;
             case MINOTAUR_THREE:
-                idleFrames = ResourceHandler.INSTANCE.minotaur_three_idle.getKeyFrame(pastTime,true);
-                walkingFrames = ResourceHandler.INSTANCE.minotaur_three_walk.getKeyFrame(pastTime,true);
-                attackFrames = ResourceHandler.INSTANCE.minotaur_three_attack.getKeyFrame(pastTime,true);
+                switch (state) {
+                    case IDLE:
+                        this.generalFrame = ResourceHandler.INSTANCE.minotaur_three_idle;
+                        break;
+                    case MOVING_DOWN:
+                    case MOVING_RIGHT:
+                    case MOVING_LEFT:
+                    case MOVING_UP:
+                        this.generalFrame = ResourceHandler.INSTANCE.minotaur_three_walk;
+                        break;
+                    case ATTACKING:
+                        this.generalFrame = ResourceHandler.INSTANCE.minotaur_three_attack;
+                        break;
+                    default:
+                        this.generalFrame = ResourceHandler.INSTANCE.minotaur_three_idle;
+                        break;
+                }
                 break;
         }
     }
@@ -255,5 +462,43 @@ public class Player {
 
     public void setPlayerType(PlayerType playerType) {
         this.playerType = playerType;
+    }
+
+    public boolean isReady() {
+        return ready;
+    }
+
+    public void setReady(boolean ready) {
+        this.ready = ready;
+    }
+
+    public double getHealth() {
+        return health;
+    }
+
+    public void setHealth(double health) {
+        this.health = health;
+    }
+
+    public void hit() {
+        if (health > 0) {
+            this.health -= 5;
+        } else {
+            this.alive = false;
+            this.currentState = PlayerState.DEAD;
+            IngameScreen.INSTANCE.getDeadMsgLabel().setText("You are dead.");
+        }
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
+
+    public Rectangle getPlayerHitBox() {
+        return playerHitBox;
     }
 }

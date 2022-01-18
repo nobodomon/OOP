@@ -14,7 +14,6 @@ public class MoveUpdateHandler implements Runnable{
     private boolean attack,moveUp, moveDown, moveLeft, moveRight;
 
     //attack cool down
-    private double coolDownTimer = 1200;
     private double lastTime = 0;
     private boolean attackAnim = false;
 
@@ -128,9 +127,12 @@ public class MoveUpdateHandler implements Runnable{
         double delta = 0;
 
         while(this.running){
-
             try {
-                Thread.sleep((long) (60F / amountOfTicks));
+                if(attack){
+                    Thread.sleep((long) (ResourceHandler.INSTANCE.getHunterAttackDuration() * 100F));
+                }else{
+                    Thread.sleep((long) (60F / amountOfTicks));
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
