@@ -1,17 +1,23 @@
 package com.mygdx.server.listeners;
 
+import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.screens.IngameScreen;
+import com.mygdx.game.supers.CapturePoint;
 import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.PlayerState;
+import com.mygdx.global.CapturePointUpdateEvent;
 import com.mygdx.global.MoveUpdateEvent;
+import com.mygdx.global.PlayerCapturingEvent;
 import com.mygdx.global.PlayerCharacterChangeEvent;
 import com.mygdx.global.PlayerHitEvent;
 import com.mygdx.global.PlayerKilledEvent;
 import com.mygdx.global.PlayerReadyEvent;
+import com.mygdx.server.handlers.CapturePointHandler;
 import com.mygdx.server.handlers.PlayerHandler;
+import com.mygdx.server.supers.ServerCapturePoint;
 import com.mygdx.server.supers.ServerPlayer;
 
 public class EventListener extends Listener {
@@ -78,6 +84,15 @@ public class EventListener extends Listener {
             player.setCurrentState(PlayerState.DEAD);
             player.setAlive(false);
             System.out.println(serverPlayer.getUsername() + " is dead!");
+
+        }else if(object instanceof CapturePointUpdateEvent){
+            final CapturePointUpdateEvent capturePointUpdateEvent = (CapturePointUpdateEvent) object;
+            final ServerCapturePoint serverCapturePoint = CapturePointHandler.INSTANCE.getCapturePointByVector(capturePointUpdateEvent.x,capturePointUpdateEvent.y);
+            serverCapturePoint.setProgress(capturePointUpdateEvent.progress);
+
+            final CapturePoint capturePoint = com.mygdx.game.handlers.CapturePointHandler.instance.getCapturePointByVector(serverCapturePoint.getX(),serverCapturePoint.getY());
+            capturePoint.setProgress(serverCapturePoint.getProgress());
+            System.out.printf("Capture point at %f,%f is being captured! \n",serverCapturePoint.getX(),serverCapturePoint.getY());
         }
     }
 }

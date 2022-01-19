@@ -12,6 +12,10 @@ public class ResourceHandler {
 
     public final Texture grass = new Texture(Gdx.files.internal("grass.png"));
 
+    public final Texture capturePoint_zero = new Texture(Gdx.files.internal("Dot_C.png"));
+    public final Texture capturePoint_half = new Texture(Gdx.files.internal("Dot_B.png"));
+    public final Texture capturePoint_complete = new Texture(Gdx.files.internal("Artifact.png"));
+
     public final Animation<TextureAtlas.AtlasRegion> ghost_one_idle =
             new Animation<>(1 / 30F, new TextureAtlas(Gdx.files.internal("ghost_1_idle.atlas")).getRegions());
 

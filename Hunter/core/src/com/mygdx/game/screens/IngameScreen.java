@@ -15,11 +15,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.handlers.CapturePointHandler;
 import com.mygdx.game.handlers.LabelHandler;
 import com.mygdx.game.handlers.MoveUpdateHandler;
 import com.mygdx.game.handlers.PlayerHandler;
 import com.mygdx.game.handlers.ResourceHandler;
 import com.mygdx.game.network.EventListener;
+import com.mygdx.game.supers.CapturePoint;
 import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.PlayerType;
 import com.mygdx.global.MoveUpdateEvent;
@@ -213,8 +215,13 @@ public class IngameScreen implements Screen {
             }
         }
 
+        CapturePointHandler.instance.render(this.batch);
+        CapturePointHandler.instance.update(delta);
+
         PlayerHandler.INSTANCE.render(this.batch);
         PlayerHandler.INSTANCE.update(delta);
+
+
         int[] players = PlayerHandler.INSTANCE.getPlayerCount();
         this.playerCount.setText(" Hunters: " + players[0] + " Ghosts: " + players[1]);
         int[] totalPlayers = PlayerHandler.INSTANCE.getReadyCount();

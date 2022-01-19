@@ -60,6 +60,7 @@ public class Player {
 
         this.layout = new GlyphLayout();
         this.font = FontSizeHandler.INSTANCE.getFont(18, Color.BLACK);
+
     }
 
     public void render(final Batch batch) {
@@ -147,12 +148,15 @@ public class Player {
             }
         }
         setFrames(this.lockedState);
-        System.out.println(this.lockedState.toString());
+
+        //If non looping animation disable loop
         if (this.lockedState == PlayerState.ATTACKING || this.lockedState == PlayerState.HIT || this.lockedState == PlayerState.DEAD) {
             frame = generalFrame.getKeyFrame(animationTime);
         } else {
             frame = generalFrame.getKeyFrame(animationTime, true);
         }
+
+        //Make character look in render in left or right direction
         if (lookingLeft) {
             positionX = this.position.x + frame.getRegionWidth();
             regionWidth = -frame.getRegionWidth();
@@ -160,8 +164,16 @@ public class Player {
             positionX = this.position.x;
             regionWidth = frame.getRegionWidth();
         }
+
+        //Generate player hitbox
         this.playerHitBox = new Rectangle(this.position.x, this.position.y, frame.getRegionWidth(), frame.getRegionHeight());
+
+        //Make player blink on hit
+        if(this.lockedState == PlayerState.HIT){
+                batch.setColor(Color.RED);
+        }
         batch.draw(frame, positionX, this.position.y, regionWidth, frame.getRegionHeight());
+        batch.setColor(Color.WHITE);
         this.layout.setText(this.font, this.username);
 
         this.font.draw(batch, name + " " + this.health + this.lockedState, this.position.x + frame.getRegionWidth() / 2F - this.layout.width / 2, this.position.y + frame.getRegionHeight() + 10);

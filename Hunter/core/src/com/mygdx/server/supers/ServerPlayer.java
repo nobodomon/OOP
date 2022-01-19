@@ -17,12 +17,12 @@ public class ServerPlayer {
 
     private PlayerType playerType;
     private PlayerState serverState;
-    private PlayerState tempHoldState;
     private boolean ready;
 
     public boolean attack;
     public boolean hit;
     public boolean dead;
+
     public boolean moveUp;
     public boolean moveDown;
     public boolean moveLeft;

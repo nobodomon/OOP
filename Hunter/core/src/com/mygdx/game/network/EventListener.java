@@ -1,12 +1,18 @@
 package com.mygdx.game.network;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.handlers.CapturePointHandler;
 import com.mygdx.game.screens.IngameScreen;
+import com.mygdx.game.supers.CapturePoint;
 import com.mygdx.game.supers.PlayerState;
 import com.mygdx.game.supers.PlayerType;
+import com.mygdx.global.CapturePointCreateEvent;
+import com.mygdx.global.CapturePointDeleteEvent;
+import com.mygdx.global.CapturePointUpdateEvent;
 import com.mygdx.global.JoinResponseEvent;
 import com.mygdx.global.PlayerAddEvent;
 import com.mygdx.global.PlayerCharacterChangeEvent;
@@ -44,11 +50,27 @@ public class EventListener extends Listener {
                     PlayerHandler.INSTANCE.addPlayer(player);
                 }
             });
+        }else if(object instanceof CapturePointCreateEvent){
+            Gdx.app.postRunnable(new Runnable() {
+                @Override
+                public void run() {
+                    CapturePointCreateEvent capturePointCreateEvent = (CapturePointCreateEvent) object;
+                    Vector2 position = new Vector2();
+                    position.set(capturePointCreateEvent.x,capturePointCreateEvent.y);
+                    final CapturePoint capturePoint = new CapturePoint(position);
+
+                    CapturePointHandler.instance.addCapturePoint(capturePoint);
+                }
+            });
+        }else if(object instanceof CapturePointDeleteEvent){
+            CapturePointDeleteEvent capturePointDeleteEvent = (CapturePointDeleteEvent) object;
+            CapturePointHandler.instance.removeCapturePoint(CapturePointHandler.instance.getCapturePointByVector(capturePointDeleteEvent.x,capturePointDeleteEvent.y));
+
         } else if (object instanceof PlayerRemoveEvent) {
 
             PlayerHandler.INSTANCE.removePlayer(PlayerHandler.INSTANCE.getPlayerByUsername(((PlayerRemoveEvent) object).username));
 
-        } else if (object instanceof PlayerUpdateEvent) {
+        }else if (object instanceof PlayerUpdateEvent) {
             final PlayerUpdateEvent playerUpdateEvent = (PlayerUpdateEvent) object;
 
             final Player player = PlayerHandler.INSTANCE.getPlayerByUsername(playerUpdateEvent.username);
@@ -73,24 +95,6 @@ public class EventListener extends Listener {
 
             player.setReady(playerReadyEvent.ready);
         }
-        /*else if (object instanceof PlayerHitEvent) {
-            final PlayerHitEvent playerHitEvent = (PlayerHitEvent) object;
-
-            final Player player = PlayerHandler.INSTANCE.getPlayerByUsername(playerHitEvent.username);
-            if (player == null) return;
-
-            player.setCurrentState(PlayerState.HIT);
-            System.out.println(player.getUsername() + " is hit");
-
-        } else if (object instanceof PlayerKilledEvent) {
-            final PlayerKilledEvent playerKilledEvent = (PlayerKilledEvent) object;
-
-            final Player player = PlayerHandler.INSTANCE.getPlayerByUsername(playerKilledEvent.username);
-            if (player == null) return;
-
-            player.setCurrentState(PlayerState.DEAD);
-            System.out.println(player.getUsername() + " is dead");
-        }*/
 
         super.received(connection, object);
     }

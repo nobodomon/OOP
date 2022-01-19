@@ -1,5 +1,6 @@
 package com.mygdx.game.handlers;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.MyGdxGame;
@@ -141,6 +142,10 @@ public class PlayerHandler {
             }
         }
         int[] players = {ready,total};
+        return players;
+    }
+
+    public LinkedList<Player> getPlayers() {
         return players;
     }
 }
