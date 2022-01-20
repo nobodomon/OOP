@@ -66,11 +66,6 @@ public class CapturePoint {
         }
         batch.draw(frame, this.position.x, this.position.y, width, height);
         this.layout.setText(this.font, this.progress + "%");
-//        hitboxRenderer.setProjectionMatrix(batch.getProjectionMatrix());
-//        hitboxRenderer.begin(ShapeRenderer.ShapeType.Line);
-//        hitboxRenderer.setColor(Color.RED);
-//        hitboxRenderer.rect(this.position.x,this.position.y,width,height);
-//        hitboxRenderer.end();
         this.font.draw(batch, this.progress + "%", this.position.x + width / 2F - this.layout.width / 2, this.position.y + height + 10);
         this.batch.end();
     }
@@ -91,6 +86,14 @@ public class CapturePoint {
         this.progress = Math.round(this.progress * 10.0f) / 10.0f;
     }
 
+    public void attemptDisrupt(){
+        if(this.progress > 0.0){
+
+            this.progress -= 0.1f;
+        }
+        this.progress = Math.round(this.progress * 10.0f) / 10.0f;
+    }
+
     public void captureDecay(){
 
         if(this.progress < 50.0f && this.progress > 0.0f){
@@ -98,9 +101,10 @@ public class CapturePoint {
         }else if(this.progress >= 50.0f && this.progress < 100.0f){
             if(this.progress == 50.0f){
 
-            }else if(this.progress - decayRate < 50.0f){
-
+            }else if(this.progress - (decayRate * 2f) < 50.0f){
+                this.progress = 50.0f;
             }else{
+
                 this.progress -= decayRate * 2f;
             }
         }else{

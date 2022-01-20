@@ -5,7 +5,6 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.screens.ConnectScreen;
-import com.mygdx.game.screens.IngameScreen;
 
 public class ConnectionStateListener extends Listener {
 

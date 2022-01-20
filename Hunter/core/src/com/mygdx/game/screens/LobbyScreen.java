@@ -10,9 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextArea;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Value;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.handlers.CapturePointHandler;
@@ -20,20 +18,18 @@ import com.mygdx.game.handlers.LabelHandler;
 import com.mygdx.game.handlers.MoveUpdateHandler;
 import com.mygdx.game.handlers.PlayerHandler;
 import com.mygdx.game.handlers.ResourceHandler;
-import com.mygdx.game.network.EventListener;
-import com.mygdx.game.supers.CapturePoint;
 import com.mygdx.game.supers.GameState;
-import com.mygdx.game.supers.Player;
-import com.mygdx.game.supers.PlayerType;
-import com.mygdx.global.MoveUpdateEvent;
+import com.mygdx.global.GameStartEvent;
 import com.mygdx.global.PlayerCharacterChangeEvent;
 import com.mygdx.global.PlayerReadyEvent;
+import com.mygdx.server.handlers.GameHandler;
 
-public class IngameScreen implements Screen {
+import java.util.concurrent.TimeUnit;
 
-    public static final IngameScreen INSTANCE = new IngameScreen();
+public class LobbyScreen implements Screen {
+
+    public static final LobbyScreen INSTANCE = new LobbyScreen();
     public GameState gameState;
-
 
     private final SpriteBatch batch;
     private final Stage stage;
@@ -54,14 +50,16 @@ public class IngameScreen implements Screen {
     private final Label playerCount;
     private final Label totalPlayerCount;
     private final Label deadMsgLabel;
+    private final Label startingCountdown;
 
     private boolean ready;
-    private boolean alive;
+    private boolean countdownTimerLock;
+    private long gameStartingTime;
 
     private boolean allPlayersReady;
 
 
-    public IngameScreen(){
+    public LobbyScreen(){
         this.batch = new SpriteBatch();
         this.stage = new Stage();
         this.stage.getViewport().setCamera(MyGdxGame.getInstance().getCamera());
@@ -77,9 +75,11 @@ public class IngameScreen implements Screen {
         this.playerCount = LabelHandler.INSTANCE.createLabel("0", 16, Color.BLACK);
         this.totalPlayerCount = LabelHandler.INSTANCE.createLabel("0", 16, Color.BLACK);
         this.deadMsgLabel = LabelHandler.INSTANCE.createLabel(null, 34, Color.RED);
+        this.startingCountdown = LabelHandler.INSTANCE.createLabel(null,34, Color.RED);
 
         this.ready = false;
         this.allPlayersReady = false;
+        this.countdownTimerLock = false;
 
         final Skin skin = new Skin (Gdx.files.internal("uiskin.json"));
         this.ghost_one_button = new TextButton("Ghost One", skin);
@@ -176,7 +176,6 @@ public class IngameScreen implements Screen {
         this.start_button.addListener(new ClickListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                CapturePointHandler.instance.resetCapturePoints();
                 return super.touchDown(event, x, y, pointer, button);
             };
         });
@@ -210,14 +209,17 @@ public class IngameScreen implements Screen {
                 this.root.add(ready_button).pad(5,5,5,5);
                 this.root.add(playerCount).padLeft(15).row();
                 this.root.add(totalPlayerCount).padLeft(15).row();
+                startingCountdown.remove();
                 break;
             case ALLPLAYERSREADY:
                 this.root.add(ready_button).pad(5,5,5,5);
                 this.root.add(start_button).pad(5,5,5,5);
                 this.root.add(playerCount).padLeft(15).row();
                 this.root.add(totalPlayerCount).padLeft(15).row();
+                this.deadMsg.clear();
+                this.deadMsg.add(startingCountdown);
                 break;
-            case ENDED:
+            case STARTED:
                 break;
         }
 
@@ -240,43 +242,52 @@ public class IngameScreen implements Screen {
                 this.batch.draw(ResourceHandler.INSTANCE.grass, ResourceHandler.INSTANCE.grass.getWidth() * x,  ResourceHandler.INSTANCE.grass.getHeight() * y);
             }
         }
-
-        if(gameState == GameState.STARTED || gameState == GameState.ENDED){
-            CapturePointHandler.instance.render(this.batch);
-            CapturePointHandler.instance.update(delta);
-        }else{
-        }
-        PlayerHandler.INSTANCE.render(this.batch);
-        PlayerHandler.INSTANCE.update(delta);
-
-
         int[] players = PlayerHandler.INSTANCE.getPlayerCount();
         this.playerCount.setText(" Hunters: " + players[0] + " Ghosts: " + players[1]);
         int[] totalPlayers = PlayerHandler.INSTANCE.getReadyCount();
         this.totalPlayerCount.setText(totalPlayers[0] + "/" + totalPlayers[1] + " Players are ready");
-        if(ready){
-            this.ready_button.setText("Unready");
-            gameState = GameState.READY;
-            if(totalPlayers[0] == totalPlayers[1] && (players[0] > 0 && players[0] <= players[1])){
-                gameState = GameState.ALLPLAYERSREADY;
+        if(totalPlayers[0] == totalPlayers[1] && (players[0] > 0 && players[0] <= players[1])){
+            gameState = GameState.ALLPLAYERSREADY;
+            if(countdownTimerLock){
+
+            }else{
+                gameStartingTime = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(5);
+                countdownTimerLock = true;
+            }
+            long seconds = ((gameStartingTime - System.currentTimeMillis())/1000) % 60;
+            startingCountdown.setText("Game starting in " +  seconds);
+            if(seconds <= 0){
+                gameState  = GameState.STARTED;
             }
         }else{
-            this.ready_button.setText("Ready");
-            gameState = GameState.LOBBY;
+            if(ready){
+                this.ready_button.setText("Unready");
+                gameState = GameState.READY;
+
+            }else{
+                this.ready_button.setText("Ready");
+                startingCountdown.setText(null);
+                countdownTimerLock = false;
+                gameState = GameState.LOBBY;
+            }
         }
+        if(gameState == GameState.STARTED){
+            System.out.println("game starting");
+            CapturePointHandler.instance.resetCapturePoints();
+            PlayerHandler.INSTANCE.resetPlayerHP();
+            MyGdxGame.getInstance().getClient().sendTCP(new GameStartEvent());
+            this.gameState = GameState.RUNNING;
+        }
+        PlayerHandler.INSTANCE.render(this.batch);
+        PlayerHandler.INSTANCE.update(delta);
         setToDefault();
         this.batch.end();
         this.stage.draw();
         this.stage.act(delta);
     }
 
-    public void setListeners(){
-
-    }
-
     @Override
     public void resize(int width, int height) {
-
     }
 
     @Override
@@ -309,20 +320,5 @@ public class IngameScreen implements Screen {
         }else{
             this.ready = false;
         }
-    }
-
-    public void showStartButton(){
-    }
-
-    public void hideStartButton(){
-        this.start_button.remove();
-    }
-
-    public boolean isAlive() {
-        return alive;
-    }
-
-    public void setAlive(boolean alive) {
-        this.alive = alive;
     }
 }

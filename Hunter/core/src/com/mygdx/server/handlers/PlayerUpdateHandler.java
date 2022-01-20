@@ -3,6 +3,7 @@ package com.mygdx.server.handlers;
 import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.PlayerState;
 import com.mygdx.global.PlayerCharacterChangeEvent;
+import com.mygdx.global.PlayerHPupdateEvent;
 import com.mygdx.global.PlayerHitEvent;
 import com.mygdx.global.PlayerReadyEvent;
 import com.mygdx.global.PlayerUpdateEvent;
@@ -37,6 +38,12 @@ public class PlayerUpdateHandler implements Runnable{
             playerUpdateEvent.y = serverPlayer.getY();
 
             ServerFoundation.instance.getServer().sendToAllTCP(playerUpdateEvent);
+
+            final PlayerHPupdateEvent playerHPupdateEvent = new PlayerHPupdateEvent();
+            playerHPupdateEvent.username = serverPlayer.getUsername();
+            playerHPupdateEvent.health = serverPlayer.getHealth();
+
+            ServerFoundation.instance.getServer().sendToAllTCP(playerHPupdateEvent);
 
             final PlayerCharacterChangeEvent characterChangeEvent = new PlayerCharacterChangeEvent();
             characterChangeEvent.username = serverPlayer.getUsername();

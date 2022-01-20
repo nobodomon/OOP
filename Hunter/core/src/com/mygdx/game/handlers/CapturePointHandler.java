@@ -48,26 +48,30 @@ public class CapturePointHandler {
         for(int i = 0; i < capturePoints.size();i++){
             CapturePoint currPoint = capturePoints.get(i);
             for(int j = 0; j < players.size(); j++){
-                if(players.get(j).getPlayerHitBox().overlaps(currPoint.getCapturePointHitBox()) && players.get(j).getCurrentState() == PlayerState.ATTACKING){
-                    capturePoints.get(i).attemptCapture();
+                if(Player.getIntByType(players.get(j).getPlayerType()) > 2){
+                    if(players.get(j).getPlayerHitBox().overlaps(currPoint.getCapturePointHitBox()) && players.get(j).getCurrentState() == PlayerState.ATTACKING){
+                        capturePoints.get(i).attemptDisrupt();
+                        break;
+                    }
+                }else{
+                    if(players.get(j).getPlayerHitBox().overlaps(currPoint.getCapturePointHitBox()) && players.get(j).getCurrentState() == PlayerState.ATTACKING){
+                        capturePoints.get(i).attemptCapture();
+                        break;
+                    }
                 }
             }
         }
 
-        for(int i = 0; i < capturePoints.size(); i++) {
-            CapturePoint currPoint = capturePoints.get(i);
-            if ((currPoint.getProgress() != 0.0) && currPoint.getProgress() != 50.0 && currPoint.getProgress() != 100.0) {
-                if (now - decayDelay > lastDecay) {
-                    if (isLastDecaySet == false && i == capturePoints.size() - 1) {
-                        lastDecay = System.currentTimeMillis();
-                        isLastDecaySet = true;
-                    }
+        while(now - decayDelay > lastDecay){
+            for(int i = 0; i < capturePoints.size(); i++) {
+                CapturePoint currPoint = capturePoints.get(i);
+                if ((currPoint.getProgress() != 0.0) && currPoint.getProgress() != 50.0 && currPoint.getProgress() != 100.0) {
                     capturePoints.get(i).captureDecay();
-                } else {
-                    isLastDecaySet = false;
                 }
             }
+            lastDecay = System.currentTimeMillis();
         }
+
 
         for(int i = 0; i < capturePoints.size(); i++) {
             capturePointUpdate(capturePoints.get(i));
@@ -95,5 +99,15 @@ public class CapturePointHandler {
         capturePointUpdateEvent.y = capturePoint.getPosition().y;
         capturePointUpdateEvent.progress = capturePoint.getProgress();
         MyGdxGame.getInstance().getClient().sendTCP(capturePointUpdateEvent);
+    }
+
+    public boolean isAllCapturePointsCaptured(){
+        boolean allCaptured = true;
+        for(int i = 0; i < this.capturePoints.size(); i++){
+            if(this.capturePoints.get(i).getProgress() != 100){
+                allCaptured = false;
+            }
+        }
+        return allCaptured;
     }
 }

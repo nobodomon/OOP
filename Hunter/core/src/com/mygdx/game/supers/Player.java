@@ -1,6 +1,5 @@
 package com.mygdx.game.supers;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -13,8 +12,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.handlers.FontSizeHandler;
 import com.mygdx.game.handlers.ResourceHandler;
-import com.mygdx.game.screens.IngameScreen;
-import com.mygdx.global.PlayerKilledEvent;
 
 
 public class Player {
@@ -49,7 +46,7 @@ public class Player {
         this.username = username;
         this.playerType = PlayerType.GHOST_ONE;
         this.currentState = PlayerState.IDLE;
-        this.health = 100;
+        this.health = 25;
 
         this.alive = true;
         this.ready = false;
@@ -498,7 +495,6 @@ public class Player {
         } else {
             this.alive = false;
             this.currentState = PlayerState.DEAD;
-            IngameScreen.INSTANCE.getDeadMsgLabel().setText("You are dead.");
         }
     }
 

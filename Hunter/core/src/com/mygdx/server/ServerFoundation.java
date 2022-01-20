@@ -44,6 +44,9 @@ public class ServerFoundation {
         this.server.getKryo().register(PlayerReadyEvent.class);
         this.server.getKryo().register(PlayerHitEvent.class);
         this.server.getKryo().register(PlayerKilledEvent.class);
+        this.server.getKryo().register(PlayerHPupdateEvent.class);
+        this.server.getKryo().register(GameStartEvent.class);
+        this.server.getKryo().register(GameRestartEvent.class);
         this.server.getKryo().register(String.class);
         this.server.getKryo().register(Color.class);
 

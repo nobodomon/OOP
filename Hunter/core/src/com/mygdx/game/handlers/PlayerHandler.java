@@ -6,8 +6,11 @@ import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.PlayerState;
+import com.mygdx.global.CapturePointUpdateEvent;
+import com.mygdx.global.PlayerHPupdateEvent;
 import com.mygdx.global.PlayerHitEvent;
 import com.mygdx.global.PlayerKilledEvent;
+import com.mygdx.global.PlayerReadyEvent;
 import com.mygdx.global.PlayerUpdateEvent;
 
 import java.util.LinkedList;
@@ -110,6 +113,24 @@ public class PlayerHandler {
         MyGdxGame.getInstance().getClient().sendTCP(playerKilledEvent);
     }
 
+    public void resetPlayerHP(){
+        for(int i = 0; i < players.size(); i++){
+            Player player = players.get(i);
+            player.setHealth(25);
+            player.setAlive(true);
+            playerHPupdate(player);
+        }
+    }
+
+    public void playerHPupdate(final Player player){
+
+        PlayerHPupdateEvent playerHPupdateEvent = new PlayerHPupdateEvent();
+        playerHPupdateEvent.username = player.getUsername();
+        playerHPupdateEvent.health = player.getHealth();
+        playerHPupdateEvent.alive = player.isAlive();
+        MyGdxGame.getInstance().getClient().sendTCP(playerHPupdateEvent);
+    }
+
     public void addPlayer(final Player player){
         this.players.add(player);
     }
@@ -143,6 +164,31 @@ public class PlayerHandler {
         }
         int[] players = {ready,total};
         return players;
+    }
+
+    public boolean areAllSurvivorsDead(){
+        boolean allDead = true;
+        for(int i = 0; i < this.players.size(); i++){
+            if(Player.getIntByType(this.players.get(i).getPlayerType()) < 2){
+                if(this.players.get(i).getHealth() != 0.0){
+                    allDead = false;
+                    break;
+                }
+            }else{
+                continue;
+            }
+        }
+        return allDead;
+    }
+
+    public void unreadyAll(){
+        for(int i = 0; i < players.size(); i++){
+            players.get(i).setReady(false);
+            PlayerReadyEvent playerReadyEvent = new PlayerReadyEvent();
+            playerReadyEvent.username = players.get(i).getUsername();
+            playerReadyEvent.ready = players.get(i).isReady();
+            MyGdxGame.getInstance().getClient().sendTCP(playerReadyEvent);
+        }
     }
 
     public LinkedList<Player> getPlayers() {

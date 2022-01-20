@@ -6,8 +6,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.esotericsoftware.kryonet.Client;
 import com.mygdx.game.screens.ConnectScreen;
-import com.mygdx.game.screens.IngameScreen;
-import com.mygdx.server.ServerFoundation;
 
 public class MyGdxGame extends Game {
 

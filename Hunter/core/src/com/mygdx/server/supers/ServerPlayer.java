@@ -1,11 +1,6 @@
 package com.mygdx.server.supers;
 
-import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.utils.Array;
 import com.esotericsoftware.kryonet.Connection;
-import com.mygdx.game.MyGdxGame;
-import com.mygdx.game.screens.IngameScreen;
 import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.PlayerState;
 import com.mygdx.game.supers.PlayerType;
@@ -13,6 +8,7 @@ import com.mygdx.game.supers.PlayerType;
 public class ServerPlayer {
 
     private final String username;
+    private double health;
     private final Connection connection;
 
     private PlayerType playerType;
@@ -53,17 +49,33 @@ public class ServerPlayer {
                     this.hit = false;
                 } else if (this.moveLeft || this.moveRight || this.moveUp || this.moveDown) {
                     if (this.moveLeft) {
-                        this.x -= this.speed;
+                        if(this.x - this.speed < 0){
+
+                        }else{
+                            this.x -= this.speed;
+                        }
                         this.serverState = PlayerState.MOVING_LEFT;
                     } else if (this.moveRight) {
-                        this.x += this.speed;
+                        if(this.x + this.speed > 800){
+
+                        }else{
+                            this.x += this.speed;
+                        }
                         this.serverState = PlayerState.MOVING_RIGHT;
                     }
                     if (this.moveUp) {
-                        this.y += this.speed;
+                        if(this.y + this.speed > 600){
+
+                        }else{
+                            this.y += this.speed;
+                        }
                         this.serverState = PlayerState.MOVING_UP;
                     } else if (this.moveDown) {
-                        this.y -= this.speed;
+                        if(this.y - this.speed < 0){
+
+                        }else{
+                            this.y -= this.speed;
+                        }
                         this.serverState = PlayerState.MOVING_DOWN;
                     }
                 } else {
@@ -129,5 +141,13 @@ public class ServerPlayer {
         }else{
             this.speed = 5F;
         }
+    }
+
+    public double getHealth() {
+        return health;
+    }
+
+    public void setHealth(double health) {
+        this.health = health;
     }
 }

@@ -1,21 +1,22 @@
 package com.mygdx.server.listeners;
 
-import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
-import com.mygdx.game.MyGdxGame;
-import com.mygdx.game.screens.IngameScreen;
 import com.mygdx.game.supers.CapturePoint;
 import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.PlayerState;
 import com.mygdx.global.CapturePointUpdateEvent;
+import com.mygdx.global.GameRestartEvent;
+import com.mygdx.global.GameStartEvent;
 import com.mygdx.global.MoveUpdateEvent;
-import com.mygdx.global.PlayerCapturingEvent;
 import com.mygdx.global.PlayerCharacterChangeEvent;
+import com.mygdx.global.PlayerHPupdateEvent;
 import com.mygdx.global.PlayerHitEvent;
 import com.mygdx.global.PlayerKilledEvent;
 import com.mygdx.global.PlayerReadyEvent;
 import com.mygdx.server.handlers.CapturePointHandler;
+import com.mygdx.server.handlers.GameHandler;
 import com.mygdx.server.handlers.PlayerHandler;
 import com.mygdx.server.supers.ServerCapturePoint;
 import com.mygdx.server.supers.ServerPlayer;
@@ -25,8 +26,11 @@ public class EventListener extends Listener {
     @Override
     public void received(Connection connection, Object object) {
         super.received(connection, object);
-
-        if(object instanceof MoveUpdateEvent){
+        if (object instanceof GameStartEvent) {
+            GameHandler.INSTANCE.startGame();
+        }else if(object instanceof GameRestartEvent){
+            GameHandler.INSTANCE.restartGame();
+        }else if (object instanceof MoveUpdateEvent) {
             final ServerPlayer serverPlayer = PlayerHandler.INSTANCE.getPlayerByConnection(connection);
 
             final MoveUpdateEvent moveUpdateEvent = (MoveUpdateEvent) object;
@@ -37,8 +41,7 @@ public class EventListener extends Listener {
             serverPlayer.moveRight = moveUpdateEvent.moveRight;
             serverPlayer.attack = moveUpdateEvent.attack;
 
-        }else if(object instanceof PlayerCharacterChangeEvent){
-            System.out.println("Attempting to change skin");
+        } else if (object instanceof PlayerCharacterChangeEvent) {
             final ServerPlayer serverPlayer = PlayerHandler.INSTANCE.getPlayerByConnection(connection);
 
             final PlayerCharacterChangeEvent playerCharacterChangeEvent = (PlayerCharacterChangeEvent) object;
@@ -46,22 +49,16 @@ public class EventListener extends Listener {
 
             final Player player = com.mygdx.game.handlers.PlayerHandler.INSTANCE.getPlayerByUsername(serverPlayer.getUsername());
             player.setPlayerType(Player.getTypeByInt(playerCharacterChangeEvent.characterType));
-        }else if(object instanceof PlayerReadyEvent){
+        } else if (object instanceof PlayerReadyEvent) {
             final ServerPlayer serverPlayer = PlayerHandler.INSTANCE.getPlayerByConnection(connection);
 
             final PlayerReadyEvent playerReadyEvent = (PlayerReadyEvent) object;
             serverPlayer.setReady(playerReadyEvent.ready);
 
-            if(playerReadyEvent.ready){
-                System.out.println(serverPlayer.getUsername() + " is ready");
-            }else{
-                System.out.println(serverPlayer.getUsername() + " is not ready");
-            }
-
             final Player player = com.mygdx.game.handlers.PlayerHandler.INSTANCE.getPlayerByUsername(serverPlayer.getUsername());
             player.setReady(playerReadyEvent.ready);
 
-        }else if(object instanceof PlayerHitEvent){
+        } else if (object instanceof PlayerHitEvent) {
 
             final PlayerHitEvent playerHitEvent = (PlayerHitEvent) object;
             final ServerPlayer serverPlayer = PlayerHandler.INSTANCE.getPlayerByUsername(playerHitEvent.username);
@@ -71,9 +68,8 @@ public class EventListener extends Listener {
 
             final Player player = com.mygdx.game.handlers.PlayerHandler.INSTANCE.getPlayerByUsername(serverPlayer.getUsername());
             player.setCurrentState(PlayerState.HIT);
-            System.out.println(serverPlayer.getUsername() + " is hit!");
 
-        }else if(object instanceof PlayerKilledEvent){
+        } else if (object instanceof PlayerKilledEvent) {
 
             final PlayerKilledEvent playerKilledEvent = (PlayerKilledEvent) object;
             final ServerPlayer serverPlayer = PlayerHandler.INSTANCE.getPlayerByUsername(playerKilledEvent.username);
@@ -83,16 +79,25 @@ public class EventListener extends Listener {
             final Player player = com.mygdx.game.handlers.PlayerHandler.INSTANCE.getPlayerByUsername(serverPlayer.getUsername());
             player.setCurrentState(PlayerState.DEAD);
             player.setAlive(false);
-            System.out.println(serverPlayer.getUsername() + " is dead!");
 
-        }else if(object instanceof CapturePointUpdateEvent){
+        } else if (object instanceof PlayerHPupdateEvent) {
+
+            final PlayerHPupdateEvent playerHPupdateEvent = (PlayerHPupdateEvent) object;
+            final ServerPlayer serverPlayer = PlayerHandler.INSTANCE.getPlayerByUsername(playerHPupdateEvent.username);
+            serverPlayer.setHealth(playerHPupdateEvent.health);
+            serverPlayer.dead = !playerHPupdateEvent.alive;
+
+            final Player player = com.mygdx.game.handlers.PlayerHandler.INSTANCE.getPlayerByUsername(serverPlayer.getUsername());
+            player.setHealth(serverPlayer.getHealth());
+            player.setAlive(!serverPlayer.dead);
+
+        } else if (object instanceof CapturePointUpdateEvent) {
             final CapturePointUpdateEvent capturePointUpdateEvent = (CapturePointUpdateEvent) object;
-            final ServerCapturePoint serverCapturePoint = CapturePointHandler.INSTANCE.getCapturePointByVector(capturePointUpdateEvent.x,capturePointUpdateEvent.y);
+            final ServerCapturePoint serverCapturePoint = CapturePointHandler.INSTANCE.getCapturePointByVector(capturePointUpdateEvent.x, capturePointUpdateEvent.y);
             serverCapturePoint.setProgress(capturePointUpdateEvent.progress);
 
-            final CapturePoint capturePoint = com.mygdx.game.handlers.CapturePointHandler.instance.getCapturePointByVector(serverCapturePoint.getX(),serverCapturePoint.getY());
+            final CapturePoint capturePoint = com.mygdx.game.handlers.CapturePointHandler.instance.getCapturePointByVector(serverCapturePoint.getX(), serverCapturePoint.getY());
             capturePoint.setProgress(serverCapturePoint.getProgress());
-            //System.out.printf("Capture point at %f,%f is being captured! \n",serverCapturePoint.getX(),serverCapturePoint.getY());
         }
     }
 }

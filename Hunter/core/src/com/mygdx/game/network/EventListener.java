@@ -6,18 +6,18 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.handlers.CapturePointHandler;
-import com.mygdx.game.screens.IngameScreen;
+import com.mygdx.game.screens.GameInProgressScreen;
+import com.mygdx.game.screens.LobbyScreen;
 import com.mygdx.game.supers.CapturePoint;
 import com.mygdx.game.supers.PlayerState;
 import com.mygdx.game.supers.PlayerType;
 import com.mygdx.global.CapturePointCreateEvent;
 import com.mygdx.global.CapturePointDeleteEvent;
-import com.mygdx.global.CapturePointUpdateEvent;
+import com.mygdx.global.GameRestartEvent;
+import com.mygdx.global.GameStartEvent;
 import com.mygdx.global.JoinResponseEvent;
 import com.mygdx.global.PlayerAddEvent;
 import com.mygdx.global.PlayerCharacterChangeEvent;
-import com.mygdx.global.PlayerHitEvent;
-import com.mygdx.global.PlayerKilledEvent;
 import com.mygdx.global.PlayerReadyEvent;
 import com.mygdx.global.PlayerRemoveEvent;
 import com.mygdx.global.PlayerUpdateEvent;
@@ -31,10 +31,28 @@ public class EventListener extends Listener {
             Gdx.app.postRunnable(new Runnable() {
                 @Override
                 public void run() {
-                    MyGdxGame.getInstance().setScreen(IngameScreen.INSTANCE);
+                    MyGdxGame.getInstance().setScreen(LobbyScreen.INSTANCE);
                 }
             });
-        } else if (object instanceof PlayerAddEvent) {
+        }
+        else if(object instanceof GameStartEvent){
+            Gdx.app.postRunnable(new Runnable() {
+                @Override
+                public void run() {
+                    MyGdxGame.getInstance().setScreen(GameInProgressScreen.INSTANCE);
+                }
+            });
+        }else if (object instanceof GameRestartEvent){
+            PlayerHandler.INSTANCE.unreadyAll();
+            GameInProgressScreen.INSTANCE.resetGame();
+            Gdx.app.postRunnable(new Runnable() {
+                @Override
+                public void run() {
+                    MyGdxGame.getInstance().setScreen(LobbyScreen.INSTANCE);
+                }
+            });
+        }
+        else if (object instanceof PlayerAddEvent) {
 
             Gdx.app.postRunnable(new Runnable() {
                 @Override

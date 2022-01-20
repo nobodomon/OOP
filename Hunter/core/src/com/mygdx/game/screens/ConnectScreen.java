@@ -91,6 +91,9 @@ public class ConnectScreen implements Screen {
                 client.getKryo().register(PlayerReadyEvent.class);
                 client.getKryo().register(PlayerHitEvent.class);
                 client.getKryo().register(PlayerKilledEvent.class);
+                client.getKryo().register(PlayerHPupdateEvent.class);
+                client.getKryo().register(GameStartEvent.class);
+                client.getKryo().register(GameRestartEvent.class);
                 client.getKryo().register(String.class);
                 client.getKryo().register(Color.class);
 
@@ -136,6 +139,9 @@ public class ConnectScreen implements Screen {
                 client.getKryo().register(PlayerReadyEvent.class);
                 client.getKryo().register(PlayerHitEvent.class);
                 client.getKryo().register(PlayerKilledEvent.class);
+                client.getKryo().register(PlayerHPupdateEvent.class);
+                client.getKryo().register(GameStartEvent.class);
+                client.getKryo().register(GameRestartEvent.class);
                 client.getKryo().register(String.class);
                 client.getKryo().register(Color.class);
 

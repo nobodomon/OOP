@@ -45,6 +45,7 @@ public class PlayerHandler {
         }
     }
 
+
     public void addPlayer(final ServerPlayer serverPlayer){
         for(ServerPlayer all : this.players){
             final PlayerAddEvent playerAddEvent = new PlayerAddEvent();

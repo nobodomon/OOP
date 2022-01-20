@@ -5,5 +5,8 @@ public enum GameState {
     READY,
     ALLPLAYERSREADY,
     STARTED,
+    RUNNING,
+    SURVIVORSWIN,
+    HUNTERSWIN,
     ENDED
 }
