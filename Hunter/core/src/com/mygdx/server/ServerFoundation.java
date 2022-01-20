@@ -8,8 +8,11 @@ import com.mygdx.server.handlers.PlayerUpdateHandler;
 import com.mygdx.server.listeners.EventListener;
 import com.mygdx.server.listeners.JoinListener;
 import com.mygdx.server.listeners.LeaveListener;
+import com.mygdx.server.supers.ServerCapturePoint;
+import com.mygdx.server.supers.ServerPlayer;
 
 import java.io.IOException;
+import java.util.LinkedList;
 
 
 public class ServerFoundation {

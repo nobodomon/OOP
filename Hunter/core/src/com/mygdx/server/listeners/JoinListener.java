@@ -44,7 +44,6 @@ public class JoinListener extends Listener {
 
                 final JoinResponseEvent joinResponseEvent = new JoinResponseEvent();
                 connection.sendTCP(joinResponseEvent);
-                //IngameScreen.INSTANCE.incrementPlayerCount();
             }
 
             super.received(connection, object);

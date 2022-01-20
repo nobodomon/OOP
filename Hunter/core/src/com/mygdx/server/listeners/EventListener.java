@@ -92,7 +92,7 @@ public class EventListener extends Listener {
 
             final CapturePoint capturePoint = com.mygdx.game.handlers.CapturePointHandler.instance.getCapturePointByVector(serverCapturePoint.getX(),serverCapturePoint.getY());
             capturePoint.setProgress(serverCapturePoint.getProgress());
-            System.out.printf("Capture point at %f,%f is being captured! \n",serverCapturePoint.getX(),serverCapturePoint.getY());
+            //System.out.printf("Capture point at %f,%f is being captured! \n",serverCapturePoint.getX(),serverCapturePoint.getY());
         }
     }
 }

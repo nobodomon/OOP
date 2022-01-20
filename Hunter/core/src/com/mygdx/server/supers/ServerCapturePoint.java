@@ -14,7 +14,6 @@ public class ServerCapturePoint {
     public boolean beingCaptured;
 
     public ServerCapturePoint(Connection connection){
-        this.progress = 0;
         this.connection = connection;
         this.beingCaptured = false;
     }

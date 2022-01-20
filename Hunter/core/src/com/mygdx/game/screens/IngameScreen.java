@@ -22,6 +22,7 @@ import com.mygdx.game.handlers.PlayerHandler;
 import com.mygdx.game.handlers.ResourceHandler;
 import com.mygdx.game.network.EventListener;
 import com.mygdx.game.supers.CapturePoint;
+import com.mygdx.game.supers.GameState;
 import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.PlayerType;
 import com.mygdx.global.MoveUpdateEvent;
@@ -31,6 +32,8 @@ import com.mygdx.global.PlayerReadyEvent;
 public class IngameScreen implements Screen {
 
     public static final IngameScreen INSTANCE = new IngameScreen();
+    public GameState gameState;
+
 
     private final SpriteBatch batch;
     private final Stage stage;
@@ -45,7 +48,6 @@ public class IngameScreen implements Screen {
     private final TextButton minotaur_two_button;
     private final TextButton minotaur_three_button;
 
-    private String readyButtonText;
     private final TextButton ready_button;
     private final TextButton start_button;
 
@@ -63,7 +65,7 @@ public class IngameScreen implements Screen {
         this.batch = new SpriteBatch();
         this.stage = new Stage();
         this.stage.getViewport().setCamera(MyGdxGame.getInstance().getCamera());
-
+        this.gameState = GameState.LOBBY;
         this.rootStack = new Stack();
         this.rootStack.setBounds(0,0,800,600);
         this.root = new Table().left().top();
@@ -71,7 +73,6 @@ public class IngameScreen implements Screen {
         this.deadMsg = new Table();
         this.deadMsg.setBounds(0,0,800,600);
 
-        final Skin skin = new Skin (Gdx.files.internal("uiskin.json"));
 
         this.playerCount = LabelHandler.INSTANCE.createLabel("0", 16, Color.BLACK);
         this.totalPlayerCount = LabelHandler.INSTANCE.createLabel("0", 16, Color.BLACK);
@@ -80,6 +81,7 @@ public class IngameScreen implements Screen {
         this.ready = false;
         this.allPlayersReady = false;
 
+        final Skin skin = new Skin (Gdx.files.internal("uiskin.json"));
         this.ghost_one_button = new TextButton("Ghost One", skin);
         this.ghost_one_button.addListener(new ClickListener(){
             @Override
@@ -170,7 +172,15 @@ public class IngameScreen implements Screen {
             }
         });
 
-        this.start_button = new TextButton("Start",skin);
+        this.start_button = new TextButton("Reset capture point",skin);
+        this.start_button.addListener(new ClickListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                CapturePointHandler.instance.resetCapturePoints();
+                return super.touchDown(event, x, y, pointer, button);
+            };
+        });
+
 
         this.batch.setProjectionMatrix(MyGdxGame.getInstance().getCamera().combined);
 
@@ -184,18 +194,34 @@ public class IngameScreen implements Screen {
 
     public void setToDefault(){
         this.root.clear();
-        this.root.add(ghost_one_button).pad(5,5,5,5);
-        this.root.add(ghost_two_button).pad(5,5,5,5);
-        this.root.add(ghost_three_button).pad(5,5,5,5);
-        this.root.add(playerCount).padLeft(15).row();
-        this.root.add(minotaur_one_button).pad(5,5,5,5);
-        this.root.add(minotaur_two_button).pad(5,5,5,5);
-        this.root.add(minotaur_three_button).pad(5,5,5,5);
-        this.root.add(totalPlayerCount).padLeft(15).row();
-        this.root.add(ready_button).pad(5,5,5,5);
-        this.root.add(start_button).pad(5,5,5,5);
+        switch(gameState){
+            case LOBBY:
+                this.root.add(ghost_one_button).pad(5,5,5,5);
+                this.root.add(ghost_two_button).pad(5,5,5,5);
+                this.root.add(ghost_three_button).pad(5,5,5,5);
+                this.root.add(playerCount).padLeft(15).row();
+                this.root.add(minotaur_one_button).pad(5,5,5,5);
+                this.root.add(minotaur_two_button).pad(5,5,5,5);
+                this.root.add(minotaur_three_button).pad(5,5,5,5);
+                this.root.add(totalPlayerCount).padLeft(15).row();
+                this.root.add(ready_button).pad(5,5,5,5);
+                break;
+            case READY:
+                this.root.add(ready_button).pad(5,5,5,5);
+                this.root.add(playerCount).padLeft(15).row();
+                this.root.add(totalPlayerCount).padLeft(15).row();
+                break;
+            case ALLPLAYERSREADY:
+                this.root.add(ready_button).pad(5,5,5,5);
+                this.root.add(start_button).pad(5,5,5,5);
+                this.root.add(playerCount).padLeft(15).row();
+                this.root.add(totalPlayerCount).padLeft(15).row();
+                break;
+            case ENDED:
+                break;
+        }
 
-        this.deadMsg.add(deadMsgLabel);
+        //this.deadMsg.add(deadMsgLabel);
     }
 
     @Override
@@ -215,9 +241,11 @@ public class IngameScreen implements Screen {
             }
         }
 
-        CapturePointHandler.instance.render(this.batch);
-        CapturePointHandler.instance.update(delta);
-
+        if(gameState == GameState.STARTED || gameState == GameState.ENDED){
+            CapturePointHandler.instance.render(this.batch);
+            CapturePointHandler.instance.update(delta);
+        }else{
+        }
         PlayerHandler.INSTANCE.render(this.batch);
         PlayerHandler.INSTANCE.update(delta);
 
@@ -228,18 +256,22 @@ public class IngameScreen implements Screen {
         this.totalPlayerCount.setText(totalPlayers[0] + "/" + totalPlayers[1] + " Players are ready");
         if(ready){
             this.ready_button.setText("Unready");
+            gameState = GameState.READY;
+            if(totalPlayers[0] == totalPlayers[1] && (players[0] > 0 && players[0] <= players[1])){
+                gameState = GameState.ALLPLAYERSREADY;
+            }
         }else{
             this.ready_button.setText("Ready");
+            gameState = GameState.LOBBY;
         }
-
-        if(totalPlayers[0] == totalPlayers[1] && (players[0] > 0 && players[0] <= players[1])){
-            start_button.setDisabled(false);
-        }else{
-            start_button.setDisabled(true);
-        }
+        setToDefault();
         this.batch.end();
         this.stage.draw();
         this.stage.act(delta);
+    }
+
+    public void setListeners(){
+
     }
 
     @Override

@@ -23,6 +23,10 @@ import com.mygdx.game.handlers.LabelHandler;
 import com.mygdx.game.network.ConnectionStateListener;
 import com.mygdx.game.network.EventListener;
 import com.mygdx.server.ServerFoundation;
+import com.mygdx.server.supers.ServerCapturePoint;
+import com.mygdx.server.supers.ServerPlayer;
+
+import java.util.LinkedList;
 
 
 public class ConnectScreen implements Screen {

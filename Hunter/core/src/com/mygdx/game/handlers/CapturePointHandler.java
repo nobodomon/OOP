@@ -18,6 +18,8 @@ import java.util.LinkedList;
 public class CapturePointHandler {
     private double decayDelay = 1200;
     private double lastDecay = 0;
+    private boolean isLastDecaySet = false;
+
     public static final CapturePointHandler instance = new CapturePointHandler();
     public LinkedList<CapturePoint> capturePoints = new LinkedList<>();
 
@@ -40,27 +42,37 @@ public class CapturePointHandler {
     }
 
     public void render(final Batch batch){
-        double now = System.currentTimeMillis();
         LinkedList<Player> players = PlayerHandler.INSTANCE.getPlayers();
         //System.out.printf("There are %d players", players.size());
+        double now = System.currentTimeMillis();
         for(int i = 0; i < capturePoints.size();i++){
+            CapturePoint currPoint = capturePoints.get(i);
             for(int j = 0; j < players.size(); j++){
-                if(players.get(j).getPlayerHitBox().overlaps(capturePoints.get(i).getCapturePointHitBox()) && players.get(j).getCurrentState() == PlayerState.ATTACKING){
+                if(players.get(j).getPlayerHitBox().overlaps(currPoint.getCapturePointHitBox()) && players.get(j).getCurrentState() == PlayerState.ATTACKING){
                     capturePoints.get(i).attemptCapture();
-                    playerCapturing(capturePoints.get(i));
-                    break;
-                }else{
-                    if(now - decayDelay > lastDecay){
-                        capturePoints.get(i).captureDecay();
-                        lastDecay = System.currentTimeMillis();
-                        playerNotCapturingDecay(capturePoints.get(i));
-                    }
                 }
             }
-
-            capturePoints.get(i).render(batch);
         }
 
+        for(int i = 0; i < capturePoints.size(); i++) {
+            CapturePoint currPoint = capturePoints.get(i);
+            if ((currPoint.getProgress() != 0.0) && currPoint.getProgress() != 50.0 && currPoint.getProgress() != 100.0) {
+                if (now - decayDelay > lastDecay) {
+                    if (isLastDecaySet == false && i == capturePoints.size() - 1) {
+                        lastDecay = System.currentTimeMillis();
+                        isLastDecaySet = true;
+                    }
+                    capturePoints.get(i).captureDecay();
+                } else {
+                    isLastDecaySet = false;
+                }
+            }
+        }
+
+        for(int i = 0; i < capturePoints.size(); i++) {
+            capturePointUpdate(capturePoints.get(i));
+            capturePoints.get(i).render(batch);
+        }
     }
 
     public void update(final float delta){
@@ -69,21 +81,19 @@ public class CapturePointHandler {
         }
     }
 
+    public void resetCapturePoints(){
+        for(int i = 0; i < this.capturePoints.size(); i++){
+            CapturePoint capturePoint = capturePoints.get(i);
+            capturePoint.setProgress(0);
+            capturePointUpdate(capturePoint);
+        }
+    }
 
-    public void playerCapturing(final CapturePoint capturePoint){
+    public void capturePointUpdate(final CapturePoint capturePoint){
         CapturePointUpdateEvent capturePointUpdateEvent = new CapturePointUpdateEvent();
         capturePointUpdateEvent.x = capturePoint.getPosition().x;
         capturePointUpdateEvent.y = capturePoint.getPosition().y;
         capturePointUpdateEvent.progress = capturePoint.getProgress();
         MyGdxGame.getInstance().getClient().sendTCP(capturePointUpdateEvent);
     }
-
-    public void playerNotCapturingDecay(final CapturePoint capturePoint){
-        CapturePointUpdateEvent capturePointUpdateEvent = new CapturePointUpdateEvent();
-        capturePointUpdateEvent.x = capturePoint.getPosition().x;
-        capturePointUpdateEvent.y = capturePoint.getPosition().y;
-        capturePointUpdateEvent.progress = capturePoint.getProgress();
-        MyGdxGame.getInstance().getClient().sendTCP(capturePointUpdateEvent);
-    }
-
 }
