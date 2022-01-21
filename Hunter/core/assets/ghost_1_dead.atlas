@@ -31,6 +31,13 @@ Wraith_01_Dying
   size: 78, 50
   orig: 130, 105
   offset: 13, 14
+  index: 14
+Wraith_01_Dying
+  rotate: false
+  xy: 179, 68
+  size: 78, 50
+  orig: 130, 105
+  offset: 13, 14
   index: 13
 Wraith_01_Dying
   rotate: false
@@ -39,13 +46,6 @@ Wraith_01_Dying
   orig: 130, 105
   offset: 13, 14
   index: 12
-Wraith_01_Dying
-  rotate: false
-  xy: 179, 68
-  size: 78, 50
-  orig: 130, 105
-  offset: 13, 14
-  index: 14
 Wraith_01_Dying
   rotate: false
   xy: 179, 10
