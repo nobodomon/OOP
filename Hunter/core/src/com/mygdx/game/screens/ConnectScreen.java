@@ -70,7 +70,13 @@ public class ConnectScreen implements Screen {
         this.hostButton.addListener(new ClickListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                ServerFoundation.main(null);
+                try{
+
+                    ServerFoundation.main(null);
+                }catch (Exception e){
+                    errorLabel.setText(e.getMessage());
+                    return super.touchDown(event,x,y,pointer,button);
+                }
                 final Client client = new Client();
 
                 client.addListener(new ConnectionStateListener());

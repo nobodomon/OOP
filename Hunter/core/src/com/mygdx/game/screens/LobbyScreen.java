@@ -321,4 +321,8 @@ public class LobbyScreen implements Screen {
             this.ready = false;
         }
     }
+
+    public void reset(){
+        this.ready = false;
+    }
 }

@@ -54,8 +54,8 @@ public class CapturePoint {
     public void render(final Batch batch){
 
         this.batch.begin();
-        float width = frame.getWidth()/2;
-        float height = frame.getHeight()/2;
+        float width = frame.getWidth();
+        float height = frame.getHeight();
         this.capturePointHitBox = new Rectangle(this.position.x, this.position.y, width, height);
         if(progress < 50){
             this.frame = ResourceHandler.INSTANCE.capturePoint_zero;
@@ -69,9 +69,8 @@ public class CapturePoint {
         this.font.draw(batch, this.progress + "%", this.position.x + width / 2F - this.layout.width / 2, this.position.y + height + 10);
         this.batch.end();
     }
-    public void update(final float delta) {
-        //this.animationTime += delta;
 
+    public void update(final float delta) {
     }
 
     public Rectangle getCapturePointHitBox() {

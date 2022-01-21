@@ -44,6 +44,7 @@ public class EventListener extends Listener {
             });
         }else if (object instanceof GameRestartEvent){
             PlayerHandler.INSTANCE.unreadyAll();
+            LobbyScreen.INSTANCE.reset();
             GameInProgressScreen.INSTANCE.resetGame();
             Gdx.app.postRunnable(new Runnable() {
                 @Override

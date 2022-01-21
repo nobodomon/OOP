@@ -6,127 +6,127 @@ filter: Nearest, Nearest
 repeat: none
 Minotaur_03_Walking
   rotate: false
-  xy: 2, 127
-  size: 180, 123
+  xy: 10, 125
+  size: 118, 104
   orig: 180, 123
-  offset: 0, 0
-  index: 8
-Minotaur_03_Walking
-  rotate: false
-  xy: 2, 2
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
+  offset: 47, 8
   index: 0
 Minotaur_03_Walking
   rotate: false
-  xy: 184, 127
-  size: 180, 123
+  xy: 10, 11
+  size: 113, 104
   orig: 180, 123
-  offset: 0, 0
-  index: 13
-Minotaur_03_Walking
-  rotate: false
-  xy: 184, 2
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
-  index: 5
-Minotaur_03_Walking
-  rotate: false
-  xy: 366, 127
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
-  index: 10
-Minotaur_03_Walking
-  rotate: false
-  xy: 366, 2
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
-  index: 2
-Minotaur_03_Walking
-  rotate: false
-  xy: 548, 127
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
-  index: 15
-Minotaur_03_Walking
-  rotate: false
-  xy: 548, 2
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
-  index: 7
-Minotaur_03_Walking
-  rotate: false
-  xy: 730, 127
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
-  index: 12
-Minotaur_03_Walking
-  rotate: false
-  xy: 730, 2
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
-  index: 4
-Minotaur_03_Walking
-  rotate: false
-  xy: 912, 127
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
+  offset: 51, 8
   index: 17
 Minotaur_03_Walking
   rotate: false
-  xy: 912, 2
-  size: 180, 123
+  xy: 138, 125
+  size: 113, 104
   orig: 180, 123
-  offset: 0, 0
-  index: 9
-Minotaur_03_Walking
-  rotate: false
-  xy: 1094, 127
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
+  offset: 51, 8
   index: 1
 Minotaur_03_Walking
   rotate: false
-  xy: 1094, 2
-  size: 180, 123
+  xy: 133, 10
+  size: 108, 105
   orig: 180, 123
-  offset: 0, 0
-  index: 14
+  offset: 55, 8
+  index: 2
 Minotaur_03_Walking
   rotate: false
-  xy: 1276, 127
-  size: 180, 123
+  xy: 261, 125
+  size: 108, 104
   orig: 180, 123
-  offset: 0, 0
-  index: 6
+  offset: 55, 8
+  index: 16
 Minotaur_03_Walking
   rotate: false
-  xy: 1276, 2
-  size: 180, 123
+  xy: 251, 11
+  size: 107, 104
   orig: 180, 123
-  offset: 0, 0
-  index: 11
+  offset: 55, 9
+  index: 15
 Minotaur_03_Walking
   rotate: false
-  xy: 1458, 127
-  size: 180, 123
+  xy: 379, 125
+  size: 105, 104
   orig: 180, 123
-  offset: 0, 0
+  offset: 55, 9
+  index: 4
+Minotaur_03_Walking
+  rotate: false
+  xy: 368, 11
+  size: 105, 104
+  orig: 180, 123
+  offset: 57, 9
   index: 3
 Minotaur_03_Walking
   rotate: false
-  xy: 1458, 2
-  size: 180, 123
+  xy: 494, 125
+  size: 104, 104
   orig: 180, 123
-  offset: 0, 0
-  index: 16
+  offset: 55, 9
+  index: 5
+Minotaur_03_Walking
+  rotate: false
+  xy: 483, 12
+  size: 105, 103
+  orig: 180, 123
+  offset: 55, 10
+  index: 14
+Minotaur_03_Walking
+  rotate: false
+  xy: 608, 125
+  size: 103, 104
+  orig: 180, 123
+  offset: 55, 9
+  index: 13
+Minotaur_03_Walking
+  rotate: false
+  xy: 721, 125
+  size: 102, 104
+  orig: 180, 123
+  offset: 55, 9
+  index: 6
+Minotaur_03_Walking
+  rotate: false
+  xy: 833, 125
+  size: 100, 104
+  orig: 180, 123
+  offset: 57, 9
+  index: 12
+Minotaur_03_Walking
+  rotate: false
+  xy: 943, 125
+  size: 98, 104
+  orig: 180, 123
+  offset: 57, 8
+  index: 7
+Minotaur_03_Walking
+  rotate: false
+  xy: 1051, 124
+  size: 95, 105
+  orig: 180, 123
+  offset: 59, 8
+  index: 11
+Minotaur_03_Walking
+  rotate: false
+  xy: 1156, 125
+  size: 94, 104
+  orig: 180, 123
+  offset: 58, 8
+  index: 8
+Minotaur_03_Walking
+  rotate: false
+  xy: 1260, 125
+  size: 92, 104
+  orig: 180, 123
+  offset: 60, 8
+  index: 10
+Minotaur_03_Walking
+  rotate: false
+  xy: 1362, 124
+  size: 89, 105
+  orig: 180, 123
+  offset: 60, 7
+  index: 9

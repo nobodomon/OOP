@@ -1,90 +1,90 @@
 
 ghost_2_attack.png
-size: 2048, 128
+size: 1024, 128
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 Wraith_02_Attack
   rotate: false
-  xy: 2, 2
-  size: 130, 105
+  xy: 10, 10
+  size: 53, 76
   orig: 130, 105
-  offset: 0, 0
-  index: 3
-Wraith_02_Attack
-  rotate: false
-  xy: 134, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
-  index: 8
-Wraith_02_Attack
-  rotate: false
-  xy: 266, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
-  index: 0
-Wraith_02_Attack
-  rotate: false
-  xy: 398, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
-  index: 5
-Wraith_02_Attack
-  rotate: false
-  xy: 530, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
-  index: 10
-Wraith_02_Attack
-  rotate: false
-  xy: 662, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
-  index: 2
-Wraith_02_Attack
-  rotate: false
-  xy: 794, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
-  index: 7
-Wraith_02_Attack
-  rotate: false
-  xy: 926, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
-  index: 4
-Wraith_02_Attack
-  rotate: false
-  xy: 1058, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
+  offset: 41, 21
   index: 9
 Wraith_02_Attack
   rotate: false
-  xy: 1190, 2
-  size: 130, 105
+  xy: 73, 12
+  size: 54, 74
   orig: 130, 105
-  offset: 0, 0
+  offset: 38, 22
+  index: 8
+Wraith_02_Attack
+  rotate: false
+  xy: 137, 11
+  size: 53, 75
+  orig: 130, 105
+  offset: 40, 22
+  index: 10
+Wraith_02_Attack
+  rotate: false
+  xy: 200, 12
+  size: 53, 74
+  orig: 130, 105
+  offset: 39, 22
+  index: 11
+Wraith_02_Attack
+  rotate: false
+  xy: 263, 13
+  size: 53, 73
+  orig: 130, 105
+  offset: 38, 23
+  index: 0
+Wraith_02_Attack
+  rotate: false
+  xy: 326, 14
+  size: 53, 72
+  orig: 130, 105
+  offset: 36, 25
+  index: 7
+Wraith_02_Attack
+  rotate: false
+  xy: 389, 14
+  size: 53, 72
+  orig: 130, 105
+  offset: 37, 24
   index: 1
 Wraith_02_Attack
   rotate: false
-  xy: 1322, 2
-  size: 130, 105
+  xy: 452, 15
+  size: 53, 71
   orig: 130, 105
-  offset: 0, 0
+  offset: 36, 26
+  index: 2
+Wraith_02_Attack
+  rotate: false
+  xy: 515, 16
+  size: 54, 70
+  orig: 130, 105
+  offset: 34, 27
+  index: 4
+Wraith_02_Attack
+  rotate: false
+  xy: 579, 16
+  size: 54, 70
+  orig: 130, 105
+  offset: 33, 27
   index: 6
 Wraith_02_Attack
   rotate: false
-  xy: 1454, 2
-  size: 130, 105
+  xy: 643, 16
+  size: 53, 70
   orig: 130, 105
-  offset: 0, 0
-  index: 11
+  offset: 35, 27
+  index: 3
+Wraith_02_Attack
+  rotate: false
+  xy: 706, 16
+  size: 53, 70
+  orig: 130, 105
+  offset: 34, 27
+  index: 5

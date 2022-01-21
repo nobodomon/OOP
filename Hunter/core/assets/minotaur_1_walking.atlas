@@ -1,132 +1,132 @@
 
 minotaur_1_walking.png
-size: 2048, 256
+size: 2048, 128
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 Minotaur_01_Walking
   rotate: false
-  xy: 2, 127
-  size: 180, 123
+  xy: 10, 11
+  size: 118, 102
   orig: 180, 123
-  offset: 0, 0
-  index: 17
-Minotaur_01_Walking
-  rotate: false
-  xy: 2, 2
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
-  index: 9
-Minotaur_01_Walking
-  rotate: false
-  xy: 184, 127
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
-  index: 1
-Minotaur_01_Walking
-  rotate: false
-  xy: 184, 2
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
-  index: 14
-Minotaur_01_Walking
-  rotate: false
-  xy: 366, 127
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
-  index: 6
-Minotaur_01_Walking
-  rotate: false
-  xy: 366, 2
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
-  index: 11
-Minotaur_01_Walking
-  rotate: false
-  xy: 548, 127
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
-  index: 3
-Minotaur_01_Walking
-  rotate: false
-  xy: 548, 2
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
-  index: 16
-Minotaur_01_Walking
-  rotate: false
-  xy: 730, 127
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
-  index: 8
-Minotaur_01_Walking
-  rotate: false
-  xy: 730, 2
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
+  offset: 47, 8
   index: 0
 Minotaur_01_Walking
   rotate: false
-  xy: 912, 127
-  size: 180, 123
+  xy: 138, 10
+  size: 113, 103
   orig: 180, 123
-  offset: 0, 0
-  index: 13
+  offset: 51, 8
+  index: 1
 Minotaur_01_Walking
   rotate: false
-  xy: 912, 2
-  size: 180, 123
+  xy: 261, 12
+  size: 113, 101
   orig: 180, 123
-  offset: 0, 0
-  index: 5
+  offset: 51, 8
+  index: 17
 Minotaur_01_Walking
   rotate: false
-  xy: 1094, 127
-  size: 180, 123
+  xy: 384, 10
+  size: 109, 103
   orig: 180, 123
-  offset: 0, 0
-  index: 10
-Minotaur_01_Walking
-  rotate: false
-  xy: 1094, 2
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
+  offset: 54, 8
   index: 2
 Minotaur_01_Walking
   rotate: false
-  xy: 1276, 127
-  size: 180, 123
+  xy: 503, 13
+  size: 109, 100
   orig: 180, 123
-  offset: 0, 0
+  offset: 54, 8
+  index: 16
+Minotaur_01_Walking
+  rotate: false
+  xy: 622, 13
+  size: 107, 100
+  orig: 180, 123
+  offset: 55, 9
   index: 15
 Minotaur_01_Walking
   rotate: false
-  xy: 1276, 2
-  size: 180, 123
+  xy: 739, 12
+  size: 106, 101
   orig: 180, 123
-  offset: 0, 0
+  offset: 56, 9
+  index: 3
+Minotaur_01_Walking
+  rotate: false
+  xy: 855, 13
+  size: 104, 100
+  orig: 180, 123
+  offset: 55, 9
+  index: 5
+Minotaur_01_Walking
+  rotate: false
+  xy: 969, 14
+  size: 104, 99
+  orig: 180, 123
+  offset: 56, 10
+  index: 14
+Minotaur_01_Walking
+  rotate: false
+  xy: 1083, 13
+  size: 103, 100
+  orig: 180, 123
+  offset: 57, 9
+  index: 4
+Minotaur_01_Walking
+  rotate: false
+  xy: 1196, 13
+  size: 102, 100
+  orig: 180, 123
+  offset: 55, 9
+  index: 6
+Minotaur_01_Walking
+  rotate: false
+  xy: 1308, 13
+  size: 100, 100
+  orig: 180, 123
+  offset: 58, 9
+  index: 13
+Minotaur_01_Walking
+  rotate: false
+  xy: 1418, 13
+  size: 97, 100
+  orig: 180, 123
+  offset: 58, 8
   index: 7
 Minotaur_01_Walking
   rotate: false
-  xy: 1458, 127
-  size: 180, 123
+  xy: 1525, 12
+  size: 96, 101
   orig: 180, 123
-  offset: 0, 0
+  offset: 61, 9
   index: 12
 Minotaur_01_Walking
   rotate: false
-  xy: 1458, 2
-  size: 180, 123
+  xy: 1631, 10
+  size: 90, 103
   orig: 180, 123
-  offset: 0, 0
-  index: 4
+  offset: 64, 8
+  index: 11
+Minotaur_01_Walking
+  rotate: false
+  xy: 1731, 10
+  size: 89, 103
+  orig: 180, 123
+  offset: 63, 8
+  index: 10
+Minotaur_01_Walking
+  rotate: false
+  xy: 1830, 12
+  size: 90, 101
+  orig: 180, 123
+  offset: 62, 8
+  index: 8
+Minotaur_01_Walking
+  rotate: false
+  xy: 1930, 10
+  size: 87, 103
+  orig: 180, 123
+  offset: 62, 7
+  index: 9

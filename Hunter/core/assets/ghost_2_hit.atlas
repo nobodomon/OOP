@@ -1,90 +1,90 @@
 
 ghost_2_hit.png
-size: 2048, 128
+size: 1024, 128
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 Wraith_02_Hurt
   rotate: false
-  xy: 2, 2
-  size: 130, 105
+  xy: 10, 10
+  size: 54, 75
   orig: 130, 105
-  offset: 0, 0
-  index: 4
-Wraith_02_Hurt
-  rotate: false
-  xy: 134, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
-  index: 9
-Wraith_02_Hurt
-  rotate: false
-  xy: 266, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
+  offset: 38, 21
   index: 1
 Wraith_02_Hurt
   rotate: false
-  xy: 398, 2
-  size: 130, 105
+  xy: 74, 10
+  size: 54, 75
   orig: 130, 105
-  offset: 0, 0
-  index: 6
-Wraith_02_Hurt
-  rotate: false
-  xy: 530, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
-  index: 11
-Wraith_02_Hurt
-  rotate: false
-  xy: 662, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
-  index: 3
-Wraith_02_Hurt
-  rotate: false
-  xy: 794, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
-  index: 8
-Wraith_02_Hurt
-  rotate: false
-  xy: 926, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
-  index: 0
-Wraith_02_Hurt
-  rotate: false
-  xy: 1058, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
-  index: 5
-Wraith_02_Hurt
-  rotate: false
-  xy: 1190, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
-  index: 10
-Wraith_02_Hurt
-  rotate: false
-  xy: 1322, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
+  offset: 37, 21
   index: 2
 Wraith_02_Hurt
   rotate: false
-  xy: 1454, 2
-  size: 130, 105
+  xy: 138, 12
+  size: 54, 73
   orig: 130, 105
-  offset: 0, 0
+  offset: 34, 22
+  index: 3
+Wraith_02_Hurt
+  rotate: false
+  xy: 202, 12
+  size: 53, 73
+  orig: 130, 105
+  offset: 38, 23
+  index: 0
+Wraith_02_Hurt
+  rotate: false
+  xy: 265, 13
+  size: 53, 72
+  orig: 130, 105
+  offset: 36, 24
+  index: 11
+Wraith_02_Hurt
+  rotate: false
+  xy: 328, 14
+  size: 54, 71
+  orig: 130, 105
+  offset: 30, 25
+  index: 8
+Wraith_02_Hurt
+  rotate: false
+  xy: 392, 14
+  size: 53, 71
+  orig: 130, 105
+  offset: 32, 24
+  index: 4
+Wraith_02_Hurt
+  rotate: false
+  xy: 455, 15
+  size: 54, 70
+  orig: 130, 105
+  offset: 32, 25
+  index: 9
+Wraith_02_Hurt
+  rotate: false
+  xy: 519, 15
+  size: 54, 70
+  orig: 130, 105
+  offset: 29, 25
   index: 7
+Wraith_02_Hurt
+  rotate: false
+  xy: 583, 15
+  size: 53, 70
+  orig: 130, 105
+  offset: 29, 25
+  index: 6
+Wraith_02_Hurt
+  rotate: false
+  xy: 646, 15
+  size: 53, 70
+  orig: 130, 105
+  offset: 29, 25
+  index: 5
+Wraith_02_Hurt
+  rotate: false
+  xy: 709, 15
+  size: 53, 70
+  orig: 130, 105
+  offset: 34, 25
+  index: 10

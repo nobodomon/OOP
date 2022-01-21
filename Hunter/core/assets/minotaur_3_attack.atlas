@@ -1,90 +1,90 @@
 
 minotaur_3_attack.png
-size: 2048, 256
+size: 1024, 256
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 Minotaur_03_Attacking
   rotate: false
-  xy: 2, 127
-  size: 180, 123
+  xy: 10, 123
+  size: 134, 102
   orig: 180, 123
-  offset: 0, 0
-  index: 6
-Minotaur_03_Attacking
-  rotate: false
-  xy: 2, 2
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
-  index: 11
-Minotaur_03_Attacking
-  rotate: false
-  xy: 184, 127
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
-  index: 3
-Minotaur_03_Attacking
-  rotate: false
-  xy: 184, 2
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
+  offset: 45, 10
   index: 8
 Minotaur_03_Attacking
   rotate: false
-  xy: 366, 127
-  size: 180, 123
+  xy: 10, 11
+  size: 128, 102
   orig: 180, 123
-  offset: 0, 0
-  index: 0
-Minotaur_03_Attacking
-  rotate: false
-  xy: 366, 2
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
-  index: 5
-Minotaur_03_Attacking
-  rotate: false
-  xy: 548, 127
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
-  index: 10
-Minotaur_03_Attacking
-  rotate: false
-  xy: 548, 2
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
-  index: 2
-Minotaur_03_Attacking
-  rotate: false
-  xy: 730, 127
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
-  index: 7
-Minotaur_03_Attacking
-  rotate: false
-  xy: 730, 2
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
-  index: 4
-Minotaur_03_Attacking
-  rotate: false
-  xy: 912, 127
-  size: 180, 123
-  orig: 180, 123
-  offset: 0, 0
+  offset: 46, 10
   index: 9
 Minotaur_03_Attacking
   rotate: false
-  xy: 912, 2
-  size: 180, 123
+  xy: 154, 123
+  size: 123, 102
   orig: 180, 123
-  offset: 0, 0
+  offset: 48, 10
+  index: 10
+Minotaur_03_Attacking
+  rotate: false
+  xy: 148, 11
+  size: 117, 102
+  orig: 180, 123
+  offset: 51, 10
+  index: 11
+Minotaur_03_Attacking
+  rotate: false
+  xy: 287, 123
+  size: 108, 102
+  orig: 180, 123
+  offset: 55, 10
+  index: 0
+Minotaur_03_Attacking
+  rotate: false
+  xy: 275, 10
+  size: 104, 103
+  orig: 180, 123
+  offset: 52, 10
   index: 1
+Minotaur_03_Attacking
+  rotate: false
+  xy: 405, 120
+  size: 100, 105
+  orig: 180, 123
+  offset: 44, 10
+  index: 7
+Minotaur_03_Attacking
+  rotate: false
+  xy: 515, 120
+  size: 90, 105
+  orig: 180, 123
+  offset: 50, 10
+  index: 2
+Minotaur_03_Attacking
+  rotate: false
+  xy: 615, 114
+  size: 86, 111
+  orig: 180, 123
+  offset: 47, 10
+  index: 3
+Minotaur_03_Attacking
+  rotate: false
+  xy: 711, 116
+  size: 84, 109
+  orig: 180, 123
+  offset: 47, 10
+  index: 4
+Minotaur_03_Attacking
+  rotate: false
+  xy: 805, 117
+  size: 83, 108
+  orig: 180, 123
+  offset: 46, 10
+  index: 5
+Minotaur_03_Attacking
+  rotate: false
+  xy: 898, 119
+  size: 82, 106
+  orig: 180, 123
+  offset: 45, 10
+  index: 6

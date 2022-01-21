@@ -1,90 +1,90 @@
 
 ghost_3_idle.png
-size: 2048, 128
+size: 1024, 128
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 Wraith_03_Idle
   rotate: false
-  xy: 2, 2
-  size: 130, 105
+  xy: 10, 10
+  size: 55, 75
   orig: 130, 105
-  offset: 0, 0
+  offset: 34, 24
   index: 5
 Wraith_03_Idle
   rotate: false
-  xy: 134, 2
-  size: 130, 105
+  xy: 75, 10
+  size: 55, 75
   orig: 130, 105
-  offset: 0, 0
-  index: 10
-Wraith_03_Idle
-  rotate: false
-  xy: 266, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
+  offset: 35, 23
   index: 2
 Wraith_03_Idle
   rotate: false
-  xy: 398, 2
-  size: 130, 105
+  xy: 140, 11
+  size: 55, 74
   orig: 130, 105
-  offset: 0, 0
+  offset: 34, 24
+  index: 10
+Wraith_03_Idle
+  rotate: false
+  xy: 205, 11
+  size: 54, 74
+  orig: 130, 105
+  offset: 34, 25
   index: 7
 Wraith_03_Idle
   rotate: false
-  xy: 530, 2
-  size: 130, 105
+  xy: 269, 10
+  size: 54, 75
   orig: 130, 105
-  offset: 0, 0
+  offset: 35, 24
   index: 4
 Wraith_03_Idle
   rotate: false
-  xy: 662, 2
-  size: 130, 105
+  xy: 333, 10
+  size: 54, 75
   orig: 130, 105
-  offset: 0, 0
-  index: 9
-Wraith_03_Idle
-  rotate: false
-  xy: 794, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
+  offset: 35, 23
   index: 1
 Wraith_03_Idle
   rotate: false
-  xy: 926, 2
-  size: 130, 105
+  xy: 397, 10
+  size: 54, 75
   orig: 130, 105
-  offset: 0, 0
+  offset: 34, 24
   index: 6
 Wraith_03_Idle
   rotate: false
-  xy: 1058, 2
-  size: 130, 105
+  xy: 461, 10
+  size: 54, 75
   orig: 130, 105
-  offset: 0, 0
-  index: 11
-Wraith_03_Idle
-  rotate: false
-  xy: 1190, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
-  index: 3
-Wraith_03_Idle
-  rotate: false
-  xy: 1322, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
+  offset: 34, 24
   index: 8
 Wraith_03_Idle
   rotate: false
-  xy: 1454, 2
-  size: 130, 105
+  xy: 525, 10
+  size: 54, 75
   orig: 130, 105
-  offset: 0, 0
+  offset: 35, 23
   index: 0
+Wraith_03_Idle
+  rotate: false
+  xy: 589, 11
+  size: 54, 74
+  orig: 130, 105
+  offset: 34, 24
+  index: 9
+Wraith_03_Idle
+  rotate: false
+  xy: 653, 11
+  size: 54, 74
+  orig: 130, 105
+  offset: 35, 24
+  index: 11
+Wraith_03_Idle
+  rotate: false
+  xy: 717, 11
+  size: 54, 74
+  orig: 130, 105
+  offset: 35, 24
+  index: 3

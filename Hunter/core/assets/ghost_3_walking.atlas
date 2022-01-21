@@ -1,90 +1,90 @@
 
 ghost_3_walking.png
-size: 2048, 128
+size: 1024, 128
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
 Wraith_03_Moving Forward
   rotate: false
-  xy: 2, 2
-  size: 130, 105
+  xy: 10, 10
+  size: 54, 73
   orig: 130, 105
-  offset: 0, 0
-  index: 5
-Wraith_03_Moving Forward
-  rotate: false
-  xy: 134, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
-  index: 10
-Wraith_03_Moving Forward
-  rotate: false
-  xy: 266, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
+  offset: 36, 25
   index: 2
 Wraith_03_Moving Forward
   rotate: false
-  xy: 398, 2
-  size: 130, 105
+  xy: 74, 10
+  size: 54, 73
   orig: 130, 105
-  offset: 0, 0
-  index: 7
-Wraith_03_Moving Forward
-  rotate: false
-  xy: 530, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
-  index: 4
-Wraith_03_Moving Forward
-  rotate: false
-  xy: 662, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
-  index: 9
-Wraith_03_Moving Forward
-  rotate: false
-  xy: 794, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
+  offset: 36, 25
   index: 1
 Wraith_03_Moving Forward
   rotate: false
-  xy: 926, 2
-  size: 130, 105
+  xy: 138, 11
+  size: 55, 72
   orig: 130, 105
-  offset: 0, 0
-  index: 6
-Wraith_03_Moving Forward
-  rotate: false
-  xy: 1058, 2
-  size: 130, 105
-  orig: 130, 105
-  offset: 0, 0
+  offset: 35, 25
   index: 11
 Wraith_03_Moving Forward
   rotate: false
-  xy: 1190, 2
-  size: 130, 105
+  xy: 203, 11
+  size: 54, 72
   orig: 130, 105
-  offset: 0, 0
+  offset: 35, 26
+  index: 5
+Wraith_03_Moving Forward
+  rotate: false
+  xy: 267, 11
+  size: 54, 72
+  orig: 130, 105
+  offset: 35, 25
+  index: 10
+Wraith_03_Moving Forward
+  rotate: false
+  xy: 331, 11
+  size: 54, 72
+  orig: 130, 105
+  offset: 35, 26
+  index: 7
+Wraith_03_Moving Forward
+  rotate: false
+  xy: 395, 11
+  size: 54, 72
+  orig: 130, 105
+  offset: 36, 26
+  index: 4
+Wraith_03_Moving Forward
+  rotate: false
+  xy: 459, 11
+  size: 54, 72
+  orig: 130, 105
+  offset: 35, 26
+  index: 6
+Wraith_03_Moving Forward
+  rotate: false
+  xy: 523, 11
+  size: 54, 72
+  orig: 130, 105
+  offset: 36, 26
   index: 3
 Wraith_03_Moving Forward
   rotate: false
-  xy: 1322, 2
-  size: 130, 105
+  xy: 587, 11
+  size: 54, 72
   orig: 130, 105
-  offset: 0, 0
-  index: 8
+  offset: 36, 25
+  index: 0
 Wraith_03_Moving Forward
   rotate: false
-  xy: 1454, 2
-  size: 130, 105
+  xy: 651, 12
+  size: 54, 71
   orig: 130, 105
-  offset: 0, 0
-  index: 0
+  offset: 35, 26
+  index: 9
+Wraith_03_Moving Forward
+  rotate: false
+  xy: 715, 12
+  size: 54, 71
+  orig: 130, 105
+  offset: 35, 26
+  index: 8
