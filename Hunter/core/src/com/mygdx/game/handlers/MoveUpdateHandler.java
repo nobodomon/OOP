@@ -7,78 +7,69 @@ import com.mygdx.global.MoveUpdateEvent;
 
 import java.util.concurrent.TimeUnit;
 
-public class MoveUpdateHandler implements Runnable{
+public class MoveUpdateHandler implements Runnable {
 
     public static final MoveUpdateHandler INSTANCE = new MoveUpdateHandler();
 
-    private boolean attack,moveUp, moveDown, moveLeft, moveRight, shift;
+    private boolean attack, moveUp, moveDown, moveLeft, moveRight, shift;
 
     //attack cool down
 
     private boolean running;
 
-    public synchronized void start(){
+    public synchronized void start() {
         this.running = true;
 
         final Thread thread = new Thread(this);
         thread.start();
     }
 
-    public void stop(){
+    public void stop() {
         this.running = false;
     }
 
-    public void tick(){
-        boolean w, s, a, d, e,shift ;
+    public void tick() {
+        boolean w, s, a, d, e, shift;
 
-            if(Gdx.input.isKeyPressed(Input.Keys.W)){
-                w = true;
-            }else{
-                w = false;
-            }
+        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+            w = true;
+        } else {
+            w = false;
+        }
 
-            if(Gdx.input.isKeyPressed(Input.Keys.S)){
-                s = true;
-            }else{
-                s = false;
-            }
+        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+            s = true;
+        } else {
+            s = false;
+        }
 
-            if(Gdx.input.isKeyPressed(Input.Keys.A)){
-                a = true;
-            }else{
-                a = false;
-            }
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            a = true;
+        } else {
+            a = false;
+        }
 
-            if(Gdx.input.isKeyPressed(Input.Keys.D)){
-                d = true;
-            }else{
-                d = false;
-            }
+        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+            d = true;
+        } else {
+            d = false;
+        }
 
-            if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-                e = true;
-            }else{
-                e = false;
-            }
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            e = true;
+        } else {
+            e = false;
+        }
 
-            if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)){
-                shift = true;
-            }else{
-                shift = false;
-            }
+        if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+            shift = true;
+        } else {
+            shift = false;
+        }
 
-//            if(lastTime - now > coolDownTimer && Gdx.input.isKeyPressed(Input.Keys.E)){
-//                lastTime = System.currentTimeMillis();
-//                e = true;
-//            }else{
-//                e = false;
-//            }
+        final boolean changed = this.movementChanged(e, w, s, a, d, shift);
 
-
-
-        final boolean changed = this.movementChanged(e,w,s,a,d,shift);
-
-        if(!changed){
+        if (!changed) {
             this.moveUp = w;
             this.moveDown = s;
             this.moveLeft = a;
@@ -93,15 +84,15 @@ public class MoveUpdateHandler implements Runnable{
             moveUpdateEvent.moveRight = this.moveRight;
             moveUpdateEvent.attack = this.attack;
             moveUpdateEvent.shift = this.shift;
-            if(this.shift == true){
+            if (this.shift == true) {
                 moveUpdateEvent.lastBlink = System.currentTimeMillis();
             }
             MyGdxGame.getInstance().getClient().sendTCP(moveUpdateEvent);
-        }else{
+        } else {
         }
     }
 
-    public boolean movementChanged(boolean isAttacking, final boolean moveUp, final boolean moveDown, final boolean moveLeft, final boolean moveRight, final boolean dash){
+    public boolean movementChanged(boolean isAttacking, final boolean moveUp, final boolean moveDown, final boolean moveLeft, final boolean moveRight, final boolean dash) {
         return isAttacking == this.attack && moveUp == this.moveUp && moveDown == this.moveDown && moveLeft == this.moveLeft && moveRight == this.moveRight && dash == this.shift;
     }
 
@@ -112,11 +103,11 @@ public class MoveUpdateHandler implements Runnable{
         double ns = 1000000000 / amountOfTicks;
         double delta = 0;
 
-        while(this.running){
+        while (this.running) {
             try {
-                if(attack){
+                if (attack) {
                     Thread.sleep((long) (ResourceHandler.INSTANCE.getHunterAttackDuration() * 100F));
-                }else{
+                } else {
                     Thread.sleep((long) (60F / amountOfTicks));
                 }
             } catch (InterruptedException e) {
@@ -127,7 +118,7 @@ public class MoveUpdateHandler implements Runnable{
             delta += (now - pastTime) / ns;
             pastTime = now;
 
-            while(delta > 0){
+            while (delta > 0) {
                 tick();
                 delta--;
             }

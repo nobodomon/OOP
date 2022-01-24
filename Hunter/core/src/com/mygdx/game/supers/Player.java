@@ -16,7 +16,7 @@ import com.mygdx.game.handlers.ResourceHandler;
 import java.util.concurrent.TimeUnit;
 
 
-public class Player {
+public class Player implements Entity {
     private final Vector2 position;
     private final Vector2 serverPosition;
     private final Vector2 distance;
@@ -66,6 +66,7 @@ public class Player {
 
     }
 
+    @Override
     public void render(final Batch batch) {
         //To color the player
         //batch.setColor(this.color)
@@ -190,6 +191,7 @@ public class Player {
 
     }
 
+    @Override
     public void update(final float delta) {
         this.animationTime += delta;
         final Vector2 interpolate = this.position.interpolate(this.serverPosition, 0.2F, Interpolation.smooth);

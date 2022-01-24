@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.esotericsoftware.kryonet.Connection;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.supers.CapturePoint;
+import com.mygdx.game.supers.EntityHandler;
 import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.PlayerState;
 import com.mygdx.global.CapturePointUpdateEvent;
@@ -18,13 +19,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
-public class CapturePointHandler {
+public class CapturePointHandler implements EntityHandler {
     private double decayDelay = 1200;
     private double lastDecay = 0;
     private boolean isLastDecaySet = false;
 
-    float[] randomX = new float[]{112.5f,212.5f,312.5f,412.5f,512.5f,612.5f,712.5f,812.5f,912.5f,1012.5f,1112.f};
-    float[] randomY = new float[]{112.5f,212.5f,312.5f,412.5f,512.5f,612.5f,712.5f};
     public static final CapturePointHandler instance = new CapturePointHandler();
     public LinkedList<CapturePoint> capturePoints = new LinkedList<>();
 
@@ -46,6 +45,7 @@ public class CapturePointHandler {
         this.capturePoints.remove(capturePoint);
     }
 
+    @Override
     public void render(final Batch batch){
         LinkedList<Player> players = PlayerHandler.INSTANCE.getPlayers();
         //System.out.printf("There are %d players", players.size());
@@ -87,6 +87,7 @@ public class CapturePointHandler {
         }
     }
 
+    @Override
     public void update(final float delta){
         for(int i = 0; i < this.capturePoints.size(); i++){
             this.capturePoints.get(i).update(delta);

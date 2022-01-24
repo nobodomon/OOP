@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.supers.EntityHandler;
 import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.PlayerState;
 import com.mygdx.global.CapturePointUpdateEvent;
@@ -16,7 +17,7 @@ import com.mygdx.global.PlayerUpdateEvent;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
-public class PlayerHandler {
+public class PlayerHandler implements EntityHandler {
 
 
     public long attackCooldown;
@@ -25,18 +26,7 @@ public class PlayerHandler {
 
     private final LinkedList<Player> players = new LinkedList<>();
 
-    public Player getPlayerByUsername(final String username){
-        for(int i = 0; i < this.players.size(); i++){
-            final Player player = this.players.get(i);
-
-            if(player.getUsername().equals(username))
-                return player;
-        }
-        return null;
-    }
-
-
-
+    @Override
     public void render(final Batch batch){
         Player hunter = null;
         Rectangle hunterHitBox = null;
@@ -79,10 +69,21 @@ public class PlayerHandler {
     }
 
 
+    @Override
     public void update(final float delta){
         for(int i = 0; i < this.players.size(); i++){
             this.players.get(i).update(delta);
         }
+    }
+
+    public Player getPlayerByUsername(final String username){
+        for(int i = 0; i < this.players.size(); i++){
+            final Player player = this.players.get(i);
+
+            if(player.getUsername().equals(username))
+                return player;
+        }
+        return null;
     }
 
     public void playerHit(final Player player){

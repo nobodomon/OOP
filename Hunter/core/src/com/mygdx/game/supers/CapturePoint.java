@@ -2,22 +2,17 @@ package com.mygdx.game.supers;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.TextureData;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.handlers.FontSizeHandler;
 import com.mygdx.game.handlers.ResourceHandler;
 
-import java.text.DecimalFormat;
-
-public class CapturePoint {
+public class CapturePoint implements Entity {
     private Vector2 position;
     private final SpriteBatch batch;
 
@@ -57,6 +52,7 @@ public class CapturePoint {
         this.disruptRate = 0.1f;
     }
 
+    @Override
     public void render(final Batch batch){
 
         this.batch.begin();
@@ -76,6 +72,7 @@ public class CapturePoint {
         this.batch.end();
     }
 
+    @Override
     public void update(final float delta) {
     }
 
@@ -142,6 +139,5 @@ public class CapturePoint {
     public void setProgress(float progress) {
         this.progress = progress;
     }
-
 
 }
