@@ -40,7 +40,6 @@ public class PlayerHandler {
     public void render(final Batch batch){
         Player hunter = null;
         Rectangle hunterHitBox = null;
-        double now = System.currentTimeMillis();
         this.attackCooldown = TimeUnit.SECONDS.toSeconds((long)ResourceHandler.INSTANCE.getHunterAttackDuration());
 
         for(int i = 0; i < this.players.size(); i++){

@@ -60,8 +60,11 @@ public class CapturePointHandler {
                     }
                 }else{
                     if(players.get(j).getPlayerHitBox().overlaps(currPoint.getCapturePointHitBox()) && players.get(j).getCurrentState() == PlayerState.ATTACKING){
-                        capturePoints.get(i).attemptCapture();
-                        break;
+                        if(this.isLastCapturePoint()){
+                            capturePoints.get(i).attemptCapture(1.5f);
+                        }else{
+                            capturePoints.get(i).attemptCapture();
+                        }
                     }
                 }
             }
@@ -115,6 +118,20 @@ public class CapturePointHandler {
             }
         }
         return allCaptured;
+    }
+
+    public boolean isLastCapturePoint(){
+        int fullyCappedPoints = 0;
+        for(int i = 0; i < this.capturePoints.size(); i++){
+            if(this.capturePoints.get(i).getProgress() == 100){
+                fullyCappedPoints++;
+            }
+        }
+        if(capturePoints.size() - fullyCappedPoints == 1){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     public boolean doesNewCapturePointOverlap(float x, float y){

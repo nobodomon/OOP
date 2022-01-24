@@ -94,6 +94,16 @@ public class CapturePoint {
         this.progress = Math.round(this.progress * 10.0f) / 10.0f;
     }
 
+    public void attemptCapture(float captureRateMultiplier){
+        if(this.progress < 100.0f){
+            if(this.progress + (captureRate * captureRateMultiplier) > 100.0f){
+                this.progress = 100.0f;
+            }else{
+                this.progress += (captureRate * captureRateMultiplier);
+            }
+        }
+        this.progress = Math.round(this.progress * 10.0f) / 10.0f;
+    }
     public void attemptDisrupt(){
         if(this.progress > 0.0 && this.progress < 100.0){
             if(this.progress - disruptRate < 0.0f){

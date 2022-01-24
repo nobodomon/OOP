@@ -227,4 +227,8 @@ public class GameInProgressScreen implements Screen {
     public void setPlayingPlayer(String playingPlayer) {
         this.playingPlayer = playingPlayer;
     }
+
+    public void setGameEndTime(long gameEndTime) {
+        this.gameEndTime = gameEndTime;
+    }
 }
