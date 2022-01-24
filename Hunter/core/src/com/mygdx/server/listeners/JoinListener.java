@@ -23,12 +23,10 @@ public class JoinListener extends Listener {
             final ServerPlayer serverPlayer = new ServerPlayer(joinRequestEvent.username, connection);
             final Random random = new Random();
 
-            serverPlayer.setX(random.nextInt(700));
-            serverPlayer.setY(random.nextInt(500));
+            serverPlayer.setX(random.nextInt(1100));
+            serverPlayer.setY(random.nextInt(700));
 
             final ServerCapturePoint serverCapturePoint = new ServerCapturePoint(connection);
-            serverCapturePoint.setX(random.nextInt(700));
-            serverCapturePoint.setY(random.nextInt(500));
 
             System.out.println("Capture Point created");
             // Name already exist
@@ -40,6 +38,7 @@ public class JoinListener extends Listener {
                 CapturePointHandler.INSTANCE.addCapturePoint(serverCapturePoint);
 
                 final JoinResponseEvent joinResponseEvent = new JoinResponseEvent();
+                joinResponseEvent.username = joinRequestEvent.username;
                 connection.sendTCP(joinResponseEvent);
             }
 

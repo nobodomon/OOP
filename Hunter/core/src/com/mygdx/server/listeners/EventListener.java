@@ -1,6 +1,5 @@
 package com.mygdx.server.listeners;
 
-import com.badlogic.gdx.Gdx;
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.mygdx.game.supers.CapturePoint;
@@ -11,10 +10,10 @@ import com.mygdx.global.GameRestartEvent;
 import com.mygdx.global.GameStartEvent;
 import com.mygdx.global.MoveUpdateEvent;
 import com.mygdx.global.PlayerCharacterChangeEvent;
-import com.mygdx.global.PlayerHPupdateEvent;
 import com.mygdx.global.PlayerHitEvent;
 import com.mygdx.global.PlayerKilledEvent;
 import com.mygdx.global.PlayerReadyEvent;
+import com.mygdx.global.PlayerUpdateEvent;
 import com.mygdx.server.handlers.CapturePointHandler;
 import com.mygdx.server.handlers.GameHandler;
 import com.mygdx.server.handlers.PlayerHandler;
@@ -40,6 +39,9 @@ public class EventListener extends Listener {
             serverPlayer.moveLeft = moveUpdateEvent.moveLeft;
             serverPlayer.moveRight = moveUpdateEvent.moveRight;
             serverPlayer.attack = moveUpdateEvent.attack;
+            serverPlayer.shift = moveUpdateEvent.shift;
+            serverPlayer.setLastBlink(moveUpdateEvent.lastBlink);
+
 
         } else if (object instanceof PlayerCharacterChangeEvent) {
             final ServerPlayer serverPlayer = PlayerHandler.INSTANCE.getPlayerByConnection(connection);
@@ -80,16 +82,22 @@ public class EventListener extends Listener {
             player.setCurrentState(PlayerState.DEAD);
             player.setAlive(false);
 
-        } else if (object instanceof PlayerHPupdateEvent) {
+        } else if (object instanceof PlayerUpdateEvent) {
 
-            final PlayerHPupdateEvent playerHPupdateEvent = (PlayerHPupdateEvent) object;
-            final ServerPlayer serverPlayer = PlayerHandler.INSTANCE.getPlayerByUsername(playerHPupdateEvent.username);
-            serverPlayer.setHealth(playerHPupdateEvent.health);
-            serverPlayer.dead = !playerHPupdateEvent.alive;
+            final PlayerUpdateEvent playerUpdateEvent = (PlayerUpdateEvent) object;
+            final ServerPlayer serverPlayer = PlayerHandler.INSTANCE.getPlayerByUsername(playerUpdateEvent.username);
+            serverPlayer.setHealth(playerUpdateEvent.health);
+            serverPlayer.setLastHit(playerUpdateEvent.lastHit);
+            serverPlayer.setX(playerUpdateEvent.x);
+            serverPlayer.setY(playerUpdateEvent.y);
+            serverPlayer.setServerState(Player.getStateByInt(playerUpdateEvent.state));
 
             final Player player = com.mygdx.game.handlers.PlayerHandler.INSTANCE.getPlayerByUsername(serverPlayer.getUsername());
             player.setHealth(serverPlayer.getHealth());
-            player.setAlive(!serverPlayer.dead);
+            player.setLastHit(serverPlayer.getLastHit());
+            player.getServerPosition().x = serverPlayer.getX();
+            player.getServerPosition().y = serverPlayer.getY();
+            player.setCurrentState(serverPlayer.getServerState());
 
         } else if (object instanceof CapturePointUpdateEvent) {
             final CapturePointUpdateEvent capturePointUpdateEvent = (CapturePointUpdateEvent) object;

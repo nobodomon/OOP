@@ -7,6 +7,8 @@ import java.util.LinkedList;
 
 public class JoinResponseEvent {
 
+    public String username;
+
     public JoinResponseEvent(){
 
     }

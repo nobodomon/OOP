@@ -1,5 +1,6 @@
 package com.mygdx.server.handlers;
 
+import com.mygdx.game.handlers.CapturePointHandler;
 import com.mygdx.global.GameRestartEvent;
 import com.mygdx.global.GameStartEvent;
 import com.mygdx.server.ServerFoundation;
@@ -16,7 +17,6 @@ public class GameHandler {
     }
 
     public void restartGame(){
-
         for(ServerPlayer all : PlayerHandler.INSTANCE.getPlayers()){
             final GameRestartEvent gameRestartEvent = new GameRestartEvent();
             all.getConnection().sendTCP(gameRestartEvent);

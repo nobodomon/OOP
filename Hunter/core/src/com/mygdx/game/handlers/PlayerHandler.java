@@ -14,12 +14,12 @@ import com.mygdx.global.PlayerReadyEvent;
 import com.mygdx.global.PlayerUpdateEvent;
 
 import java.util.LinkedList;
+import java.util.concurrent.TimeUnit;
 
 public class PlayerHandler {
 
 
-    public double attackCooldown;
-    public double lastAttack = 0;
+    public long attackCooldown;
 
     public static final PlayerHandler INSTANCE = new PlayerHandler();
 
@@ -41,7 +41,7 @@ public class PlayerHandler {
         Player hunter = null;
         Rectangle hunterHitBox = null;
         double now = System.currentTimeMillis();
-        this.attackCooldown = ResourceHandler.INSTANCE.getHunterAttackDuration() * 10000F;
+        this.attackCooldown = TimeUnit.SECONDS.toSeconds((long)ResourceHandler.INSTANCE.getHunterAttackDuration());
 
         for(int i = 0; i < this.players.size(); i++){
             if(Player.getIntByType(this.players.get(i).getPlayerType()) > 2){
@@ -59,8 +59,8 @@ public class PlayerHandler {
                 if(this.players.get(i).getUsername() != hunter.getUsername()){
                     if(hunterHitBox.overlaps(this.players.get(i).getPlayerHitBox())){
                         if(this.players.get(i).getHealth() > 0){
-                            if (now - attackCooldown > lastAttack) {
-                                this.lastAttack = System.currentTimeMillis();
+                            if (this.players.get(i).getLastHit() - System.currentTimeMillis() < 0) {
+                                System.out.println(this.players.get(i).getLastHit());
                                 this.players.get(i).hit();
                                 playerHit(this.players.get(i));
                             }
@@ -79,6 +79,7 @@ public class PlayerHandler {
         }
     }
 
+
     public void update(final float delta){
         for(int i = 0; i < this.players.size(); i++){
             this.players.get(i).update(delta);
@@ -89,6 +90,8 @@ public class PlayerHandler {
         PlayerUpdateEvent playerUpdateEvent = new PlayerUpdateEvent();
         playerUpdateEvent.username = player.getUsername();
         playerUpdateEvent.state = Player.getIntByState(PlayerState.HIT);
+        playerUpdateEvent.health = player.getHealth();
+        playerUpdateEvent.lastHit = player.getLastHit();
         playerUpdateEvent.x = player.getServerPosition().x;
         playerUpdateEvent.y = player.getServerPosition().y;
         MyGdxGame.getInstance().getClient().sendTCP(playerUpdateEvent);
@@ -103,6 +106,8 @@ public class PlayerHandler {
         PlayerUpdateEvent playerUpdateEvent = new PlayerUpdateEvent();
         playerUpdateEvent.username = player.getUsername();
         playerUpdateEvent.state = Player.getIntByState(PlayerState.DEAD);
+        playerUpdateEvent.health = player.getHealth();
+        playerUpdateEvent.lastHit = player.getLastHit();
         playerUpdateEvent.x = player.getServerPosition().x;
         playerUpdateEvent.y = player.getServerPosition().y;
         MyGdxGame.getInstance().getClient().sendTCP(playerUpdateEvent);
@@ -117,18 +122,21 @@ public class PlayerHandler {
         for(int i = 0; i < players.size(); i++){
             Player player = players.get(i);
             player.setHealth(25);
+            player.setLastHit(0);
             player.setAlive(true);
-            playerHPupdate(player);
+            playerReset(player);
         }
     }
 
-    public void playerHPupdate(final Player player){
-
-        PlayerHPupdateEvent playerHPupdateEvent = new PlayerHPupdateEvent();
-        playerHPupdateEvent.username = player.getUsername();
-        playerHPupdateEvent.health = player.getHealth();
-        playerHPupdateEvent.alive = player.isAlive();
-        MyGdxGame.getInstance().getClient().sendTCP(playerHPupdateEvent);
+    public void playerReset(final Player player){
+        PlayerUpdateEvent playerUpdateEvent = new PlayerUpdateEvent();
+        playerUpdateEvent.username = player.getUsername();
+        playerUpdateEvent.health = player.getHealth();
+        playerUpdateEvent.lastHit = 0;
+        playerUpdateEvent.x = player.getServerPosition().x;
+        playerUpdateEvent.y = player.getServerPosition().y;
+        playerUpdateEvent.state = Player.getIntByState(player.getCurrentState());
+        MyGdxGame.getInstance().getClient().sendTCP(playerUpdateEvent);
     }
 
     public void addPlayer(final Player player){
@@ -167,18 +175,14 @@ public class PlayerHandler {
     }
 
     public boolean areAllSurvivorsDead(){
-        boolean allDead = true;
         for(int i = 0; i < this.players.size(); i++){
-            if(Player.getIntByType(this.players.get(i).getPlayerType()) < 2){
-                if(this.players.get(i).getHealth() != 0.0){
-                    allDead = false;
-                    break;
+            if(Player.getIntByType(this.players.get(i).getPlayerType()) < 3){
+                if(this.players.get(i).getHealth() > 0.0){
+                    return false;
                 }
-            }else{
-                continue;
             }
         }
-        return allDead;
+        return true;
     }
 
     public void unreadyAll(){

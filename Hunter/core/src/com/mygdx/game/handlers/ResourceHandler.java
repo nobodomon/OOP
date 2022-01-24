@@ -10,7 +10,12 @@ public class ResourceHandler {
 
     public final static ResourceHandler INSTANCE = new ResourceHandler();
 
-    public final Texture grass = new Texture(Gdx.files.internal("grass.png"));
+    public final Texture mud_one = new Texture(Gdx.files.internal("Ground_Tile_01_C.png"));
+    public final Texture mud_two = new Texture(Gdx.files.internal("Ground_Tile_02_C.png"));
+    public final Texture gravel_one = new Texture(Gdx.files.internal("Ground_Tile_01_A.png"));
+    public final Texture gravel_two = new Texture(Gdx.files.internal("Ground_Tile_02_A.png"));
+    public final Texture grass_one = new Texture(Gdx.files.internal("Ground_Tile_01_B.png"));
+    public final Texture grass_two = new Texture(Gdx.files.internal("Ground_Tile_02_B.png"));
 
     public final Texture capturePoint_zero = new Texture(Gdx.files.internal("Dot_C.png"));
     public final Texture capturePoint_half = new Texture(Gdx.files.internal("Dot_B.png"));
@@ -92,6 +97,26 @@ public class ResourceHandler {
         return (minotaur_one_attack.getAnimationDuration() + minotaur_two_attack.getAnimationDuration() + minotaur_three_attack.getAnimationDuration())/3;
     }
 
+
+    public Texture getRandomMapTexture(int i){
+
+        switch(i){
+            case 0:
+                return grass_one;
+            case 1:
+                return grass_two;
+            case 2:
+                return mud_one;
+            case 3:
+                return mud_two;
+            case 4:
+                return gravel_one;
+            case 5:
+                return gravel_two;
+            default:
+                return grass_one;
+        }
+    }
 }
 
 

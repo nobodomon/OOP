@@ -31,6 +31,8 @@ public class EventListener extends Listener {
             Gdx.app.postRunnable(new Runnable() {
                 @Override
                 public void run() {
+                    LobbyScreen.INSTANCE.setPlayingPlayer(((JoinResponseEvent) object).username);
+                    GameInProgressScreen.INSTANCE.setPlayingPlayer(((JoinResponseEvent) object).username);
                     MyGdxGame.getInstance().setScreen(LobbyScreen.INSTANCE);
                 }
             });
@@ -45,6 +47,8 @@ public class EventListener extends Listener {
         }else if (object instanceof GameRestartEvent){
             PlayerHandler.INSTANCE.unreadyAll();
             LobbyScreen.INSTANCE.reset();
+            CapturePointHandler.instance.resetCapturePoints();
+            PlayerHandler.INSTANCE.resetPlayerHP();
             GameInProgressScreen.INSTANCE.resetGame();
             Gdx.app.postRunnable(new Runnable() {
                 @Override
@@ -63,6 +67,8 @@ public class EventListener extends Listener {
                     final Player player = new Player(playerAddEvent.username, PlayerType.GHOST_ONE);
                     player.getPosition().x = playerAddEvent.x;
                     player.getPosition().y = playerAddEvent.y;
+                    player.setHealth(playerAddEvent.health);
+                    player.setLastHit(playerAddEvent.lastHit);
                     player.getServerPosition().x = playerAddEvent.x;
                     player.getServerPosition().y = playerAddEvent.y;
 
@@ -97,6 +103,9 @@ public class EventListener extends Listener {
 
             PlayerState state = Player.getStateByInt(playerUpdateEvent.state);
             player.setCurrentState(state);
+            player.setHealth(playerUpdateEvent.health);
+            player.setLastHit(playerUpdateEvent.lastHit);
+            player.setBlinkCD(playerUpdateEvent.blinkCD);
             player.getServerPosition().set(playerUpdateEvent.x, playerUpdateEvent.y);
         } else if (object instanceof PlayerCharacterChangeEvent) {
             final PlayerCharacterChangeEvent playerCharacterChangeEvent = (PlayerCharacterChangeEvent) object;

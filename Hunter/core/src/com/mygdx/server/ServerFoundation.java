@@ -20,13 +20,15 @@ public class ServerFoundation {
     public static ServerFoundation instance;
 
     private Server server;
+    private int TCPPORT;
+    private int UDPPORT;
 
-    public static void main(String[] args){
-        ServerFoundation.instance = new ServerFoundation();
+    public static void main(int TCPPORT, int UDPPORT){
+        ServerFoundation.instance = new ServerFoundation(TCPPORT,UDPPORT);
         System.out.println("Server Initializing");
     }
 
-    public ServerFoundation(){
+    public ServerFoundation(int TCPPORT, int UDPPORT){
         this.server = new Server();
 
         this.server.getKryo().register(JoinRequestEvent.class);
@@ -57,7 +59,7 @@ public class ServerFoundation {
         PlayerUpdateHandler.INSTANCE.start();
         CapturePointUpdateHandler.INSTANCE.start();
 
-        this.bindServer(6334,6334);
+        this.bindServer(TCPPORT,UDPPORT);
     }
 
     public void bindServer(final int tcpPort, final int udpPort){

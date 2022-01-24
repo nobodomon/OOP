@@ -2,20 +2,18 @@ package com.mygdx.game.handlers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.utils.Timer;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.global.MoveUpdateEvent;
+
+import java.util.concurrent.TimeUnit;
 
 public class MoveUpdateHandler implements Runnable{
 
     public static final MoveUpdateHandler INSTANCE = new MoveUpdateHandler();
 
-    private boolean attack,moveUp, moveDown, moveLeft, moveRight;
+    private boolean attack,moveUp, moveDown, moveLeft, moveRight, shift;
 
     //attack cool down
-    private double lastTime = 0;
-    private boolean attackAnim = false;
 
     private boolean running;
 
@@ -31,20 +29,8 @@ public class MoveUpdateHandler implements Runnable{
     }
 
     public void tick(){
-        double lastTime = 0;
-        boolean w, s, a, d, e;
+        boolean w, s, a, d, e,shift ;
 
-//        if(attackAnim == true) {
-//            double now = System.currentTimeMillis();
-//            float frameTime = ResourceHandler.INSTANCE.ghost_one_attack.getAnimationDuration();
-//            if (lastTime - now > frameTime) {
-//                e = true;
-//            } else {
-//                e = false;
-//                attackAnim = false;
-//            }
-//        }
-        if(Gdx.input.isKeyPressed(Input.Keys.E) || Gdx.input.isKeyPressed(Input.Keys.W) || Gdx.input.isKeyPressed(Input.Keys.S) || Gdx.input.isKeyPressed(Input.Keys.A) || Gdx.input.isKeyPressed(Input.Keys.D)){
             if(Gdx.input.isKeyPressed(Input.Keys.W)){
                 w = true;
             }else{
@@ -69,10 +55,16 @@ public class MoveUpdateHandler implements Runnable{
                 d = false;
             }
 
-            if(Gdx.input.isKeyPressed(Input.Keys.E)){
+            if(Gdx.input.isKeyPressed(Input.Keys.SPACE)){
                 e = true;
             }else{
                 e = false;
+            }
+
+            if(Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)){
+                shift = true;
+            }else{
+                shift = false;
             }
 
 //            if(lastTime - now > coolDownTimer && Gdx.input.isKeyPressed(Input.Keys.E)){
@@ -81,21 +73,10 @@ public class MoveUpdateHandler implements Runnable{
 //            }else{
 //                e = false;
 //            }
-        }else{
-            w = false;
-            s = false;
-            a = false;
-            d = false;
-            if(attackAnim == true){
-                e = true;
-            }else{
-                e = false;
-            }
-        }
 
 
 
-        final boolean changed = this.movementChanged(e,w,s,a,d);
+        final boolean changed = this.movementChanged(e,w,s,a,d,shift);
 
         if(!changed){
             this.moveUp = w;
@@ -103,6 +84,7 @@ public class MoveUpdateHandler implements Runnable{
             this.moveLeft = a;
             this.moveRight = d;
             this.attack = e;
+            this.shift = shift;
 
             final MoveUpdateEvent moveUpdateEvent = new MoveUpdateEvent();
             moveUpdateEvent.moveUp = this.moveUp;
@@ -110,13 +92,17 @@ public class MoveUpdateHandler implements Runnable{
             moveUpdateEvent.moveLeft = this.moveLeft;
             moveUpdateEvent.moveRight = this.moveRight;
             moveUpdateEvent.attack = this.attack;
+            moveUpdateEvent.shift = this.shift;
+            if(this.shift == true){
+                moveUpdateEvent.lastBlink = System.currentTimeMillis();
+            }
             MyGdxGame.getInstance().getClient().sendTCP(moveUpdateEvent);
         }else{
         }
     }
 
-    public boolean movementChanged(boolean isAttacking, final boolean moveUp, final boolean moveDown, final boolean moveLeft, final boolean moveRight){
-        return isAttacking == this.attack && moveUp == this.moveUp && moveDown == this.moveDown && moveLeft == this.moveLeft && moveRight == this.moveRight;
+    public boolean movementChanged(boolean isAttacking, final boolean moveUp, final boolean moveDown, final boolean moveLeft, final boolean moveRight, final boolean dash){
+        return isAttacking == this.attack && moveUp == this.moveUp && moveDown == this.moveDown && moveLeft == this.moveLeft && moveRight == this.moveRight && dash == this.shift;
     }
 
     @Override

@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.esotericsoftware.kryonet.Client;
-import com.mygdx.game.handlers.PlayerHandler;
 import com.mygdx.game.handlers.ResourceHandler;
 import com.mygdx.game.supers.PlayerState;
 import com.mygdx.global.*;
@@ -23,6 +22,7 @@ import com.mygdx.game.handlers.LabelHandler;
 import com.mygdx.game.network.ConnectionStateListener;
 import com.mygdx.game.network.EventListener;
 import com.mygdx.server.ServerFoundation;
+import com.mygdx.server.handlers.PlayerHandler;
 import com.mygdx.server.supers.ServerCapturePoint;
 import com.mygdx.server.supers.ServerPlayer;
 
@@ -57,7 +57,7 @@ public class ConnectScreen implements Screen {
         this.stage.getViewport().setCamera(MyGdxGame.getInstance().getCamera());
 
         this.root = new Table();
-        this.root.setBounds(0,0,800, 600);
+        this.root.setBounds(0,0,1200, 800);
 
         final Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         this.rootGroup = new HorizontalGroup();
@@ -72,7 +72,7 @@ public class ConnectScreen implements Screen {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 try{
 
-                    ServerFoundation.main(null);
+                    ServerFoundation.main(Integer.parseInt(portLabel.getText()), Integer.parseInt(portLabel.getText()));
                 }catch (Exception e){
                     errorLabel.setText(e.getMessage());
                     return super.touchDown(event,x,y,pointer,button);
@@ -153,20 +153,26 @@ public class ConnectScreen implements Screen {
 
                 try {
                     client.start();
+                    if (PlayerHandler.INSTANCE.getPlayerByUsername(usernameLabel.getText()) != null) {
+                        return super.touchDown(event,x,y,pointer,button);
+                    }
                     client.connect(15000, ipAddressLabel.getText(), Integer.parseInt(portLabel.getText()), Integer.parseInt(portLabel.getText()));
+
+                    // Success
+                    MyGdxGame.getInstance().setClient(client);
+
+                    JoinRequestEvent joinRequestEvent = new JoinRequestEvent();
+                    joinRequestEvent.username = usernameLabel.getText();
+
+                    client.sendTCP(joinRequestEvent);
+                    return super.touchDown(event, x, y, pointer, button);
+
                 } catch (Exception e) {
                     errorLabel.setText(e.getMessage());
                     return super.touchDown(event,x,y,pointer,button);
                 }
-                // Success
-                MyGdxGame.getInstance().setClient(client);
 
-                JoinRequestEvent joinRequestEvent = new JoinRequestEvent();
-                joinRequestEvent.username = usernameLabel.getText();
 
-                client.sendTCP(joinRequestEvent);
-
-                return super.touchDown(event, x, y, pointer, button);
             }
         });
 

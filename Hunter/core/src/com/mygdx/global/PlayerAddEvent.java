@@ -10,6 +10,8 @@ public class PlayerAddEvent {
 
     public float x;
     public float y;
+    public double health;
+    public long lastHit;
 
     public PlayerAddEvent(){
 

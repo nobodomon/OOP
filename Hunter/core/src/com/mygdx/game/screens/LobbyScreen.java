@@ -1,8 +1,10 @@
 package com.mygdx.game.screens;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -22,14 +24,25 @@ import com.mygdx.game.supers.GameState;
 import com.mygdx.global.GameStartEvent;
 import com.mygdx.global.PlayerCharacterChangeEvent;
 import com.mygdx.global.PlayerReadyEvent;
+import com.mygdx.server.ServerFoundation;
 import com.mygdx.server.handlers.GameHandler;
 
+import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class LobbyScreen implements Screen {
 
     public static final LobbyScreen INSTANCE = new LobbyScreen();
+    private final String[] charSelectionText = new String[]{"Ghost 1", "Ghost 2", "Ghost 3", "Hunter 1", "Hunter 2", "Hunter 3"};
+
     public GameState gameState;
+
+    private String playingPlayer;
 
     private final SpriteBatch batch;
     private final Stage stage;
@@ -37,123 +50,79 @@ public class LobbyScreen implements Screen {
     private final Table root;
     private final Table deadMsg;
 
-    private final TextButton ghost_one_button;
-    private final TextButton ghost_two_button;
-    private final TextButton ghost_three_button;
-    private final TextButton minotaur_one_button;
-    private final TextButton minotaur_two_button;
-    private final TextButton minotaur_three_button;
+    private final TextButton previous;
+    private final TextButton next;
 
     private final TextButton ready_button;
-    private final TextButton start_button;
 
     private final Label playerCount;
+    private final Label charSelectionLabel;
     private final Label totalPlayerCount;
     private final Label deadMsgLabel;
     private final Label startingCountdown;
+    private final Label blinkCooldown;
 
     private boolean ready;
     private boolean countdownTimerLock;
     private long gameStartingTime;
-
-    private boolean allPlayersReady;
-
+    private int charSelectionIndex;
 
     public LobbyScreen(){
+        this.playingPlayer = "";
         this.batch = new SpriteBatch();
         this.stage = new Stage();
         this.stage.getViewport().setCamera(MyGdxGame.getInstance().getCamera());
         this.gameState = GameState.LOBBY;
         this.rootStack = new Stack();
-        this.rootStack.setBounds(0,0,800,600);
+        this.rootStack.setBounds(0,0,1200,800);
         this.root = new Table().left().top();
-        this.root.setBounds(0,0,800,600);
+        this.root.setBounds(0,0,1200,800);
         this.deadMsg = new Table();
-        this.deadMsg.setBounds(0,0,800,600);
-
+        this.deadMsg.setBounds(0,0,1200,800);
 
         this.playerCount = LabelHandler.INSTANCE.createLabel("0", 16, Color.BLACK);
         this.totalPlayerCount = LabelHandler.INSTANCE.createLabel("0", 16, Color.BLACK);
         this.deadMsgLabel = LabelHandler.INSTANCE.createLabel(null, 34, Color.RED);
         this.startingCountdown = LabelHandler.INSTANCE.createLabel(null,34, Color.RED);
+        this.blinkCooldown = LabelHandler.INSTANCE.createLabel(null,16,Color.BLACK);
+        this.charSelectionLabel = LabelHandler.INSTANCE.createLabel(charSelectionText[charSelectionIndex],16,Color.BLACK);
 
         this.ready = false;
-        this.allPlayersReady = false;
         this.countdownTimerLock = false;
+        this.charSelectionIndex = 0;
 
         final Skin skin = new Skin (Gdx.files.internal("uiskin.json"));
-        this.ghost_one_button = new TextButton("Ghost One", skin);
-        this.ghost_one_button.addListener(new ClickListener(){
+        this.previous = new TextButton("<", skin);
+        this.previous.addListener(new ClickListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
+                if(charSelectionIndex == 0){
+                    charSelectionIndex = 5;
+                }else{
+                    charSelectionIndex--;
+                }
+                charSelectionLabel.setText(charSelectionText[charSelectionIndex]);
                 final PlayerCharacterChangeEvent playerCharacterChangeEvent = new PlayerCharacterChangeEvent();
-                playerCharacterChangeEvent.characterType = 0;
+                playerCharacterChangeEvent.characterType = charSelectionIndex;
                 MyGdxGame.getInstance().getClient().sendTCP(playerCharacterChangeEvent);
 
                 return super.touchDown(event, x, y, pointer, button);
             }
         });
 
-        this.ghost_two_button = new TextButton("Ghost Two", skin);
-        this.ghost_two_button.addListener(new ClickListener(){
+        this.next = new TextButton(">", skin);
+        this.next.addListener(new ClickListener(){
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 
+                if(charSelectionIndex == 5){
+                    charSelectionIndex = 0;
+                }else{
+                    charSelectionIndex++;
+                }
+                charSelectionLabel.setText(charSelectionText[charSelectionIndex]);
                 final PlayerCharacterChangeEvent playerCharacterChangeEvent = new PlayerCharacterChangeEvent();
-                playerCharacterChangeEvent.characterType = 1;
-                MyGdxGame.getInstance().getClient().sendTCP(playerCharacterChangeEvent);
-
-                return super.touchDown(event, x, y, pointer, button);
-            }
-        });
-
-        this.ghost_three_button = new TextButton("Ghost Three", skin);
-        this.ghost_three_button.addListener(new ClickListener(){
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
-                final PlayerCharacterChangeEvent playerCharacterChangeEvent = new PlayerCharacterChangeEvent();
-                playerCharacterChangeEvent.characterType = 2;
-                MyGdxGame.getInstance().getClient().sendTCP(playerCharacterChangeEvent);
-
-                return super.touchDown(event, x, y, pointer, button);
-            }
-        });
-
-        this.minotaur_one_button = new TextButton("Minotaur One", skin);
-        this.minotaur_one_button.addListener(new ClickListener(){
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
-                final PlayerCharacterChangeEvent playerCharacterChangeEvent = new PlayerCharacterChangeEvent();
-                playerCharacterChangeEvent.characterType = 3;
-                MyGdxGame.getInstance().getClient().sendTCP(playerCharacterChangeEvent);
-
-                return super.touchDown(event, x, y, pointer, button);
-            }
-        });
-
-        this.minotaur_two_button = new TextButton("Minotaur Two", skin);
-        this.minotaur_two_button.addListener(new ClickListener(){
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
-                final PlayerCharacterChangeEvent playerCharacterChangeEvent = new PlayerCharacterChangeEvent();
-                playerCharacterChangeEvent.characterType = 4;
-                MyGdxGame.getInstance().getClient().sendTCP(playerCharacterChangeEvent);
-
-                return super.touchDown(event, x, y, pointer, button);
-            }
-        });
-
-        this.minotaur_three_button = new TextButton("Minotaur Three", skin);
-        this.minotaur_three_button.addListener(new ClickListener(){
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-
-                final PlayerCharacterChangeEvent playerCharacterChangeEvent = new PlayerCharacterChangeEvent();
-                playerCharacterChangeEvent.characterType = 5;
+                playerCharacterChangeEvent.characterType = charSelectionIndex;
                 MyGdxGame.getInstance().getClient().sendTCP(playerCharacterChangeEvent);
 
                 return super.touchDown(event, x, y, pointer, button);
@@ -172,14 +141,6 @@ public class LobbyScreen implements Screen {
             }
         });
 
-        this.start_button = new TextButton("Reset capture point",skin);
-        this.start_button.addListener(new ClickListener(){
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                return super.touchDown(event, x, y, pointer, button);
-            };
-        });
-
 
         this.batch.setProjectionMatrix(MyGdxGame.getInstance().getCamera().combined);
 
@@ -195,15 +156,13 @@ public class LobbyScreen implements Screen {
         this.root.clear();
         switch(gameState){
             case LOBBY:
-                this.root.add(ghost_one_button).pad(5,5,5,5);
-                this.root.add(ghost_two_button).pad(5,5,5,5);
-                this.root.add(ghost_three_button).pad(5,5,5,5);
-                this.root.add(playerCount).padLeft(15).row();
-                this.root.add(minotaur_one_button).pad(5,5,5,5);
-                this.root.add(minotaur_two_button).pad(5,5,5,5);
-                this.root.add(minotaur_three_button).pad(5,5,5,5);
-                this.root.add(totalPlayerCount).padLeft(15).row();
-                this.root.add(ready_button).pad(5,5,5,5);
+                this.root.add(previous).width(25).pad(5,5,5,5);
+                this.root.add(charSelectionLabel).fillX();
+                this.root.add(next).width(25).pad(5,5,5,5).row();
+                this.root.add(playerCount).pad(5,5,5,5).colspan(3).row();
+                this.root.add(totalPlayerCount).pad(5,5,5,5).colspan(3).row();
+                this.root.add(ready_button).pad(5,5,5,5).colspan(3).row();
+                this.root.add(blinkCooldown).colspan(3);
                 break;
             case READY:
                 this.root.add(ready_button).pad(5,5,5,5);
@@ -213,7 +172,6 @@ public class LobbyScreen implements Screen {
                 break;
             case ALLPLAYERSREADY:
                 this.root.add(ready_button).pad(5,5,5,5);
-                this.root.add(start_button).pad(5,5,5,5);
                 this.root.add(playerCount).padLeft(15).row();
                 this.root.add(totalPlayerCount).padLeft(15).row();
                 this.deadMsg.clear();
@@ -236,10 +194,11 @@ public class LobbyScreen implements Screen {
     public void render(float delta) {
         this.batch.begin();
         // x axis render
-        for(int x = 0; x< Gdx.graphics.getWidth() / ResourceHandler.INSTANCE.grass.getWidth(); x++){
+        for(int x = 0; x< Gdx.graphics.getWidth() / 100; x++){
             // y axis render
-            for(int y = 0; y< Gdx.graphics.getHeight() / ResourceHandler.INSTANCE.grass.getHeight(); y++){
-                this.batch.draw(ResourceHandler.INSTANCE.grass, ResourceHandler.INSTANCE.grass.getWidth() * x,  ResourceHandler.INSTANCE.grass.getHeight() * y);
+            for(int y = 0; y< Gdx.graphics.getHeight() / 100; y++){
+                Texture mapTexture = ResourceHandler.INSTANCE.grass_one;
+                this.batch.draw(mapTexture, mapTexture.getWidth() * x,  mapTexture.getHeight() * y);
             }
         }
         int[] players = PlayerHandler.INSTANCE.getPlayerCount();
@@ -275,11 +234,24 @@ public class LobbyScreen implements Screen {
             System.out.println("game starting");
             CapturePointHandler.instance.resetCapturePoints();
             PlayerHandler.INSTANCE.resetPlayerHP();
+            GameInProgressScreen.INSTANCE.resetGame();
             MyGdxGame.getInstance().getClient().sendTCP(new GameStartEvent());
             this.gameState = GameState.RUNNING;
         }
+
+        float seconds = (PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer).getBlinkCD() - System.currentTimeMillis())/ 1000;
+        float milliseconds = (PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer).getBlinkCD() - System.currentTimeMillis()) % 1000;
+        seconds += milliseconds / 1000;
+        DecimalFormat format = new DecimalFormat("#.##");
+        if(seconds <= 0){
+            blinkCooldown.setText("Blink is ready");
+        }else{
+            blinkCooldown.setText("Blink is ready in " + format.format(seconds) + "seconds");
+        }
+
         PlayerHandler.INSTANCE.render(this.batch);
         PlayerHandler.INSTANCE.update(delta);
+
         setToDefault();
         this.batch.end();
         this.stage.draw();
@@ -324,5 +296,13 @@ public class LobbyScreen implements Screen {
 
     public void reset(){
         this.ready = false;
+    }
+
+    public String getPlayingPlayer() {
+        return playingPlayer;
+    }
+
+    public void setPlayingPlayer(String playingPlayer) {
+        this.playingPlayer = playingPlayer;
     }
 }

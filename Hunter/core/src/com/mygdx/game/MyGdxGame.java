@@ -16,7 +16,7 @@ public class MyGdxGame extends Game {
 	@Override
 	public void create () {
 		this.camera = new OrthographicCamera();
-		this.camera.setToOrtho(false,800,600);
+		this.camera.setToOrtho(false,1200,800);
 
 		super.setScreen(ConnectScreen.INSTANCE);
 	}

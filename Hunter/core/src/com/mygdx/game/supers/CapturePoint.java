@@ -22,7 +22,11 @@ public class CapturePoint {
     private final SpriteBatch batch;
 
     private float progress;
+
+    private float captureRate;
     private float decayRate;
+    private float disruptRate;
+
     private Rectangle capturePointHitBox;
 
     private ShapeRenderer hitboxRenderer;
@@ -49,6 +53,8 @@ public class CapturePoint {
         this.font = FontSizeHandler.INSTANCE.getFont(18, Color.BLACK);
 
         this.decayRate = 0.1f;
+        this.captureRate = 0.2f;
+        this.disruptRate = 0.1f;
     }
 
     public void render(final Batch batch){
@@ -66,7 +72,7 @@ public class CapturePoint {
         }
         batch.draw(frame, this.position.x, this.position.y, width, height);
         this.layout.setText(this.font, this.progress + "%");
-        this.font.draw(batch, this.progress + "%", this.position.x + width / 2F - this.layout.width / 2, this.position.y + height + 10);
+        this.font.draw(batch, this.progress + "%", this.position.x + width / 2F - this.layout.width / 2, this.position.y + height + 15);
         this.batch.end();
     }
 
@@ -79,16 +85,22 @@ public class CapturePoint {
 
     public void attemptCapture(){
         if(this.progress < 100.0f){
-
-            this.progress += 0.1f;
+            if(this.progress + captureRate > 100.0f){
+                this.progress = 100.0f;
+            }else{
+                this.progress += captureRate;
+            }
         }
         this.progress = Math.round(this.progress * 10.0f) / 10.0f;
     }
 
     public void attemptDisrupt(){
-        if(this.progress > 0.0){
-
-            this.progress -= 0.1f;
+        if(this.progress > 0.0 && this.progress < 100.0){
+            if(this.progress - disruptRate < 0.0f){
+                this.progress = 0.0f;
+            }else{
+                this.progress -= 0.1f;
+            }
         }
         this.progress = Math.round(this.progress * 10.0f) / 10.0f;
     }
@@ -120,4 +132,6 @@ public class CapturePoint {
     public void setProgress(float progress) {
         this.progress = progress;
     }
+
+
 }

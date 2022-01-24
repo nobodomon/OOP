@@ -13,6 +13,8 @@ import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.handlers.FontSizeHandler;
 import com.mygdx.game.handlers.ResourceHandler;
 
+import java.util.concurrent.TimeUnit;
+
 
 public class Player {
     private final Vector2 position;
@@ -27,6 +29,8 @@ public class Player {
     private double health;
     private boolean alive;
     private boolean ready;
+    private long lastHit;
+    private long blinkCD;
     private final GlyphLayout layout;
     private final BitmapFont font;
 
@@ -42,6 +46,8 @@ public class Player {
         this.serverPosition = new Vector2();
         this.distance = new Vector2();
 
+        this.lastHit = 0;
+        this.blinkCD = 0;
         this.lookingLeft = false;
         this.username = username;
         this.playerType = PlayerType.GHOST_ONE;
@@ -66,10 +72,10 @@ public class Player {
         TextureRegion frame;
         float positionX;
         float regionWidth;
-        String name = this.username;
+        String name = this.username + " " + this.health;
 
         // If player is dead set currentState to permanently dead
-        if (alive == false) {
+        if (health <= 0.0) {
             currentState = PlayerState.DEAD;
         }
 
@@ -95,12 +101,14 @@ public class Player {
                 animLock = true;
                 this.lockedState = this.currentState;
             }
-        } else if (currentState == PlayerState.DEAD) {
-            animationTime = 0;
+        } else if (currentState == PlayerState.DEAD ) {
             if (animLock) {
                 if (!generalFrame.isAnimationFinished(animationTime)) {
                 } else {
-                    animLock = false;
+                    if(lockedState != PlayerState.DEAD){
+                        animationTime = 0;
+                    }
+                    //animLock = false;
                 }
             } else {
                 animLock = true;
@@ -166,14 +174,19 @@ public class Player {
         this.playerHitBox = new Rectangle(this.position.x, this.position.y, frame.getRegionWidth(), frame.getRegionHeight());
 
         //Make player blink on hit
-        if(this.lockedState == PlayerState.HIT){
-                batch.setColor(Color.RED);
+        if(this.lastHit - System.currentTimeMillis() > 0 && this.lastHit != 0){
+            if((this.lastHit - System.currentTimeMillis()) % 2> 0){
+                batch.setColor(Color.GRAY);
+            }else{
+
+            }
         }
+
         batch.draw(frame, positionX, this.position.y, regionWidth, frame.getRegionHeight());
         batch.setColor(Color.WHITE);
-        this.layout.setText(this.font, this.username);
+        this.layout.setText(this.font, name);
 
-        this.font.draw(batch, name + " " + this.health + this.lockedState, this.position.x + frame.getRegionWidth() / 2F - this.layout.width / 2, this.position.y + frame.getRegionHeight() + 10);
+        this.font.draw(batch, name, this.position.x + frame.getRegionWidth() / 2F - this.layout.width / 2, this.position.y + frame.getRegionHeight() + 10);
 
     }
 
@@ -489,8 +502,17 @@ public class Player {
         this.health = health;
     }
 
+    public long getLastHit() {
+        return lastHit;
+    }
+
+    public void setLastHit(long lastHit) {
+        this.lastHit = lastHit;
+    }
+
     public void hit() {
-        if (health > 0) {
+        if (health > 0.0) {
+            this.lastHit = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(3);
             this.health -= 5;
         } else {
             this.alive = false;
@@ -508,5 +530,13 @@ public class Player {
 
     public Rectangle getPlayerHitBox() {
         return playerHitBox;
+    }
+
+    public long getBlinkCD() {
+        return blinkCD;
+    }
+
+    public void setBlinkCD(long blinkCD) {
+        this.blinkCD = blinkCD;
     }
 }

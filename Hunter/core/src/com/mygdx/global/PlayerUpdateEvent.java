@@ -9,6 +9,9 @@ public class PlayerUpdateEvent {
     public float x;
     public float y;
     public int state;
+    public double health;
+    public long lastHit;
+    public long blinkCD;
 
     public PlayerUpdateEvent(){
 

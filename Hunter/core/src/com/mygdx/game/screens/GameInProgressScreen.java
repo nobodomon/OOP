@@ -3,6 +3,7 @@ package com.mygdx.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -22,11 +23,17 @@ import com.mygdx.game.handlers.ResourceHandler;
 import com.mygdx.game.supers.GameState;
 import com.mygdx.global.GameRestartEvent;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 public class GameInProgressScreen implements Screen {
 
+
     public static final GameInProgressScreen INSTANCE = new GameInProgressScreen();
+
+    private String playingPlayer;
+
     private final SpriteBatch batch;
     private final Stage stage;
     private final Table root;
@@ -43,17 +50,18 @@ public class GameInProgressScreen implements Screen {
     private final TextButton restart_button;
     //private final Label endCauseLabel;
 
+
     public GameInProgressScreen() {
         this.batch = new SpriteBatch();
         this.batch.setProjectionMatrix(MyGdxGame.getInstance().getCamera().combined);
         this.stage = new Stage();
         this.stage.getViewport().setCamera(MyGdxGame.getInstance().getCamera());
         this.rootStack = new Stack();
-        this.rootStack.setBounds(0,0,800,600);
+        this.rootStack.setBounds(0,0,1200,800);
         this.root = new Table().top().left();
-        this.root.setBounds(0, 0, 800, 600);
+        this.root.setBounds(0, 0, 1200, 800);
         this.endMsg = new Table().center();
-        this.endMsg.setBounds(0,0,800,600);
+        this.endMsg.setBounds(0,0,1200,800);
         this.gameState = GameState.RUNNING;
         this.gameEndTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5);
         this.gameProgressTime = LabelHandler.INSTANCE.createLabel("0", 32, Color.RED);
@@ -68,6 +76,7 @@ public class GameInProgressScreen implements Screen {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 CapturePointHandler.instance.resetCapturePoints();
                 PlayerHandler.INSTANCE.resetPlayerHP();
+                resetGame();
                 GameRestartEvent gameRestartEvent = new GameRestartEvent();
                 MyGdxGame.getInstance().getClient().sendTCP(gameRestartEvent);
                 return super.touchDown(event, x, y, pointer, button);
@@ -89,10 +98,11 @@ public class GameInProgressScreen implements Screen {
     public void render(float delta) {
         this.batch.begin();
 
-        for (int x = 0; x < Gdx.graphics.getWidth() / ResourceHandler.INSTANCE.grass.getWidth(); x++) {
+        for (int x = 0; x < Gdx.graphics.getWidth() / 100; x++) {
             // y axis render
-            for (int y = 0; y < Gdx.graphics.getHeight() / ResourceHandler.INSTANCE.grass.getHeight(); y++) {
-                this.batch.draw(ResourceHandler.INSTANCE.grass, ResourceHandler.INSTANCE.grass.getWidth() * x, ResourceHandler.INSTANCE.grass.getHeight() * y);
+            for (int y = 0; y < Gdx.graphics.getHeight() / 100; y++) {
+                Texture mapTexture = ResourceHandler.INSTANCE.grass_one;
+                this.batch.draw(mapTexture, mapTexture.getWidth() * x, mapTexture.getHeight() * y);
             }
         }
         long minutes, seconds;
@@ -116,12 +126,13 @@ public class GameInProgressScreen implements Screen {
             }else if(CapturePointHandler.instance.isAllCapturePointsCaptured()){
                 gameState = GameState.SURVIVORSWIN;
                 showEndMsg(gameState,"All capture points secured!");
+            }else if(PlayerHandler.INSTANCE.getPlayerByUsername(playingPlayer).getHealth() == 0.0){
+                showDeadMsg();
             }
         }else if(gameCurrentTime <= 0 ){
             if(CapturePointHandler.instance.isAllCapturePointsCaptured() == false){
                 gameState = GameState.HUNTERSWIN;
                 showEndMsg(gameState,"Time's up!");
-
             }
         }else{
             gameState = GameState.RUNNING;
@@ -164,6 +175,12 @@ public class GameInProgressScreen implements Screen {
         }
     }
 
+    public void showDeadMsg(){
+        this.huntersWinLabel.setText("YOU ARE DEAD");
+        this.endMsg.clear();
+        this.endMsg.add(huntersWinLabel);
+    }
+
     @Override
     public void resize(int width, int height) {
 
@@ -201,5 +218,13 @@ public class GameInProgressScreen implements Screen {
         this.gameState = GameState.RUNNING;
         this.gameEndTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5);
         this.endMsg.clear();
+    }
+
+    public String getPlayingPlayer() {
+        return playingPlayer;
+    }
+
+    public void setPlayingPlayer(String playingPlayer) {
+        this.playingPlayer = playingPlayer;
     }
 }

@@ -13,13 +13,18 @@ import com.mygdx.global.PlayerHitEvent;
 import com.mygdx.global.PlayerUpdateEvent;
 import com.mygdx.server.supers.ServerCapturePoint;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 public class CapturePointHandler {
     private double decayDelay = 1200;
     private double lastDecay = 0;
     private boolean isLastDecaySet = false;
 
+    float[] randomX = new float[]{112.5f,212.5f,312.5f,412.5f,512.5f,612.5f,712.5f,812.5f,912.5f,1012.5f,1112.f};
+    float[] randomY = new float[]{112.5f,212.5f,312.5f,412.5f,512.5f,612.5f,712.5f};
     public static final CapturePointHandler instance = new CapturePointHandler();
     public LinkedList<CapturePoint> capturePoints = new LinkedList<>();
 
@@ -88,7 +93,8 @@ public class CapturePointHandler {
     public void resetCapturePoints(){
         for(int i = 0; i < this.capturePoints.size(); i++){
             CapturePoint capturePoint = capturePoints.get(i);
-            capturePoint.setProgress(0);
+            capturePoint.setProgress(0.0f);
+
             capturePointUpdate(capturePoint);
         }
     }
@@ -109,5 +115,14 @@ public class CapturePointHandler {
             }
         }
         return allCaptured;
+    }
+
+    public boolean doesNewCapturePointOverlap(float x, float y){
+        for(int i = 0; i< this.capturePoints.size(); i++){
+            if(capturePoints.get(i).getPosition().x == x && capturePoints.get(i).getPosition().y == y){
+                return true;
+            }
+        }
+        return false;
     }
 }
