@@ -20,8 +20,6 @@ public class ServerFoundation {
     public static ServerFoundation instance;
 
     private Server server;
-    private int TCPPORT;
-    private int UDPPORT;
 
     public static void main(int TCPPORT, int UDPPORT){
         ServerFoundation.instance = new ServerFoundation(TCPPORT,UDPPORT);

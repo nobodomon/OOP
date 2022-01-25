@@ -2,6 +2,7 @@ package com.mygdx.server.listeners;
 
 import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
+import com.mygdx.game.screens.ConnectScreen;
 import com.mygdx.global.JoinRequestEvent;
 import com.mygdx.global.JoinResponseEvent;
 import com.mygdx.server.handlers.PlayerHandler;
@@ -31,8 +32,9 @@ public class JoinListener extends Listener {
             System.out.println("Capture Point created");
             // Name already exist
             if(PlayerHandler.INSTANCE.getPlayerByUsername(((JoinRequestEvent) object).username) != null){
+                ConnectScreen.INSTANCE.getErrorLabel().setText("Username is taken!");
                 return;
-            }else{
+            }
 
                 PlayerHandler.INSTANCE.addPlayer(serverPlayer);
                 CapturePointHandler.INSTANCE.addCapturePoint(serverCapturePoint);
@@ -40,10 +42,10 @@ public class JoinListener extends Listener {
                 final JoinResponseEvent joinResponseEvent = new JoinResponseEvent();
                 joinResponseEvent.username = joinRequestEvent.username;
                 connection.sendTCP(joinResponseEvent);
-            }
 
-            super.received(connection, object);
+
         }
+        super.received(connection, object);
 
     }
 }

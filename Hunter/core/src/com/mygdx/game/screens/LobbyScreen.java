@@ -239,20 +239,13 @@ public class LobbyScreen implements Screen {
             this.gameState = GameState.RUNNING;
         }
 
-        float seconds = (PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer).getBlinkCD() - System.currentTimeMillis())/ 1000;
-        float milliseconds = (PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer).getBlinkCD() - System.currentTimeMillis()) % 1000;
-        seconds += milliseconds / 1000;
-        DecimalFormat format = new DecimalFormat("#.##");
-        if(seconds <= 0){
-            blinkCooldown.setText("Blink is ready");
-        }else{
-            blinkCooldown.setText("Blink is ready in " + format.format(seconds) + "seconds");
-        }
-
         PlayerHandler.INSTANCE.render(this.batch);
         PlayerHandler.INSTANCE.update(delta);
 
+        showBlinkCdTimer();
+
         setToDefault();
+
         this.batch.end();
         this.stage.draw();
         this.stage.act(delta);
@@ -291,6 +284,18 @@ public class LobbyScreen implements Screen {
             this.ready = true;
         }else{
             this.ready = false;
+        }
+    }
+
+    public void showBlinkCdTimer(){
+        float blinkCdSeconds = (PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer).getBlinkCD() - System.currentTimeMillis())/ 1000;
+        float milliseconds = (PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer).getBlinkCD() - System.currentTimeMillis()) % 1000;
+        blinkCdSeconds += milliseconds / 1000;
+        DecimalFormat format = new DecimalFormat("#.##");
+        if(blinkCdSeconds <= 0){
+            blinkCooldown.setText("Blink is ready");
+        }else{
+            blinkCooldown.setText("Blink is ready in " + format.format(blinkCdSeconds) + "seconds");
         }
     }
 

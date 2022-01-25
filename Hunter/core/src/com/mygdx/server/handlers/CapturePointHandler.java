@@ -28,6 +28,7 @@ public class CapturePointHandler {
         }
         return null;
     }
+
     public ServerCapturePoint getCapturePointByVector(final float x, final float y){
         for(final ServerCapturePoint serverCapturePoint: this.capturePoints){
             if(serverCapturePoint.getX() == x && serverCapturePoint.getY() == y){
@@ -63,6 +64,10 @@ public class CapturePointHandler {
         capturePointDeleteEvent.y = capturePoint.getY();
 
         ServerFoundation.instance.getServer().sendToAllTCP(capturePointDeleteEvent);
+    }
+
+    public void clearCapturePoints(){
+        this.capturePoints = new LinkedList<>();
     }
 
     public LinkedList<ServerCapturePoint> getCapturePoints() {

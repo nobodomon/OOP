@@ -3,6 +3,7 @@ package com.mygdx.game.handlers;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.screens.ConnectScreen;
 import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.PlayerState;
 import com.mygdx.global.PlayerHitEvent;
@@ -140,7 +141,13 @@ public class PlayerHandler implements EntityHandler {
     }
 
     public void addPlayer(final Player player){
-        this.players.add(player);
+        if(getPlayerByUsername(player.getUsername()) != null){
+            ConnectScreen.INSTANCE.getErrorLabel().setText("Username is taken!");
+            return;
+        }else{
+
+            this.players.add(player);
+        }
     }
 
     public void removePlayer(final Player player){

@@ -93,6 +93,10 @@ public class CapturePointHandler implements EntityHandler {
         }
     }
 
+    public void clearCapturePoints(){
+        this.capturePoints = new LinkedList<>();
+    }
+
     public void capturePointUpdate(final CapturePoint capturePoint){
         CapturePointUpdateEvent capturePointUpdateEvent = new CapturePointUpdateEvent();
         capturePointUpdateEvent.x = capturePoint.getPosition().x;

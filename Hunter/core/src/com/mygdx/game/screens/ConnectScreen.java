@@ -23,6 +23,7 @@ import com.mygdx.game.handlers.LabelHandler;
 import com.mygdx.game.network.ConnectionStateListener;
 import com.mygdx.game.network.EventListener;
 import com.mygdx.server.ServerFoundation;
+import com.mygdx.server.handlers.CapturePointHandler;
 import com.mygdx.server.handlers.PlayerHandler;
 import com.mygdx.server.supers.ServerCapturePoint;
 import com.mygdx.server.supers.ServerPlayer;
@@ -49,7 +50,6 @@ public class ConnectScreen implements Screen {
     private final TextButton connectButton;
     private final TextButton hostButton;
 
-    private float pastTime;
     private final Label errorLabel;
 
     public ConnectScreen(){
@@ -72,7 +72,6 @@ public class ConnectScreen implements Screen {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 try{
-
                     ServerFoundation.main(Integer.parseInt(portLabel.getText()), Integer.parseInt(portLabel.getText()));
                 }catch (Exception e){
                     errorLabel.setText(e.getMessage());
@@ -154,26 +153,20 @@ public class ConnectScreen implements Screen {
 
                 try {
                     client.start();
-                    if (PlayerHandler.INSTANCE.getPlayerByUsername(usernameLabel.getText()) != null) {
-                        return super.touchDown(event,x,y,pointer,button);
-                    }
                     client.connect(15000, ipAddressLabel.getText(), Integer.parseInt(portLabel.getText()), Integer.parseInt(portLabel.getText()));
-
-                    // Success
-                    MyGdxGame.getInstance().setClient(client);
-
-                    JoinRequestEvent joinRequestEvent = new JoinRequestEvent();
-                    joinRequestEvent.username = usernameLabel.getText();
-
-                    client.sendTCP(joinRequestEvent);
-                    return super.touchDown(event, x, y, pointer, button);
-
                 } catch (Exception e) {
                     errorLabel.setText(e.getMessage());
                     return super.touchDown(event,x,y,pointer,button);
                 }
+                // Success
+                MyGdxGame.getInstance().setClient(client);
 
+                JoinRequestEvent joinRequestEvent = new JoinRequestEvent();
+                joinRequestEvent.username = usernameLabel.getText();
 
+                client.sendTCP(joinRequestEvent);
+
+                return super.touchDown(event, x, y, pointer, button);
             }
         });
 
@@ -214,10 +207,6 @@ public class ConnectScreen implements Screen {
     public void render(float delta) {
         this.stage.draw();
         this.stage.act(delta);
-    }
-
-    public void update(final float delta){
-        this.pastTime += delta;
     }
 
     @Override

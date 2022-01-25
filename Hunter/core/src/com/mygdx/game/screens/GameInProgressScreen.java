@@ -66,7 +66,7 @@ public class GameInProgressScreen implements Screen {
         this.endMsg.setBounds(0,0,1200,800);
         this.gameState = GameState.RUNNING;
         this.gameEndTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5);
-        this.gameProgressTime = LabelHandler.INSTANCE.createLabel("0", 32, Color.RED);
+        this.gameProgressTime = LabelHandler.INSTANCE.createLabel("0", 24, Color.RED);
         this.blinkCooldown = LabelHandler.INSTANCE.createLabel(null,16,Color.BLACK);
 
         this.survivorsWinLabel = LabelHandler.INSTANCE.createLabel(null, 32, Color.GREEN);
@@ -116,21 +116,15 @@ public class GameInProgressScreen implements Screen {
         seconds = (gameCurrentTime / 1000) % 60;
         this.gameProgressTime.setText("" + minutes + ":" + seconds + "left");
 
+        showBlinkCdTimer();
+
         CapturePointHandler.instance.render(this.batch);
         CapturePointHandler.instance.update(delta);
 
         PlayerHandler.INSTANCE.render(this.batch);
         PlayerHandler.INSTANCE.update(delta);
 
-        float blinkCdSeconds = (PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer).getBlinkCD() - System.currentTimeMillis())/ 1000;
-        float milliseconds = (PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer).getBlinkCD() - System.currentTimeMillis()) % 1000;
-        seconds += milliseconds / 1000;
-        DecimalFormat format = new DecimalFormat("#.##");
-        if(blinkCdSeconds <= 0){
-            blinkCooldown.setText("Blink is ready");
-        }else{
-            blinkCooldown.setText("Blink is ready in " + format.format(seconds) + "seconds");
-        }
+
 
         if(gameCurrentTime > 0){
             if(PlayerHandler.INSTANCE.areAllSurvivorsDead()){
@@ -166,7 +160,7 @@ public class GameInProgressScreen implements Screen {
 
     public void setToDefault() {
         this.root.clear();
-        this.root.add(gameProgressTime);
+        this.root.add(gameProgressTime).top().center();
         this.root.add(blinkCooldown);
     }
 
@@ -186,6 +180,18 @@ public class GameInProgressScreen implements Screen {
                 this.endMsg.add(LabelHandler.INSTANCE.createLabel(endCause,24,Color.RED)).row();
                 this.endMsg.add(restart_button);
                 break;
+        }
+    }
+
+    public void showBlinkCdTimer(){
+        float blinkCdSeconds = (PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer).getBlinkCD() - System.currentTimeMillis())/ 1000;
+        float milliseconds = (PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer).getBlinkCD() - System.currentTimeMillis()) % 1000;
+        blinkCdSeconds += milliseconds / 1000;
+        DecimalFormat format = new DecimalFormat("#.##");
+        if(blinkCdSeconds <= 0){
+            blinkCooldown.setText("Blink is ready");
+        }else{
+            blinkCooldown.setText("Blink is ready in " + format.format(blinkCdSeconds) + "seconds");
         }
     }
 
