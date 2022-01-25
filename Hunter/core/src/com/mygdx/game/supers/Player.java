@@ -41,7 +41,7 @@ public class Player implements Entity {
     private float animationTime;
     private boolean animLock;
 
-    public Player(final String username, final PlayerType playerType) {
+    public Player(final String username) {
         this.position = new Vector2();
         this.serverPosition = new Vector2();
         this.distance = new Vector2();

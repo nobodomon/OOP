@@ -15,7 +15,7 @@ import java.util.LinkedList;
 public class PlayerHandler {
     public static final PlayerHandler INSTANCE = new PlayerHandler();
 
-    private final LinkedList<ServerPlayer> players;
+    private LinkedList<ServerPlayer> players;
 
     public PlayerHandler(){
         this.players = new LinkedList<>();
@@ -74,6 +74,10 @@ public class PlayerHandler {
         playerRemoveEvent.username = serverPlayer.getUsername();
 
         ServerFoundation.instance.getServer().sendToAllTCP(playerRemoveEvent);
+    }
+
+    public void clearPlayers(){
+        this.players = new LinkedList<>();
     }
 
     public LinkedList<ServerPlayer> getPlayers() {

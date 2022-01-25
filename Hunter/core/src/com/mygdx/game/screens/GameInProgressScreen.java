@@ -23,6 +23,7 @@ import com.mygdx.game.handlers.ResourceHandler;
 import com.mygdx.game.supers.GameState;
 import com.mygdx.global.GameRestartEvent;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.TimeUnit;
@@ -46,6 +47,7 @@ public class GameInProgressScreen implements Screen {
     private final Label gameProgressTime;
     private final Label survivorsWinLabel;
     private final Label huntersWinLabel;
+    private final Label blinkCooldown;
 
     private final TextButton restart_button;
     //private final Label endCauseLabel;
@@ -65,6 +67,7 @@ public class GameInProgressScreen implements Screen {
         this.gameState = GameState.RUNNING;
         this.gameEndTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5);
         this.gameProgressTime = LabelHandler.INSTANCE.createLabel("0", 32, Color.RED);
+        this.blinkCooldown = LabelHandler.INSTANCE.createLabel(null,16,Color.BLACK);
 
         this.survivorsWinLabel = LabelHandler.INSTANCE.createLabel(null, 32, Color.GREEN);
         this.huntersWinLabel = LabelHandler.INSTANCE.createLabel(null, 32, Color.RED);
@@ -119,6 +122,16 @@ public class GameInProgressScreen implements Screen {
         PlayerHandler.INSTANCE.render(this.batch);
         PlayerHandler.INSTANCE.update(delta);
 
+        float blinkCdSeconds = (PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer).getBlinkCD() - System.currentTimeMillis())/ 1000;
+        float milliseconds = (PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer).getBlinkCD() - System.currentTimeMillis()) % 1000;
+        seconds += milliseconds / 1000;
+        DecimalFormat format = new DecimalFormat("#.##");
+        if(blinkCdSeconds <= 0){
+            blinkCooldown.setText("Blink is ready");
+        }else{
+            blinkCooldown.setText("Blink is ready in " + format.format(seconds) + "seconds");
+        }
+
         if(gameCurrentTime > 0){
             if(PlayerHandler.INSTANCE.areAllSurvivorsDead()){
                 gameState = GameState.HUNTERSWIN;
@@ -154,6 +167,7 @@ public class GameInProgressScreen implements Screen {
     public void setToDefault() {
         this.root.clear();
         this.root.add(gameProgressTime);
+        this.root.add(blinkCooldown);
     }
 
     public void showEndMsg(GameState state, String endCause){

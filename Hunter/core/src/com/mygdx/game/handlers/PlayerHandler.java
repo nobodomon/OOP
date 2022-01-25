@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.supers.EntityHandler;
+import com.mygdx.game.supers.Hunter;
 import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.PlayerState;
 import com.mygdx.global.CapturePointUpdateEvent;
@@ -24,7 +25,7 @@ public class PlayerHandler implements EntityHandler {
 
     public static final PlayerHandler INSTANCE = new PlayerHandler();
 
-    private final LinkedList<Player> players = new LinkedList<>();
+    private LinkedList<Player> players = new LinkedList<>();
 
     @Override
     public void render(final Batch batch){
@@ -35,7 +36,7 @@ public class PlayerHandler implements EntityHandler {
         for(int i = 0; i < this.players.size(); i++){
             if(Player.getIntByType(this.players.get(i).getPlayerType()) > 2){
                 hunter = this.players.get(i);
-                hunterHitBox = this.players.get(i).getPlayerHitBox();
+                hunterHitBox = hunter.getPlayerHitBox();
                 break;
             }else{
                 hunter = null;
@@ -137,6 +138,10 @@ public class PlayerHandler implements EntityHandler {
         playerUpdateEvent.y = player.getServerPosition().y;
         playerUpdateEvent.state = Player.getIntByState(player.getCurrentState());
         MyGdxGame.getInstance().getClient().sendTCP(playerUpdateEvent);
+    }
+
+    public void clearPlayers(){
+        this.players = new LinkedList<>();
     }
 
     public void addPlayer(final Player player){

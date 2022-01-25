@@ -13,6 +13,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.esotericsoftware.kryonet.Client;
 import com.mygdx.game.handlers.ResourceHandler;
 import com.mygdx.game.supers.PlayerState;
@@ -62,9 +63,9 @@ public class ConnectScreen implements Screen {
         final Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         this.rootGroup = new HorizontalGroup();
         this.inputGroup = new Table();
-        this.ipAddressLabel = new TextField("localhost", skin);
-        this.portLabel = new TextField("6334", skin);
-        this.usernameLabel = new TextField("Username", skin);
+        this.ipAddressLabel = new TextField("", skin);
+        this.portLabel = new TextField("", skin);
+        this.usernameLabel = new TextField("", skin);
         this.horizontalGroup = new HorizontalGroup().expand();
         this.hostButton = new TextButton("Host", skin);
         this.hostButton.addListener(new ClickListener(){
@@ -185,14 +186,18 @@ public class ConnectScreen implements Screen {
 
     public void setToDefault(){
         this.root.clear();
-        this.inputGroup.add(this.ipAddressLabel).width(250).row();
-        this.inputGroup.add(this.portLabel).width(250).padTop(25).row();
-        this.inputGroup.add(this.usernameLabel).width(250).padTop(50).row();
-        this.hostButton.setSize(250,50);
-        this.connectButton.setSize(250,50);
-        this.horizontalGroup.addActor(this.hostButton);
-        this.horizontalGroup.addActor(this.connectButton);
-        this.inputGroup.add(this.horizontalGroup).size(250,50).padTop(100);
+        Label ipAddressLabel = LabelHandler.INSTANCE.createLabel("IP address",24,Color.WHITE);
+        this.inputGroup.add(ipAddressLabel).left().row();
+        this.inputGroup.add(this.ipAddressLabel).fillX().colspan(2).row();
+        Label portLabel = LabelHandler.INSTANCE.createLabel("Port number",24,Color.WHITE);
+        this.inputGroup.add(portLabel).left().row();
+        this.inputGroup.add(this.portLabel).fillX().colspan(2).row();
+        Label usernameLabel = LabelHandler.INSTANCE.createLabel("Username",24,Color.WHITE);
+        this.inputGroup.add(usernameLabel).left().row();
+        this.inputGroup.add(this.usernameLabel).fillX().colspan(2).row();
+        this.inputGroup.add(this.hostButton).size(250,50).padTop(25);
+        this.inputGroup.add(this.connectButton).size(250,50).padTop(25);
+       // this.inputGroup.add(this.horizontalGroup).size(250,50).padTop(100);
 //        this.root.add(this.hostButton).size(250,50).padTop(100).row();
 //        this.root.add(this.connectButton).size(250,50).padTop(25).row();
         this.rootGroup.addActor(inputGroup);

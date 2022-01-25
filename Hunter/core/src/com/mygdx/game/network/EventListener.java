@@ -64,8 +64,7 @@ public class EventListener extends Listener {
                 @Override
                 public void run() {
                     PlayerAddEvent playerAddEvent = (PlayerAddEvent) object;
-
-                    final Player player = new Player(playerAddEvent.username, PlayerType.GHOST_ONE);
+                    final Player player = new Player(playerAddEvent.username);
                     player.getPosition().x = playerAddEvent.x;
                     player.getPosition().y = playerAddEvent.y;
                     player.setHealth(playerAddEvent.health);
