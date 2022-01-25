@@ -1,15 +1,10 @@
 package com.mygdx.game.handlers;
 
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.MyGdxGame;
-import com.mygdx.game.supers.EntityHandler;
-import com.mygdx.game.supers.Hunter;
 import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.PlayerState;
-import com.mygdx.global.CapturePointUpdateEvent;
-import com.mygdx.global.PlayerHPupdateEvent;
 import com.mygdx.global.PlayerHitEvent;
 import com.mygdx.global.PlayerKilledEvent;
 import com.mygdx.global.PlayerReadyEvent;

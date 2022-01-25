@@ -1,4 +1,4 @@
-package com.mygdx.game.supers;
+package com.mygdx.game.handlers;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 

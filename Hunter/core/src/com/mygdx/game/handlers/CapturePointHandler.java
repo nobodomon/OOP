@@ -1,23 +1,13 @@
 package com.mygdx.game.handlers;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.math.Vector2;
-import com.esotericsoftware.kryonet.Connection;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.supers.CapturePoint;
-import com.mygdx.game.supers.EntityHandler;
 import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.PlayerState;
 import com.mygdx.global.CapturePointUpdateEvent;
-import com.mygdx.global.PlayerCapturingEvent;
-import com.mygdx.global.PlayerHitEvent;
-import com.mygdx.global.PlayerUpdateEvent;
-import com.mygdx.server.supers.ServerCapturePoint;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
 
 public class CapturePointHandler implements EntityHandler {
     private double decayDelay = 1200;
