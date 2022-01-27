@@ -35,7 +35,7 @@ public class PlayerUpdateHandler implements Runnable{
             int state = Player.getIntByState(serverPlayer.getServerState());
             playerUpdateEvent.state = state;
             playerUpdateEvent.lastHit = serverPlayer.getLastHit();
-            playerUpdateEvent.blinkCD = serverPlayer.getBlinkCD();
+            playerUpdateEvent.skillCD = serverPlayer.getSkill().getNextAvailableUsage();
             playerUpdateEvent.health = serverPlayer.getHealth();
             playerUpdateEvent.x = serverPlayer.getX();
             playerUpdateEvent.y = serverPlayer.getY();

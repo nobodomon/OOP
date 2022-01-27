@@ -288,8 +288,8 @@ public class LobbyScreen implements Screen {
     }
 
     public void showBlinkCdTimer(){
-        float blinkCdSeconds = (PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer).getBlinkCD() - System.currentTimeMillis())/ 1000;
-        float milliseconds = (PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer).getBlinkCD() - System.currentTimeMillis()) % 1000;
+        float blinkCdSeconds = (PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer).getSkillCD() - System.currentTimeMillis())/ 1000;
+        float milliseconds = (PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer).getSkillCD() - System.currentTimeMillis()) % 1000;
         blinkCdSeconds += milliseconds / 1000;
         DecimalFormat format = new DecimalFormat("#.##");
         if(blinkCdSeconds <= 0){

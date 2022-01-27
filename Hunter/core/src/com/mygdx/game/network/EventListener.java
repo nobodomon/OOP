@@ -106,7 +106,7 @@ public class EventListener extends Listener {
             player.setCurrentState(state);
             player.setHealth(playerUpdateEvent.health);
             player.setLastHit(playerUpdateEvent.lastHit);
-            player.setBlinkCD(playerUpdateEvent.blinkCD);
+            player.setSkillCD(playerUpdateEvent.skillCD);
             player.getServerPosition().set(playerUpdateEvent.x, playerUpdateEvent.y);
         } else if (object instanceof PlayerCharacterChangeEvent) {
             final PlayerCharacterChangeEvent playerCharacterChangeEvent = (PlayerCharacterChangeEvent) object;

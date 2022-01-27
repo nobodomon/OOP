@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.screens.ConnectScreen;
+import com.mygdx.game.supers.Hunter;
 import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.PlayerState;
 import com.mygdx.global.PlayerHitEvent;
@@ -35,10 +36,7 @@ public class PlayerHandler implements EntityHandler {
                 hunterHitBox = hunter.getPlayerHitBox();
                 break;
             }else{
-                hunter = null;
-                hunterHitBox = null;
             }
-
         }
         if(hunter != null && hunterHitBox != null && hunter.getCurrentState() == PlayerState.ATTACKING){
             for(int i = 0; i< this.players.size(); i++){

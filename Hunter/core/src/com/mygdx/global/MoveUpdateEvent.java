@@ -8,7 +8,6 @@ public class MoveUpdateEvent {
     public boolean moveLeft;
     public boolean moveRight;
     public boolean shift;
-    public long lastBlink;
 
     public MoveUpdateEvent(){
 

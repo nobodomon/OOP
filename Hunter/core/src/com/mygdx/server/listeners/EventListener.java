@@ -40,8 +40,6 @@ public class EventListener extends Listener {
             serverPlayer.moveRight = moveUpdateEvent.moveRight;
             serverPlayer.attack = moveUpdateEvent.attack;
             serverPlayer.shift = moveUpdateEvent.shift;
-            serverPlayer.setLastBlink(moveUpdateEvent.lastBlink);
-
 
         } else if (object instanceof PlayerCharacterChangeEvent) {
             final ServerPlayer serverPlayer = PlayerHandler.INSTANCE.getPlayerByConnection(connection);

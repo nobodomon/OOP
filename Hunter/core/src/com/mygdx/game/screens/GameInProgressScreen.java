@@ -184,8 +184,8 @@ public class GameInProgressScreen implements Screen {
     }
 
     public void showBlinkCdTimer(){
-        float blinkCdSeconds = (PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer).getBlinkCD() - System.currentTimeMillis())/ 1000;
-        float milliseconds = (PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer).getBlinkCD() - System.currentTimeMillis()) % 1000;
+        float blinkCdSeconds = (PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer).getSkill().getNextAvailableUsage() - System.currentTimeMillis())/ 1000;
+        float milliseconds = (PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer).getSkill().getNextAvailableUsage() - System.currentTimeMillis()) % 1000;
         blinkCdSeconds += milliseconds / 1000;
         DecimalFormat format = new DecimalFormat("#.##");
         if(blinkCdSeconds <= 0){
@@ -226,29 +226,14 @@ public class GameInProgressScreen implements Screen {
 
     }
 
-    public GameState getGameState() {
-        return gameState;
-    }
-
-    public void setGameState(GameState gameState) {
-        this.gameState = gameState;
-    }
-
     public void resetGame(){
         this.gameState = GameState.RUNNING;
         this.gameEndTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5);
         this.endMsg.clear();
     }
 
-    public String getPlayingPlayer() {
-        return playingPlayer;
-    }
-
     public void setPlayingPlayer(String playingPlayer) {
         this.playingPlayer = playingPlayer;
     }
 
-    public void setGameEndTime(long gameEndTime) {
-        this.gameEndTime = gameEndTime;
-    }
 }

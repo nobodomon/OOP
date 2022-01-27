@@ -20,26 +20,29 @@ public class Player implements Entity {
     private final Vector2 position;
     private final Vector2 serverPosition;
     private final Vector2 distance;
-    private PlayerState currentState;
-    private PlayerState lockedState;
     private PlayerType playerType;
     private boolean lookingLeft;
 
+    private boolean alive;
+
     private final String username;
     private double health;
-    private boolean alive;
     private boolean ready;
     private long lastHit;
-    private long blinkCD;
+    private long skillCD;
+
+    private Skill skill;
+
+    private Animation<TextureAtlas.AtlasRegion> generalFrame;
+    private PlayerState currentState;
+    private PlayerState lockedState;
+    private float animationTime;
+    private boolean animLock;
     private final GlyphLayout layout;
     private final BitmapFont font;
 
-    private Animation<TextureAtlas.AtlasRegion> generalFrame;
-
     private Rectangle playerHitBox;
 
-    private float animationTime;
-    private boolean animLock;
 
     public Player(final String username) {
         this.position = new Vector2();
@@ -47,13 +50,12 @@ public class Player implements Entity {
         this.distance = new Vector2();
 
         this.lastHit = 0;
-        this.blinkCD = 0;
+        this.skillCD = 0;
         this.lookingLeft = false;
         this.username = username;
         this.playerType = PlayerType.GHOST_ONE;
         this.currentState = PlayerState.IDLE;
         this.health = 25;
-
         this.alive = true;
         this.ready = false;
         this.playerHitBox = new Rectangle();
@@ -120,11 +122,9 @@ public class Player implements Entity {
             if (!animLock) {
                 if (currentState == PlayerState.MOVING_LEFT) {
                     this.lockedState = PlayerState.MOVING_LEFT;
-                    lookingDirection = PlayerState.MOVING_LEFT;
                     lookingLeft = true;
                 } else if (currentState == PlayerState.MOVING_RIGHT) {
                     this.lockedState = PlayerState.MOVING_RIGHT;
-                    lookingDirection = PlayerState.MOVING_RIGHT;
                     lookingLeft = false;
                 }
                 if (currentState == PlayerState.MOVING_UP) {
@@ -138,7 +138,6 @@ public class Player implements Entity {
                     animLock = true;
                 } else {
                     animLock = false;
-                    lockedState = lookingDirection;
                 }
             }
         } else if (currentState == PlayerState.IDLE) {
@@ -480,6 +479,9 @@ public class Player implements Entity {
         }
     }
 
+    public void skillUsed(){
+    }
+
     public PlayerType getPlayerType() {
         return playerType;
     }
@@ -534,11 +536,19 @@ public class Player implements Entity {
         return playerHitBox;
     }
 
-    public long getBlinkCD() {
-        return blinkCD;
+    public long getSkillCD() {
+        return skillCD;
     }
 
-    public void setBlinkCD(long blinkCD) {
-        this.blinkCD = blinkCD;
+    public void setSkillCD(long blinkCD) {
+        this.skillCD = blinkCD;
+    }
+
+    public Skill getSkill() {
+        return skill;
+    }
+
+    public void setSkill(Skill skill) {
+        this.skill = skill;
     }
 }

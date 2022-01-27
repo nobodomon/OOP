@@ -11,7 +11,7 @@ public class PlayerUpdateEvent {
     public int state;
     public double health;
     public long lastHit;
-    public long blinkCD;
+    public long skillCD;
 
     public PlayerUpdateEvent(){
 

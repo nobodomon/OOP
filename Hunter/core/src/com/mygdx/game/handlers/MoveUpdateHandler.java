@@ -84,9 +84,6 @@ public class MoveUpdateHandler implements Runnable {
             moveUpdateEvent.moveRight = this.moveRight;
             moveUpdateEvent.attack = this.attack;
             moveUpdateEvent.shift = this.shift;
-            if (this.shift == true) {
-                moveUpdateEvent.lastBlink = System.currentTimeMillis();
-            }
             MyGdxGame.getInstance().getClient().sendTCP(moveUpdateEvent);
         } else {
         }

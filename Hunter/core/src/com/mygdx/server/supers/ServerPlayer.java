@@ -1,20 +1,23 @@
 package com.mygdx.server.supers;
 
 import com.esotericsoftware.kryonet.Connection;
+import com.mygdx.game.supers.skills.DashSkill;
 import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.PlayerState;
 import com.mygdx.game.supers.PlayerType;
-
-import java.util.concurrent.TimeUnit;
+import com.mygdx.game.supers.Skill;
+import com.mygdx.game.supers.Skills;
+import com.mygdx.game.supers.skills.SpeedBoostSkill;
 
 public class ServerPlayer {
 
     private final String username;
     private double health;
     private long lastHit;
-    private long lastBlink;
-    private long blinkCD;
+
     private final Connection connection;
+
+    private Skill skill;
 
     private PlayerType playerType;
     private PlayerState serverState;
@@ -31,7 +34,6 @@ public class ServerPlayer {
     public boolean shift;
 
     private float speed;
-    private float blinkSpeed;
 
     private float x;
     private float y;
@@ -40,17 +42,20 @@ public class ServerPlayer {
         this.username = username;
         this.connection = connection;
 
+        //this.skill = new SpeedBoostSkill(Skills.SPEEDBOOST, 5, 10, this);
         this.ready = false;
         this.playerType = PlayerType.GHOST_ONE;
         this.health = 25.0;
-        this.speed = 5.0F;
-        this.blinkSpeed = this.speed * 50;
-        this.blinkCD = 0;
-        this.lastBlink = 0;
+        this.speed = 4.5F;
+        this.skill = new SpeedBoostSkill(Skills.SPEEDBOOST, 15, 2, this);
+        //this.skill = new DashSkill(Skills.DASH,5,1,this);
     }
 
 
     public void update() {
+        if(System.currentTimeMillis() > skill.getSkillEndDuration()){
+            skill.revertSkill();
+        }
         if (health > 0.0) {
             if (this.attack || this.hit || this.moveLeft || this.moveRight || this.moveUp || this.moveDown || this.shift) {
                 if (this.attack) {
@@ -58,94 +63,44 @@ public class ServerPlayer {
                 } else if (this.hit) {
                     this.serverState = PlayerState.HIT;
                     this.hit = false;
-                } else if (this.moveLeft || this.moveRight || this.moveUp || this.moveDown || this.shift) {
-                    if (this.shift && (lastBlink > blinkCD)) {
-                        if (this.moveLeft) {
+                } else if (this.shift && (this.moveLeft || this.moveRight || this.moveUp || this.moveDown || this.shift)) {
+                    skill.useSkill();
+                } else {
+                    if (this.moveLeft) {
 
-                            if (lastBlink > blinkCD) {
-                                if (this.x - blinkSpeed < 0) {
-                                    this.x = 0;
-                                } else {
-                                    this.x -= blinkSpeed;
-                                }
-                                this.blinkCD = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(5);
-                            }
-                            this.serverState = PlayerState.MOVING_LEFT;
-                        } else if (this.moveRight) {
+                        if (this.x - this.speed < 0) {
 
-                            if (lastBlink > blinkCD) {
-                                if (this.x + blinkSpeed > 1150) {
-                                    this.x = 1150;
-                                } else {
-                                    this.x += blinkSpeed;
-                                }
-                                this.blinkCD = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(5);
-                            }
-                            this.serverState = PlayerState.MOVING_RIGHT;
+                        } else {
+                            this.x -= this.speed;
                         }
-                        if (this.moveUp) {
-                            if (lastBlink > blinkCD) {
-                                if (this.y + blinkSpeed > 720) {
-                                    this.y = 720;
-                                } else {
-                                    this.y += blinkSpeed;
-                                }
-                                this.blinkCD = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(5);
-                            }
+                        this.serverState = PlayerState.MOVING_LEFT;
+                    } else if (this.moveRight) {
+                        if (this.x + this.speed > 1150) {
 
-                            this.serverState = PlayerState.MOVING_UP;
-                        } else if (this.moveDown) {
-
-                            if (lastBlink > blinkCD) {
-                                if (this.y - blinkSpeed < 0) {
-                                    this.y = 0;
-                                } else {
-                                    this.y -= blinkSpeed;
-                                }
-                                this.blinkCD = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(5);
-                            }
-
-                            this.serverState = PlayerState.MOVING_UP;
+                        } else {
+                            this.x += this.speed;
                         }
-                    } else {
-                        if (this.moveLeft) {
-
-                            if (this.x - this.speed < 0) {
-
-                            } else {
-                                this.x -= this.speed;
-                            }
-                            this.serverState = PlayerState.MOVING_LEFT;
-                        } else if (this.moveRight) {
-                            if (this.x + this.speed > 1150) {
-
-                            } else {
-                                this.x += this.speed;
-                            }
-                            this.serverState = PlayerState.MOVING_RIGHT;
-                        }
-
-                        if (this.moveUp) {
-                            if (this.y + this.speed > 720) {
-                                this.y = 720;
-                            } else {
-                                this.y += this.speed;
-                            }
-                            this.serverState = PlayerState.MOVING_UP;
-                        } else if (this.moveDown) {
-                            if (this.y - this.speed < 0) {
-                                this.y = 0;
-                            } else {
-                                this.y -= this.speed;
-                            }
-                            this.serverState = PlayerState.MOVING_DOWN;
-                        }
+                        this.serverState = PlayerState.MOVING_RIGHT;
                     }
 
-
-                } else {
-                    this.serverState = PlayerState.IDLE;
+                    if (this.moveUp) {
+                        if (this.y + this.speed > 720) {
+                            this.y = 720;
+                        } else {
+                            this.y += this.speed;
+                        }
+                        this.serverState = PlayerState.MOVING_UP;
+                    } else if (this.moveDown) {
+                        if (this.y - this.speed < 0) {
+                            this.y = 0;
+                        } else {
+                            this.y -= this.speed;
+                        }
+                        this.serverState = PlayerState.MOVING_DOWN;
+                    }
                 }
+
+
             } else {
                 this.serverState = PlayerState.IDLE;
             }
@@ -153,6 +108,7 @@ public class ServerPlayer {
             this.serverState = PlayerState.DEAD;
         }
     }
+
 
     public void setX(float x) {
         this.x = x;
@@ -202,9 +158,9 @@ public class ServerPlayer {
 
         this.playerType = playerType;
         if (Player.getIntByType(this.playerType) > 2) {
-            this.speed = 3.5F;
+            this.speed = 4.5F;
         } else {
-            this.speed = 5F;
+            this.speed = 4F;
         }
     }
 
@@ -224,15 +180,19 @@ public class ServerPlayer {
         this.lastHit = lastHit;
     }
 
-    public long getLastBlink() {
-        return lastBlink;
+    public float getSpeed() {
+        return speed;
     }
 
-    public void setLastBlink(long lastBlink) {
-        this.lastBlink = lastBlink;
+    public void setSpeed(float speed) {
+        this.speed = speed;
     }
 
-    public long getBlinkCD() {
-        return blinkCD;
+    public Skill getSkill() {
+        return skill;
+    }
+
+    public void setSkill(Skill skill) {
+        this.skill = skill;
     }
 }
