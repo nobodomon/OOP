@@ -17,7 +17,7 @@ public class SpeedBoostSkill extends Skill {
     public void useSkill() {
         super.useSkill();
         if(System.currentTimeMillis() > getNextAvailableUsage()){
-            skillUser.setSpeed(skillUser.getSpeed() * 2);
+            skillUser.setSpeed(skillUser.getSpeed() * 2.5f);
             setSkillEndDuration(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(getSkillDuration()));
             setNextAvailableUsage(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(getSkillDuration()) +TimeUnit.SECONDS.toMillis(getSkillCooldown()));
         }

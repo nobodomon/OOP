@@ -42,13 +42,11 @@ public class ServerPlayer {
         this.username = username;
         this.connection = connection;
 
-        //this.skill = new SpeedBoostSkill(Skills.SPEEDBOOST, 5, 10, this);
         this.ready = false;
         this.playerType = PlayerType.GHOST_ONE;
         this.health = 25.0;
         this.speed = 4.5F;
-        this.skill = new SpeedBoostSkill(Skills.SPEEDBOOST, 15, 2, this);
-        //this.skill = new DashSkill(Skills.DASH,5,1,this);
+        this.skill = new SpeedBoostSkill(Skills.SPEEDBOOST, 15,2,this);
     }
 
 
@@ -155,12 +153,20 @@ public class ServerPlayer {
     }
 
     public void setPlayerType(PlayerType playerType) {
-
         this.playerType = playerType;
-        if (Player.getIntByType(this.playerType) > 2) {
-            this.speed = 4.5F;
-        } else {
-            this.speed = 4F;
+        switch (playerType){
+            case GHOST_ONE:
+            case GHOST_THREE:
+            case GHOST_TWO:
+                this.speed = 4F;
+                this.skill = new SpeedBoostSkill(Skills.SPEEDBOOST, 15, 2, this);
+                break;
+            case MINOTAUR_ONE:
+            case MINOTAUR_TWO:
+            case MINOTAUR_THREE:
+                this.speed = 4.5F;
+                this.skill = new DashSkill(Skills.DASH,5,1,this);
+                break;
         }
     }
 

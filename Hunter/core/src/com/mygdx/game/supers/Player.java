@@ -31,7 +31,7 @@ public class Player implements Entity {
     private long lastHit;
     private long skillCD;
 
-    private Skill skill;
+    private Skills skillName;
 
     private Animation<TextureAtlas.AtlasRegion> generalFrame;
     private PlayerState currentState;
@@ -50,6 +50,7 @@ public class Player implements Entity {
         this.distance = new Vector2();
 
         this.lastHit = 0;
+        this.skillName = Skills.DASH;
         this.skillCD = 0;
         this.lookingLeft = false;
         this.username = username;
@@ -544,11 +545,11 @@ public class Player implements Entity {
         this.skillCD = blinkCD;
     }
 
-    public Skill getSkill() {
-        return skill;
+    public Skills getSkill() {
+        return skillName;
     }
 
-    public void setSkill(Skill skill) {
-        this.skill = skill;
+    public void setSkill(Skills skill) {
+        this.skillName = skill;
     }
 }

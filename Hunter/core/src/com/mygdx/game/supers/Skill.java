@@ -40,25 +40,13 @@ public class Skill {
 
     }
 
-
-    public void setSkillName(Skills skillName) {
-        this.skillName = skillName;
-    }
-
     public int getSkillCooldown() {
         return skillCooldown;
     }
 
-    public void setSkillCooldown(int skillCooldown) {
-        this.skillCooldown = skillCooldown;
-    }
 
     public int getSkillDuration() {
         return skillDuration;
-    }
-
-    public void setSkillDuration(int skillDuration) {
-        this.skillDuration = skillDuration;
     }
 
     public long getSkillEndDuration() {
