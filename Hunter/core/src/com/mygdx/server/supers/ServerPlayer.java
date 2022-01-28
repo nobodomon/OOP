@@ -1,6 +1,7 @@
 package com.mygdx.server.supers;
 
 import com.esotericsoftware.kryonet.Connection;
+import com.mygdx.game.supers.skills.BlinkToPoint;
 import com.mygdx.game.supers.skills.DashSkill;
 import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.PlayerState;
@@ -46,7 +47,7 @@ public class ServerPlayer {
         this.playerType = PlayerType.GHOST_ONE;
         this.health = 25.0;
         this.speed = 4.5F;
-        this.skill = new SpeedBoostSkill(Skills.SPEEDBOOST, 15,2,this);
+        this.skill = new DashSkill(Skills.DASH, 5,1,this);
     }
 
 
@@ -167,6 +168,8 @@ public class ServerPlayer {
                 this.speed = 4.5F;
                 this.skill = new DashSkill(Skills.DASH,5,1,this);
                 break;
+            default:
+                this.skill =  new DashSkill(Skills.DASH,5,1,this);
         }
     }
 

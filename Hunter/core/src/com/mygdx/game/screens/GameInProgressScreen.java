@@ -21,6 +21,7 @@ import com.mygdx.game.handlers.MoveUpdateHandler;
 import com.mygdx.game.handlers.PlayerHandler;
 import com.mygdx.game.handlers.ResourceHandler;
 import com.mygdx.game.supers.GameState;
+import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.Skills;
 import com.mygdx.global.GameRestartEvent;
 import com.mygdx.server.supers.ServerPlayer;
@@ -186,16 +187,15 @@ public class GameInProgressScreen implements Screen {
     }
 
     public void showBlinkCdTimer(){
-        ServerPlayer serverPlayer = com.mygdx.server.handlers.PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer);
-        float blinkCdSeconds = (serverPlayer.getSkill().getNextAvailableUsage() - System.currentTimeMillis())/ 1000;
-        float milliseconds = (serverPlayer.getSkill().getNextAvailableUsage() - System.currentTimeMillis()) % 1000;
-        Skills skillName = serverPlayer.getSkill().getSkillName();
+        Player player = PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer);
+        float blinkCdSeconds = (player.getSkillCD() - System.currentTimeMillis())/ 1000;
+        float milliseconds = (player.getSkillCD() - System.currentTimeMillis()) % 1000;
         blinkCdSeconds += milliseconds / 1000;
         DecimalFormat format = new DecimalFormat("#.##");
         if(blinkCdSeconds <= 0){
-            blinkCooldown.setText(skillName.toString() + " is ready");
+            blinkCooldown.setText("Skill is ready");
         }else{
-            blinkCooldown.setText(skillName.toString() + " is ready in " + format.format(blinkCdSeconds) + "seconds");
+            blinkCooldown.setText("Skill is ready in " + format.format(blinkCdSeconds) + "seconds");
         }
     }
 
