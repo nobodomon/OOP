@@ -9,8 +9,12 @@ public class PlayerUpdateEvent {
     public float x;
     public float y;
     public int state;
+
+    public int status;
     public double health;
     public long lastHit;
+
+    public String skillname;
     public long skillCD;
 
     public PlayerUpdateEvent(){

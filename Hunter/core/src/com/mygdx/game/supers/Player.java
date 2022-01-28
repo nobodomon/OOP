@@ -29,11 +29,12 @@ public class Player implements Entity {
     private double health;
     private boolean ready;
     private long lastHit;
-    private long skillCD;
 
-    private Skills skillName;
+    private long skillCD;
+    private String skillName;
 
     private Animation<TextureAtlas.AtlasRegion> generalFrame;
+    private PlayerStatus status;
     private PlayerState currentState;
     private PlayerState lockedState;
     private float animationTime;
@@ -50,12 +51,12 @@ public class Player implements Entity {
         this.distance = new Vector2();
 
         this.lastHit = 0;
-        this.skillName = Skills.DASH;
         this.skillCD = 0;
         this.lookingLeft = false;
         this.username = username;
         this.playerType = PlayerType.GHOST_ONE;
         this.currentState = PlayerState.IDLE;
+        this.status = PlayerStatus.NONE;
         this.health = 25;
         this.alive = true;
         this.ready = false;
@@ -218,6 +219,28 @@ public class Player implements Entity {
 
     public PlayerState getCurrentState() {
         return currentState;
+    }
+
+    public static PlayerStatus getStatusByInt(int i){
+        switch (i) {
+            case 0:
+                return PlayerStatus.NONE;
+            case 1:
+                return PlayerStatus.STUNNED;
+            default:
+                return PlayerStatus.NONE;
+        }
+    }
+
+    public static int getIntByStatus(PlayerStatus status){
+        switch(status){
+            case NONE:
+                return 0;
+            case STUNNED:
+                return 1;
+            default:
+                return 0;
+        }
     }
 
     public static PlayerState getStateByInt(int i) {
@@ -545,11 +568,19 @@ public class Player implements Entity {
         this.skillCD = blinkCD;
     }
 
-    public Skills getSkill() {
+    public String getSkill() {
         return skillName;
     }
 
-    public void setSkill(Skills skill) {
+    public void setSkill(String skill) {
         this.skillName = skill;
+    }
+
+    public PlayerStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PlayerStatus status) {
+        this.status = status;
     }
 }

@@ -1,6 +1,7 @@
 package com.mygdx.server.supers;
 
 import com.esotericsoftware.kryonet.Connection;
+import com.mygdx.game.supers.PlayerStatus;
 import com.mygdx.game.supers.skills.BlinkToPoint;
 import com.mygdx.game.supers.skills.DashSkill;
 import com.mygdx.game.supers.Player;
@@ -8,6 +9,7 @@ import com.mygdx.game.supers.PlayerState;
 import com.mygdx.game.supers.PlayerType;
 import com.mygdx.game.supers.Skill;
 import com.mygdx.game.supers.Skills;
+import com.mygdx.game.supers.skills.MassStun;
 import com.mygdx.game.supers.skills.SpeedBoostSkill;
 
 public class ServerPlayer {
@@ -22,6 +24,7 @@ public class ServerPlayer {
 
     private PlayerType playerType;
     private PlayerState serverState;
+    private PlayerStatus status;
     private boolean ready;
 
     public boolean attack;
@@ -42,7 +45,7 @@ public class ServerPlayer {
     public ServerPlayer(String username, Connection connection) {
         this.username = username;
         this.connection = connection;
-
+        this.status = PlayerStatus.NONE;
         this.ready = false;
         this.playerType = PlayerType.GHOST_ONE;
         this.health = 25.0;
@@ -56,54 +59,58 @@ public class ServerPlayer {
             skill.revertSkill();
         }
         if (health > 0.0) {
-            if (this.attack || this.hit || this.moveLeft || this.moveRight || this.moveUp || this.moveDown || this.shift) {
-                if (this.attack) {
-                    this.serverState = PlayerState.ATTACKING;
-                } else if (this.hit) {
-                    this.serverState = PlayerState.HIT;
-                    this.hit = false;
-                } else if (this.shift && (this.moveLeft || this.moveRight || this.moveUp || this.moveDown || this.shift)) {
-                    skill.useSkill();
+            if(status != PlayerStatus.STUNNED){
+                if (this.attack || this.hit || this.moveLeft || this.moveRight || this.moveUp || this.moveDown || this.shift) {
+                    if (this.attack) {
+                        this.serverState = PlayerState.ATTACKING;
+                    } else if (this.hit) {
+                        this.serverState = PlayerState.HIT;
+                        this.hit = false;
+                    } else if (this.shift && (this.moveLeft || this.moveRight || this.moveUp || this.moveDown || this.shift)) {
+                        skill.useSkill();
+                    } else {
+                        if (this.moveLeft) {
+
+                            if (this.x - this.speed < 0) {
+
+                            } else {
+                                this.x -= this.speed;
+                            }
+                            this.serverState = PlayerState.MOVING_LEFT;
+                        } else if (this.moveRight) {
+                            if (this.x + this.speed > 1150) {
+
+                            } else {
+                                this.x += this.speed;
+                            }
+                            this.serverState = PlayerState.MOVING_RIGHT;
+                        }
+
+                        if (this.moveUp) {
+                            if (this.y + this.speed > 720) {
+                                this.y = 720;
+                            } else {
+                                this.y += this.speed;
+                            }
+                            this.serverState = PlayerState.MOVING_UP;
+                        } else if (this.moveDown) {
+                            if (this.y - this.speed < 0) {
+                                this.y = 0;
+                            } else {
+                                this.y -= this.speed;
+                            }
+                            this.serverState = PlayerState.MOVING_DOWN;
+                        }
+                    }
+
+
                 } else {
-                    if (this.moveLeft) {
-
-                        if (this.x - this.speed < 0) {
-
-                        } else {
-                            this.x -= this.speed;
-                        }
-                        this.serverState = PlayerState.MOVING_LEFT;
-                    } else if (this.moveRight) {
-                        if (this.x + this.speed > 1150) {
-
-                        } else {
-                            this.x += this.speed;
-                        }
-                        this.serverState = PlayerState.MOVING_RIGHT;
-                    }
-
-                    if (this.moveUp) {
-                        if (this.y + this.speed > 720) {
-                            this.y = 720;
-                        } else {
-                            this.y += this.speed;
-                        }
-                        this.serverState = PlayerState.MOVING_UP;
-                    } else if (this.moveDown) {
-                        if (this.y - this.speed < 0) {
-                            this.y = 0;
-                        } else {
-                            this.y -= this.speed;
-                        }
-                        this.serverState = PlayerState.MOVING_DOWN;
-                    }
+                    this.serverState = PlayerState.IDLE;
                 }
-
-
             } else {
-                this.serverState = PlayerState.IDLE;
+                this.serverState = PlayerState.HIT;
             }
-        } else {
+        }else{
             this.serverState = PlayerState.DEAD;
         }
     }
@@ -157,18 +164,30 @@ public class ServerPlayer {
         this.playerType = playerType;
         switch (playerType){
             case GHOST_ONE:
+                this.speed = 4F;
+                this.status = PlayerStatus.NONE;
+                this.skill = new BlinkToPoint(Skills.BLINKTOPOINT, 15, 2, this);
+                break;
             case GHOST_THREE:
             case GHOST_TWO:
                 this.speed = 4F;
+                this.status = PlayerStatus.NONE;
                 this.skill = new SpeedBoostSkill(Skills.SPEEDBOOST, 15, 2, this);
                 break;
             case MINOTAUR_ONE:
+                this.speed = 4.5F;
+                this.status = PlayerStatus.NONE;
+                this.skill = new MassStun(Skills.MASSSTUN, 30, 5, this);
+                break;
             case MINOTAUR_TWO:
             case MINOTAUR_THREE:
                 this.speed = 4.5F;
+                this.status = PlayerStatus.NONE;
                 this.skill = new DashSkill(Skills.DASH,5,1,this);
                 break;
             default:
+                this.speed = 4F;
+                this.status = PlayerStatus.NONE;
                 this.skill =  new DashSkill(Skills.DASH,5,1,this);
         }
     }
@@ -203,5 +222,13 @@ public class ServerPlayer {
 
     public void setSkill(Skill skill) {
         this.skill = skill;
+    }
+
+    public PlayerStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PlayerStatus status) {
+        this.status = status;
     }
 }

@@ -10,6 +10,7 @@ import com.mygdx.game.screens.GameInProgressScreen;
 import com.mygdx.game.screens.LobbyScreen;
 import com.mygdx.game.supers.CapturePoint;
 import com.mygdx.game.supers.PlayerState;
+import com.mygdx.game.supers.PlayerStatus;
 import com.mygdx.game.supers.PlayerType;
 import com.mygdx.global.CapturePointCreateEvent;
 import com.mygdx.global.CapturePointDeleteEvent;
@@ -104,9 +105,12 @@ public class EventListener extends Listener {
 
             PlayerState state = Player.getStateByInt(playerUpdateEvent.state);
             player.setCurrentState(state);
+            PlayerStatus status = Player.getStatusByInt(playerUpdateEvent.status);
+            player.setStatus(status);
             player.setHealth(playerUpdateEvent.health);
             player.setLastHit(playerUpdateEvent.lastHit);
             player.setSkillCD(playerUpdateEvent.skillCD);
+            player.setSkill(playerUpdateEvent.skillname);
             player.getServerPosition().set(playerUpdateEvent.x, playerUpdateEvent.y);
         } else if (object instanceof PlayerCharacterChangeEvent) {
             final PlayerCharacterChangeEvent playerCharacterChangeEvent = (PlayerCharacterChangeEvent) object;

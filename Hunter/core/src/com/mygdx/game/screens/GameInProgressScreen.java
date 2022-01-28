@@ -193,9 +193,9 @@ public class GameInProgressScreen implements Screen {
         blinkCdSeconds += milliseconds / 1000;
         DecimalFormat format = new DecimalFormat("#.##");
         if(blinkCdSeconds <= 0){
-            blinkCooldown.setText("Skill is ready");
+            blinkCooldown.setText(player.getSkill() + " is ready");
         }else{
-            blinkCooldown.setText("Skill is ready in " + format.format(blinkCdSeconds) + "seconds");
+            blinkCooldown.setText(player.getSkill() + " is ready in " + format.format(blinkCdSeconds) + "seconds");
         }
     }
 
