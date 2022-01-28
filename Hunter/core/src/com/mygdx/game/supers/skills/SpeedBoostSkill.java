@@ -11,6 +11,14 @@ public class SpeedBoostSkill extends Skill {
     public SpeedBoostSkill(Skills skillName, int skillCooldown, int skillDuration, ServerPlayer skillUser) {
         super(skillName, skillCooldown, skillDuration, skillUser);
         this.prevSpeed = skillUser.getSpeed();
+
+        setSkillDescription("Grants the player a speed boost of 2.5x for " + skillDuration + " seconds.");
+    }
+
+    public SpeedBoostSkill(ServerPlayer skillUser){
+        super(Skills.SPEEDBOOST,15,3, skillUser);
+        this.prevSpeed = skillUser.getSpeed();
+        setSkillDescription("Grants the player a speed boost of 2.5x for " + 3 + " seconds.");
     }
 
     @Override

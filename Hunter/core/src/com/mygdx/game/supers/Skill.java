@@ -6,6 +6,7 @@ public class Skill {
     private Skills skillName;
     private int skillCooldown;
     private int skillDuration;
+    private String skillDescription;
     public ServerPlayer skillUser;
 
     public long getNextAvailableUsage() {
@@ -55,5 +56,13 @@ public class Skill {
 
     public void setSkillEndDuration(long skillEndDuration) {
         this.skillEndDuration = skillEndDuration;
+    }
+
+    public String getSkillDescription() {
+        return skillDescription;
+    }
+
+    public void setSkillDescription(String skillDescription) {
+        this.skillDescription = skillDescription;
     }
 }

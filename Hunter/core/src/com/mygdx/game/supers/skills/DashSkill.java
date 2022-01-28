@@ -11,6 +11,12 @@ public class DashSkill extends Skill {
 
     public DashSkill(Skills skillName, int skillCooldown, int skillDuration, ServerPlayer skillUser) {
         super(skillName, skillCooldown, skillDuration, skillUser);
+        setSkillDescription("Allows the player to dash towards a direction.");
+    }
+
+    public DashSkill(ServerPlayer skillUser){
+        super(Skills.DASH,5,1, skillUser);
+        setSkillDescription("Allows the player to dash towards a direction.");
     }
 
     @Override

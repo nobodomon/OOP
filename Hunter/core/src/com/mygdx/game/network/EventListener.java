@@ -111,6 +111,7 @@ public class EventListener extends Listener {
             player.setLastHit(playerUpdateEvent.lastHit);
             player.setSkillCD(playerUpdateEvent.skillCD);
             player.setSkill(playerUpdateEvent.skillname);
+            player.setSkillDescription(playerUpdateEvent.skillDescription);
             player.getServerPosition().set(playerUpdateEvent.x, playerUpdateEvent.y);
         } else if (object instanceof PlayerCharacterChangeEvent) {
             final PlayerCharacterChangeEvent playerCharacterChangeEvent = (PlayerCharacterChangeEvent) object;

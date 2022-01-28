@@ -11,6 +11,11 @@ import java.util.concurrent.TimeUnit;
 public class BlinkToPoint extends Skill {
     public BlinkToPoint(Skills skillName, int skillCooldown, int skillDuration, ServerPlayer serverPlayer) {
         super(skillName, skillCooldown, skillDuration, serverPlayer);
+        setSkillDescription("Allows the player to blink to the nearest capture point.");
+    }
+    public BlinkToPoint(ServerPlayer skillUser){
+        super(Skills.BLINKTOPOINT,15,1, skillUser);
+        setSkillDescription("Allows the player to blink to the nearest capture point.");
     }
 
     @Override

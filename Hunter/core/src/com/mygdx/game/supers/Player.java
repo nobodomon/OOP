@@ -32,6 +32,7 @@ public class Player implements Entity {
 
     private long skillCD;
     private String skillName;
+    private String skillDescription;
 
     private Animation<TextureAtlas.AtlasRegion> generalFrame;
     private PlayerStatus status;
@@ -582,5 +583,13 @@ public class Player implements Entity {
 
     public void setStatus(PlayerStatus status) {
         this.status = status;
+    }
+
+    public String getSkillDescription() {
+        return skillDescription;
+    }
+
+    public void setSkillDescription(String skillDescription) {
+        this.skillDescription = skillDescription;
     }
 }

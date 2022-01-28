@@ -13,6 +13,12 @@ import java.util.concurrent.TimeUnit;
 public class MassStun extends Skill {
     public MassStun(Skills skillName, int skillCooldown, int skillDuration, ServerPlayer serverPlayer) {
         super(skillName, skillCooldown, skillDuration, serverPlayer);
+        setSkillDescription("Hunter only skill that stuns all ghosts for " + skillDuration + " seconds.");
+    }
+
+    public MassStun(ServerPlayer skillUser){
+        super(Skills.MASSSTUN,30,3, skillUser);
+        setSkillDescription("Hunter only skill that stuns all ghosts for " + 3 + " seconds.");
     }
 
     @Override

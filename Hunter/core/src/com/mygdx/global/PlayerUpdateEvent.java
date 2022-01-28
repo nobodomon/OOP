@@ -15,6 +15,7 @@ public class PlayerUpdateEvent {
     public long lastHit;
 
     public String skillname;
+    public String skillDescription;
     public long skillCD;
 
     public PlayerUpdateEvent(){

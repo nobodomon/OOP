@@ -50,7 +50,7 @@ public class ServerPlayer {
         this.playerType = PlayerType.GHOST_ONE;
         this.health = 25.0;
         this.speed = 4.5F;
-        this.skill = new DashSkill(Skills.DASH, 5,1,this);
+        this.skill = new DashSkill(this);
     }
 
 
@@ -166,29 +166,29 @@ public class ServerPlayer {
             case GHOST_ONE:
                 this.speed = 4F;
                 this.status = PlayerStatus.NONE;
-                this.skill = new BlinkToPoint(Skills.BLINKTOPOINT, 15, 2, this);
+                this.skill = new BlinkToPoint(this);
                 break;
             case GHOST_THREE:
             case GHOST_TWO:
                 this.speed = 4F;
                 this.status = PlayerStatus.NONE;
-                this.skill = new SpeedBoostSkill(Skills.SPEEDBOOST, 15, 2, this);
+                this.skill = new SpeedBoostSkill(this);
                 break;
             case MINOTAUR_ONE:
                 this.speed = 4.5F;
                 this.status = PlayerStatus.NONE;
-                this.skill = new MassStun(Skills.MASSSTUN, 30, 5, this);
+                this.skill = new MassStun(this);
                 break;
             case MINOTAUR_TWO:
             case MINOTAUR_THREE:
                 this.speed = 4.5F;
                 this.status = PlayerStatus.NONE;
-                this.skill = new DashSkill(Skills.DASH,5,1,this);
+                this.skill = new DashSkill(this);
                 break;
             default:
                 this.speed = 4F;
                 this.status = PlayerStatus.NONE;
-                this.skill =  new DashSkill(Skills.DASH,5,1,this);
+                this.skill =  new DashSkill(this);
         }
     }
 
