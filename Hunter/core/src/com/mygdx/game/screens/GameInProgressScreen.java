@@ -7,12 +7,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Null;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.handlers.CapturePointHandler;
@@ -22,6 +24,7 @@ import com.mygdx.game.handlers.PlayerHandler;
 import com.mygdx.game.handlers.ResourceHandler;
 import com.mygdx.game.supers.GameState;
 import com.mygdx.game.supers.Player;
+import com.mygdx.game.supers.Skill;
 import com.mygdx.game.supers.Skills;
 import com.mygdx.global.GameRestartEvent;
 import com.mygdx.server.supers.ServerPlayer;
@@ -42,6 +45,7 @@ public class GameInProgressScreen implements Screen {
     private final Stage stage;
     private final Table root;
     private final Table endMsg;
+    private final Table skillBar;
     private final Stack rootStack;
     private GameState gameState;
     private long gameEndTime;
@@ -51,6 +55,8 @@ public class GameInProgressScreen implements Screen {
     private final Label survivorsWinLabel;
     private final Label huntersWinLabel;
     private final Label blinkCooldown;
+
+    private Texture skillIcon;
 
     private final TextButton restart_button;
     //private final Label endCauseLabel;
@@ -67,6 +73,8 @@ public class GameInProgressScreen implements Screen {
         this.root.setBounds(0, 0, 1200, 800);
         this.endMsg = new Table().center();
         this.endMsg.setBounds(0,0,1200,800);
+        this.skillBar = new Table().right().bottom();
+        this.skillBar.setBounds(0,0,1200,800);
         this.gameState = GameState.RUNNING;
         this.gameEndTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5);
         this.gameProgressTime = LabelHandler.INSTANCE.createLabel("0", 24, Color.RED);
@@ -74,6 +82,8 @@ public class GameInProgressScreen implements Screen {
 
         this.survivorsWinLabel = LabelHandler.INSTANCE.createLabel(null, 32, Color.GREEN);
         this.huntersWinLabel = LabelHandler.INSTANCE.createLabel(null, 32, Color.RED);
+
+        this.skillIcon = Skill.getSkillIcon(Skills.DASH, false);
 
         final Skin skin = new Skin (Gdx.files.internal("uiskin.json"));
         this.restart_button = new TextButton("Back to lobby", skin);
@@ -155,6 +165,7 @@ public class GameInProgressScreen implements Screen {
         this.stage.addActor(this.rootStack);
         this.rootStack.add(this.root);
         this.rootStack.add(this.endMsg);
+        this.rootStack.add(this.skillBar);
 
         this.batch.end();
         this.stage.draw();
@@ -188,15 +199,26 @@ public class GameInProgressScreen implements Screen {
 
     public void showBlinkCdTimer(){
         Player player = PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer);
+        Image skillImage = new Image(skillIcon);
+        skillImage.setAlign(Align.center);
+        skillBar.clear();
+        Stack stack = new Stack();
         float blinkCdSeconds = (player.getSkillCD() - System.currentTimeMillis())/ 1000;
         float milliseconds = (player.getSkillCD() - System.currentTimeMillis()) % 1000;
         blinkCdSeconds += milliseconds / 1000;
         DecimalFormat format = new DecimalFormat("#.##");
         if(blinkCdSeconds <= 0){
-            blinkCooldown.setText(player.getSkill() + " is ready");
+            blinkCooldown.setText("");
+            skillIcon = Skill.getSkillIcon(player.getSkill(),false);
         }else{
-            blinkCooldown.setText(player.getSkill() + " is ready in " + format.format(blinkCdSeconds) + "seconds");
+            blinkCooldown.setText(format.format(blinkCdSeconds));
+            skillIcon = Skill.getSkillIcon(player.getSkill(),true);
         }
+        stack.add(new Image(skillIcon));
+        stack.add(new Image(ResourceHandler.INSTANCE.skill_frame));
+        blinkCooldown.setAlignment(Align.center);
+        stack.add(blinkCooldown);
+        skillBar.add(stack).pad(15,15,15,15);
     }
 
     public void showDeadMsg(){

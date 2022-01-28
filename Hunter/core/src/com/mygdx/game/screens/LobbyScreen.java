@@ -3,17 +3,20 @@ package com.mygdx.game.screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.ai.steer.behaviors.Alignment;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.utils.Align;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.handlers.CapturePointHandler;
 import com.mygdx.game.handlers.LabelHandler;
@@ -22,6 +25,7 @@ import com.mygdx.game.handlers.PlayerHandler;
 import com.mygdx.game.handlers.ResourceHandler;
 import com.mygdx.game.supers.GameState;
 import com.mygdx.game.supers.Player;
+import com.mygdx.game.supers.Skill;
 import com.mygdx.game.supers.Skills;
 import com.mygdx.global.GameStartEvent;
 import com.mygdx.global.PlayerCharacterChangeEvent;
@@ -52,7 +56,7 @@ public class LobbyScreen implements Screen {
     private final Stack rootStack;
     private final Table root;
     private final Table deadMsg;
-
+    private final Table skillBar;
     private final TextButton previous;
     private final TextButton next;
 
@@ -64,6 +68,9 @@ public class LobbyScreen implements Screen {
     private final Label deadMsgLabel;
     private final Label startingCountdown;
     private final Label blinkCooldown;
+    private final Label skillDescription;
+
+    private Texture skillIcon;
 
     private boolean ready;
     private boolean countdownTimerLock;
@@ -82,14 +89,19 @@ public class LobbyScreen implements Screen {
         this.root.setBounds(0,0,1200,800);
         this.deadMsg = new Table();
         this.deadMsg.setBounds(0,0,1200,800);
+        this.skillBar = new Table().right().bottom();
+        this.skillBar.setBounds(0,0,1200,800);
+
 
         this.playerCount = LabelHandler.INSTANCE.createLabel("0", 16, Color.BLACK);
         this.totalPlayerCount = LabelHandler.INSTANCE.createLabel("0", 16, Color.BLACK);
         this.deadMsgLabel = LabelHandler.INSTANCE.createLabel(null, 34, Color.RED);
         this.startingCountdown = LabelHandler.INSTANCE.createLabel(null,34, Color.RED);
-        this.blinkCooldown = LabelHandler.INSTANCE.createLabel(null,16,Color.BLACK);
+        this.blinkCooldown = LabelHandler.INSTANCE.createLabel(null,24,Color.RED);
+        this.skillDescription = LabelHandler.INSTANCE.createLabel(null,16,Color.BLACK);
         this.charSelectionLabel = LabelHandler.INSTANCE.createLabel(charSelectionText[charSelectionIndex],16,Color.BLACK);
 
+        this.skillIcon = Skill.getSkillIcon(Skills.DASH, false);
         this.ready = false;
         this.countdownTimerLock = false;
         this.charSelectionIndex = 0;
@@ -150,12 +162,14 @@ public class LobbyScreen implements Screen {
         this.stage.addActor(this.rootStack);
 
         this.rootStack.add(this.root);
+        this.rootStack.add(this.skillBar);
         this.rootStack.add(this.deadMsg.center());
 
         this.setToDefault();
     }
 
     public void setToDefault(){
+        Player player = PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer);
         this.root.clear();
         switch(gameState){
             case LOBBY:
@@ -165,7 +179,7 @@ public class LobbyScreen implements Screen {
                 this.root.add(playerCount).pad(5,5,5,5).colspan(3).row();
                 this.root.add(totalPlayerCount).pad(5,5,5,5).colspan(3).row();
                 this.root.add(ready_button).pad(5,5,5,5).colspan(3).row();
-                this.root.add(blinkCooldown).colspan(3);
+                this.root.add(skillDescription).colspan(3);
                 break;
             case READY:
                 this.root.add(ready_button).pad(5,5,5,5);
@@ -208,6 +222,7 @@ public class LobbyScreen implements Screen {
         this.playerCount.setText(" Hunters: " + players[0] + " Ghosts: " + players[1]);
         int[] totalPlayers = PlayerHandler.INSTANCE.getReadyCount();
         this.totalPlayerCount.setText(totalPlayers[0] + "/" + totalPlayers[1] + " Players are ready");
+        this.skillDescription.setText(PlayerHandler.INSTANCE.getPlayerByUsername(playingPlayer).getSkillDescription());
         if(totalPlayers[0] == totalPlayers[1] && (players[0] > 0 && players[0] <= players[1])){
             gameState = GameState.ALLPLAYERSREADY;
             if(countdownTimerLock){
@@ -292,15 +307,26 @@ public class LobbyScreen implements Screen {
 
     public void showBlinkCdTimer(){
         Player player = PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer);
+        Image skillImage = new Image(skillIcon);
+        skillImage.setAlign(Align.center);
+        skillBar.clear();
+        Stack stack = new Stack();
         float blinkCdSeconds = (player.getSkillCD() - System.currentTimeMillis())/ 1000;
         float milliseconds = (player.getSkillCD() - System.currentTimeMillis()) % 1000;
         blinkCdSeconds += milliseconds / 1000;
         DecimalFormat format = new DecimalFormat("#.##");
         if(blinkCdSeconds <= 0){
-            blinkCooldown.setText(player.getSkill() + " is ready");
+            blinkCooldown.setText("");
+            skillIcon = Skill.getSkillIcon(player.getSkill(),false);
         }else{
-            blinkCooldown.setText(player.getSkill() + " is ready in " + format.format(blinkCdSeconds) + "seconds");
+            blinkCooldown.setText(format.format(blinkCdSeconds));
+            skillIcon = Skill.getSkillIcon(player.getSkill(),true);
         }
+        stack.add(new Image(skillIcon));
+        stack.add(new Image(ResourceHandler.INSTANCE.skill_frame));
+        blinkCooldown.setAlignment(Align.center);
+        stack.add(blinkCooldown);
+        skillBar.add(stack).pad(15,15,15,15);
     }
 
     public void reset(){

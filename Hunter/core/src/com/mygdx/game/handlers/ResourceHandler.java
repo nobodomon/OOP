@@ -16,6 +16,7 @@ public class ResourceHandler {
     public final Texture gravel_two = new Texture(Gdx.files.internal("Ground_Tile_02_A.png"));
     public final Texture grass_one = new Texture(Gdx.files.internal("Ground_Tile_01_B.png"));
     public final Texture grass_two = new Texture(Gdx.files.internal("Ground_Tile_02_B.png"));
+    public final Texture skill_frame = new Texture(Gdx.files.internal("skillframe.png"));
 
     public final Texture capturePoint_zero = new Texture(Gdx.files.internal("Dot_C.png"));
     public final Texture capturePoint_half = new Texture(Gdx.files.internal("Dot_B.png"));

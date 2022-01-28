@@ -12,6 +12,7 @@ import com.mygdx.game.supers.CapturePoint;
 import com.mygdx.game.supers.PlayerState;
 import com.mygdx.game.supers.PlayerStatus;
 import com.mygdx.game.supers.PlayerType;
+import com.mygdx.game.supers.Skills;
 import com.mygdx.global.CapturePointCreateEvent;
 import com.mygdx.global.CapturePointDeleteEvent;
 import com.mygdx.global.GameRestartEvent;
@@ -110,7 +111,7 @@ public class EventListener extends Listener {
             player.setHealth(playerUpdateEvent.health);
             player.setLastHit(playerUpdateEvent.lastHit);
             player.setSkillCD(playerUpdateEvent.skillCD);
-            player.setSkill(playerUpdateEvent.skillname);
+            player.setSkill(Skills.valueOf(playerUpdateEvent.skillname));
             player.setSkillDescription(playerUpdateEvent.skillDescription);
             player.getServerPosition().set(playerUpdateEvent.x, playerUpdateEvent.y);
         } else if (object instanceof PlayerCharacterChangeEvent) {

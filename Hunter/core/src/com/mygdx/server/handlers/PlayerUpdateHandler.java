@@ -2,6 +2,8 @@ package com.mygdx.server.handlers;
 
 import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.PlayerState;
+import com.mygdx.game.supers.Skill;
+import com.mygdx.game.supers.Skills;
 import com.mygdx.global.PlayerCharacterChangeEvent;
 import com.mygdx.global.PlayerHPupdateEvent;
 import com.mygdx.global.PlayerHitEvent;
@@ -37,7 +39,7 @@ public class PlayerUpdateHandler implements Runnable{
             int status = Player.getIntByStatus(serverPlayer.getStatus());
             playerUpdateEvent.status = status;
             playerUpdateEvent.lastHit = serverPlayer.getLastHit();
-            playerUpdateEvent.skillname = serverPlayer.getSkill().getSkillName().toString();
+            playerUpdateEvent.skillname = serverPlayer.getSkill().getSkillName().name();
             playerUpdateEvent.skillDescription = serverPlayer.getSkill().getSkillDescription();
             playerUpdateEvent.skillCD = serverPlayer.getSkill().getNextAvailableUsage();
             playerUpdateEvent.health = serverPlayer.getHealth();

@@ -1,6 +1,7 @@
 package com.mygdx.global;
 
 import com.mygdx.game.supers.PlayerState;
+import com.mygdx.game.supers.Skill;
 
 public class PlayerUpdateEvent {
 

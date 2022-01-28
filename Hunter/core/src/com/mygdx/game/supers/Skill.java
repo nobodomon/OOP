@@ -1,5 +1,9 @@
 package com.mygdx.game.supers;
 
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.mygdx.game.MyGdxGame;
 import com.mygdx.server.supers.ServerPlayer;
 
 public class Skill {
@@ -29,8 +33,16 @@ public class Skill {
         this.nextAvailableUsage = 0;
     }
 
+    public Skill(){
+
+    }
+
     public Skills getSkillName() {
         return skillName;
+    }
+
+    public void setSkillName(Skills skillName) {
+        this.skillName = skillName;
     }
 
     public void useSkill(){
@@ -64,5 +76,35 @@ public class Skill {
 
     public void setSkillDescription(String skillDescription) {
         this.skillDescription = skillDescription;
+    }
+
+    public static Texture getSkillIcon(Skills skillName,boolean cooldown){
+        if(cooldown == false){
+            switch(skillName){
+                case DASH:
+                    return new Texture(Gdx.files.internal("dash.png"));
+                case BLINKTOPOINT:
+                    return new Texture(Gdx.files.internal("blink.png"));
+                case SPEEDBOOST:
+                    return new Texture(Gdx.files.internal("speedboost.png"));
+                case MASSSTUN:
+                    return new Texture(Gdx.files.internal("speedboost.png"));
+                default:
+                    return new Texture(Gdx.files.internal("dash.png"));
+            }
+        }else{
+            switch(skillName){
+                case DASH:
+                    return new Texture(Gdx.files.internal("dash-cd.png"));
+                case BLINKTOPOINT:
+                    return new Texture(Gdx.files.internal("blink-cd.png"));
+                case SPEEDBOOST:
+                    return new Texture(Gdx.files.internal("speedboost-cd.png"));
+                case MASSSTUN:
+                    return new Texture(Gdx.files.internal("speedboost-cd.png"));
+                default:
+                    return new Texture(Gdx.files.internal("dash-cd.png"));
+            }
+        }
     }
 }

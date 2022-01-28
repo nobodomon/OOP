@@ -31,7 +31,7 @@ public class Player implements Entity {
     private long lastHit;
 
     private long skillCD;
-    private String skillName;
+    private Skills skillName;
     private String skillDescription;
 
     private Animation<TextureAtlas.AtlasRegion> generalFrame;
@@ -53,6 +53,7 @@ public class Player implements Entity {
 
         this.lastHit = 0;
         this.skillCD = 0;
+        this.skillName = Skills.DASH;
         this.lookingLeft = false;
         this.username = username;
         this.playerType = PlayerType.GHOST_ONE;
@@ -569,11 +570,11 @@ public class Player implements Entity {
         this.skillCD = blinkCD;
     }
 
-    public String getSkill() {
+    public Skills getSkill() {
         return skillName;
     }
 
-    public void setSkill(String skill) {
+    public void setSkill(Skills skill) {
         this.skillName = skill;
     }
 
