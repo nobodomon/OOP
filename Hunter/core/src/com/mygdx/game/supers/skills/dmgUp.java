@@ -10,12 +10,12 @@ public class dmgUp extends Skill {
 
     public dmgUp(Skills skillName, int skillCooldown, int skillDuration, ServerPlayer skillUser) {
         super(skillName, skillCooldown, skillDuration, skillUser);
-        setSkillDescription("Grants the player a damage boost of 1.7x for " + skillDuration + " seconds.");
+        setSkillDescription("Grants the player a damage boost of 2x for " + skillDuration + " seconds.");
     }
 
     public dmgUp(ServerPlayer skillUser) {
         super(Skills.DMGUP, 20, 3, skillUser);
-        setSkillDescription("Grants the hunter a damage boost of 1.7x for " + 3 + " seconds.");
+        setSkillDescription("Grants the hunter a damage boost of 2x for " + 3 + " seconds.");
     }
 
     @Override
