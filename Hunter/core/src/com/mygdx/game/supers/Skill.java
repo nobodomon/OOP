@@ -1,9 +1,7 @@
 package com.mygdx.game.supers;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.mygdx.game.MyGdxGame;
 import com.mygdx.server.supers.ServerPlayer;
 
 public class Skill {
@@ -33,7 +31,7 @@ public class Skill {
         this.nextAvailableUsage = 0;
     }
 
-    public Skill(){
+    public Skill() {
 
     }
 
@@ -45,11 +43,11 @@ public class Skill {
         this.skillName = skillName;
     }
 
-    public void useSkill(){
+    public void useSkill() {
 
     }
 
-    public void revertSkill(){
+    public void revertSkill() {
 
     }
 
@@ -78,9 +76,9 @@ public class Skill {
         this.skillDescription = skillDescription;
     }
 
-    public static Texture getSkillIcon(Skills skillName,boolean cooldown){
-        if(cooldown == false){
-            switch(skillName){
+    public static Texture getSkillIcon(Skills skillName, boolean cooldown) {
+        if (cooldown == false) {
+            switch (skillName) {
                 case DASH:
                     return new Texture(Gdx.files.internal("dash.png"));
                 case BLINKTOPOINT:
@@ -92,8 +90,8 @@ public class Skill {
                 default:
                     return new Texture(Gdx.files.internal("dash.png"));
             }
-        }else{
-            switch(skillName){
+        } else {
+            switch (skillName) {
                 case DASH:
                     return new Texture(Gdx.files.internal("dash-cd.png"));
                 case BLINKTOPOINT:

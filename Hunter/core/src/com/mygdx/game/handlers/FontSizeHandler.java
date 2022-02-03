@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeType;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 
 import java.util.HashMap;
@@ -22,8 +21,8 @@ public class FontSizeHandler {
         this.fontPath = fontPath;
     }
 
-    public BitmapFont getFont(final int size, Color color){
-        if(this.fonts.containsKey(size)) return this.fonts.get(size);
+    public BitmapFont getFont(final int size, Color color) {
+        if (this.fonts.containsKey(size)) return this.fonts.get(size);
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(this.fontPath));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();

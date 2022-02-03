@@ -5,8 +5,6 @@ import com.badlogic.gdx.Input;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.global.MoveUpdateEvent;
 
-import java.util.concurrent.TimeUnit;
-
 public class MoveUpdateHandler implements Runnable {
 
     public static final MoveUpdateHandler INSTANCE = new MoveUpdateHandler();
@@ -31,41 +29,17 @@ public class MoveUpdateHandler implements Runnable {
     public void tick() {
         boolean w, s, a, d, e, shift;
 
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-            w = true;
-        } else {
-            w = false;
-        }
+        w = Gdx.input.isKeyPressed(Input.Keys.W);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-            s = true;
-        } else {
-            s = false;
-        }
+        s = Gdx.input.isKeyPressed(Input.Keys.S);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            a = true;
-        } else {
-            a = false;
-        }
+        a = Gdx.input.isKeyPressed(Input.Keys.A);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-            d = true;
-        } else {
-            d = false;
-        }
+        d = Gdx.input.isKeyPressed(Input.Keys.D);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            e = true;
-        } else {
-            e = false;
-        }
+        e = Gdx.input.isKeyPressed(Input.Keys.SPACE);
 
-        if (Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
-            shift = true;
-        } else {
-            shift = false;
-        }
+        shift = Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT);
 
         final boolean changed = this.movementChanged(e, w, s, a, d, shift);
 

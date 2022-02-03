@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.screens.ConnectScreen;
-import com.mygdx.game.supers.Hunter;
 import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.PlayerState;
 import com.mygdx.global.PlayerHitEvent;
@@ -25,63 +24,64 @@ public class PlayerHandler implements EntityHandler {
     private LinkedList<Player> players = new LinkedList<>();
 
     @Override
-    public void render(final Batch batch){
+    public void render(final Batch batch) {
         Player hunter = null;
         Rectangle hunterHitBox = null;
-        this.attackCooldown = TimeUnit.SECONDS.toSeconds((long)ResourceHandler.INSTANCE.getHunterAttackDuration());
+        this.attackCooldown = TimeUnit.SECONDS.toSeconds((long) ResourceHandler.INSTANCE.getHunterAttackDuration());
 
-        for(int i = 0; i < this.players.size(); i++){
-            if(Player.getIntByType(this.players.get(i).getPlayerType()) > 2){
+        for (int i = 0; i < this.players.size(); i++) {
+            if (Player.getIntByType(this.players.get(i).getPlayerType()) > 2) {
                 hunter = this.players.get(i);
                 hunterHitBox = hunter.getPlayerHitBox();
                 break;
-            }else{
+            } else {
             }
         }
-        if(hunter != null && hunterHitBox != null && hunter.getCurrentState() == PlayerState.ATTACKING){
-            for(int i = 0; i< this.players.size(); i++){
-                if(this.players.get(i).getUsername() != hunter.getUsername()){
-                    if(hunterHitBox.overlaps(this.players.get(i).getPlayerHitBox())){
-                        if(this.players.get(i).getHealth() > 0){
+        if (hunter != null && hunterHitBox != null && hunter.getCurrentState() == PlayerState.ATTACKING) {
+            for (int i = 0; i < this.players.size(); i++) {
+                if (this.players.get(i).getUsername() != hunter.getUsername()) {
+                    if (hunterHitBox.overlaps(this.players.get(i).getPlayerHitBox())) {
+                        if (this.players.get(i).getHealth() > 0) {
                             if (this.players.get(i).getLastHit() - System.currentTimeMillis() < 0) {
                                 System.out.println(this.players.get(i).getLastHit());
-                                this.players.get(i).hit();
+                                this.players.get(i).hit(hunter.getDmgMultiplier());
+                                /*System.out.println(hunter.getDmgMultiplier());*/
                                 playerHit(this.players.get(i));
                             }
-                        }else if(this.players.get(i).getHealth() == 0){
+                        } else if (this.players.get(i).getHealth() == 0) {
                             playerKilled(this.players.get(i));
                         }
                     }
-                }else{
+                } else {
                     continue;
                 }
             }
         }
 
-        for(int i = 0; i < this.players.size(); i++){
+        for (int i = 0; i < this.players.size(); i++) {
             this.players.get(i).render(batch);
         }
     }
 
 
     @Override
-    public void update(final float delta){
-        for(int i = 0; i < this.players.size(); i++){
+    public void update(final float delta) {
+        for (int i = 0; i < this.players.size(); i++) {
             this.players.get(i).update(delta);
         }
     }
 
-    public Player getPlayerByUsername(final String username){
-        for(int i = 0; i < this.players.size(); i++){
+    public Player getPlayerByUsername(final String username) {
+        for (int i = 0; i < this.players.size(); i++) {
             final Player player = this.players.get(i);
 
-            if(player.getUsername().equals(username))
+            if (player.getUsername().equals(username))
                 return player;
         }
         return null;
     }
 
-    public void playerHit(final Player player){
+    public void playerHit(final Player player) {
         PlayerUpdateEvent playerUpdateEvent = new PlayerUpdateEvent();
         playerUpdateEvent.username = player.getUsername();
         playerUpdateEvent.state = Player.getIntByState(PlayerState.HIT);
@@ -97,7 +97,7 @@ public class PlayerHandler implements EntityHandler {
         MyGdxGame.getInstance().getClient().sendTCP(playerHitEvent);
     }
 
-    public void playerKilled(final Player player){
+    public void playerKilled(final Player player) {
         PlayerUpdateEvent playerUpdateEvent = new PlayerUpdateEvent();
         playerUpdateEvent.username = player.getUsername();
         playerUpdateEvent.state = Player.getIntByState(PlayerState.DEAD);
@@ -113,8 +113,8 @@ public class PlayerHandler implements EntityHandler {
         MyGdxGame.getInstance().getClient().sendTCP(playerKilledEvent);
     }
 
-    public void resetPlayerHP(){
-        for(int i = 0; i < players.size(); i++){
+    public void resetPlayerHP() {
+        for (int i = 0; i < players.size(); i++) {
             Player player = players.get(i);
             player.setHealth(25);
             player.setLastHit(0);
@@ -123,7 +123,7 @@ public class PlayerHandler implements EntityHandler {
         }
     }
 
-    public void playerReset(final Player player){
+    public void playerReset(final Player player) {
         PlayerUpdateEvent playerUpdateEvent = new PlayerUpdateEvent();
         playerUpdateEvent.username = player.getUsername();
         playerUpdateEvent.health = player.getHealth();
@@ -134,55 +134,55 @@ public class PlayerHandler implements EntityHandler {
         MyGdxGame.getInstance().getClient().sendTCP(playerUpdateEvent);
     }
 
-    public void clearPlayers(){
+    public void clearPlayers() {
         this.players = new LinkedList<>();
     }
 
-    public void addPlayer(final Player player){
-        if(getPlayerByUsername(player.getUsername()) != null){
+    public void addPlayer(final Player player) {
+        if (getPlayerByUsername(player.getUsername()) != null) {
             ConnectScreen.INSTANCE.getErrorLabel().setText("Username is taken!");
             return;
-        }else{
+        } else {
 
             this.players.add(player);
         }
     }
 
-    public void removePlayer(final Player player){
+    public void removePlayer(final Player player) {
         this.players.remove(player);
     }
 
-    public int[] getPlayerCount(){
+    public int[] getPlayerCount() {
         int hunters = 0;
         int ghosts = 0;
-        for(int i = 0; i < this.players.size(); i++){
-            if(Player.getIntByType(this.players.get(i).getPlayerType()) > 2){
+        for (int i = 0; i < this.players.size(); i++) {
+            if (Player.getIntByType(this.players.get(i).getPlayerType()) > 2) {
                 hunters++;
-            }else{
+            } else {
                 ghosts++;
             }
         }
-        int[] players = {hunters,ghosts};
+        int[] players = {hunters, ghosts};
         return players;
     }
 
-    public int[] getReadyCount(){
+    public int[] getReadyCount() {
         int ready = 0;
         int total = 0;
-        for(int i = 0; i < this.players.size(); i++){
+        for (int i = 0; i < this.players.size(); i++) {
             total++;
-            if(this.players.get(i).isReady()){
+            if (this.players.get(i).isReady()) {
                 ready++;
             }
         }
-        int[] players = {ready,total};
+        int[] players = {ready, total};
         return players;
     }
 
-    public boolean areAllSurvivorsDead(){
-        for(int i = 0; i < this.players.size(); i++){
-            if(Player.getIntByType(this.players.get(i).getPlayerType()) < 3){
-                if(this.players.get(i).getHealth() > 0.0){
+    public boolean areAllSurvivorsDead() {
+        for (int i = 0; i < this.players.size(); i++) {
+            if (Player.getIntByType(this.players.get(i).getPlayerType()) < 3) {
+                if (this.players.get(i).getHealth() > 0.0) {
                     return false;
                 }
             }
@@ -190,8 +190,8 @@ public class PlayerHandler implements EntityHandler {
         return true;
     }
 
-    public void unreadyAll(){
-        for(int i = 0; i < players.size(); i++){
+    public void unreadyAll() {
+        for (int i = 0; i < players.size(); i++) {
             players.get(i).setReady(false);
             PlayerReadyEvent playerReadyEvent = new PlayerReadyEvent();
             playerReadyEvent.username = players.get(i).getUsername();

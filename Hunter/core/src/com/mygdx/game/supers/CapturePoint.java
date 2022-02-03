@@ -18,17 +18,17 @@ public class CapturePoint implements Entity {
 
     private float progress;
 
-    private float captureRate;
-    private float decayRate;
-    private float disruptRate;
+    private final float captureRate;
+    private final float decayRate;
+    private final float disruptRate;
 
     private Rectangle capturePointHitBox;
 
-    private ShapeRenderer hitboxRenderer;
+    private final ShapeRenderer hitboxRenderer;
 
     private Texture frame;
-    private GlyphLayout layout;
-    private BitmapFont font;
+    private final GlyphLayout layout;
+    private final BitmapFont font;
 
     public Vector2 getPosition() {
         return position;
@@ -38,7 +38,7 @@ public class CapturePoint implements Entity {
         this.position = position;
     }
 
-    public CapturePoint(final Vector2 position){
+    public CapturePoint(final Vector2 position) {
         this.batch = new SpriteBatch();
         this.frame = ResourceHandler.INSTANCE.capturePoint_zero;
         this.position = position;
@@ -53,17 +53,17 @@ public class CapturePoint implements Entity {
     }
 
     @Override
-    public void render(final Batch batch){
+    public void render(final Batch batch) {
 
         this.batch.begin();
         float width = frame.getWidth();
         float height = frame.getHeight();
         this.capturePointHitBox = new Rectangle(this.position.x, this.position.y, width, height);
-        if(progress < 50){
+        if (progress < 50) {
             this.frame = ResourceHandler.INSTANCE.capturePoint_zero;
-        }else if(progress >= 50 && progress < 100){
+        } else if (progress >= 50 && progress < 100) {
             this.frame = ResourceHandler.INSTANCE.capturePoint_half;
-        }else if(progress == 100){
+        } else if (progress == 100) {
             this.frame = ResourceHandler.INSTANCE.capturePoint_complete;
         }
         batch.draw(frame, this.position.x, this.position.y, width, height);
@@ -80,52 +80,53 @@ public class CapturePoint implements Entity {
         return capturePointHitBox;
     }
 
-    public void attemptCapture(){
-        if(this.progress < 100.0f){
-            if(this.progress + captureRate > 100.0f){
+    public void attemptCapture() {
+        if (this.progress < 100.0f) {
+            if (this.progress + captureRate > 100.0f) {
                 this.progress = 100.0f;
-            }else{
+            } else {
                 this.progress += captureRate;
             }
         }
         this.progress = Math.round(this.progress * 10.0f) / 10.0f;
     }
 
-    public void attemptCapture(float captureRateMultiplier){
-        if(this.progress < 100.0f){
-            if(this.progress + (captureRate * captureRateMultiplier) > 100.0f){
+    public void attemptCapture(float captureRateMultiplier) {
+        if (this.progress < 100.0f) {
+            if (this.progress + (captureRate * captureRateMultiplier) > 100.0f) {
                 this.progress = 100.0f;
-            }else{
+            } else {
                 this.progress += (captureRate * captureRateMultiplier);
             }
         }
         this.progress = Math.round(this.progress * 10.0f) / 10.0f;
     }
-    public void attemptDisrupt(){
-        if(this.progress > 0.0 && this.progress < 100.0){
-            if(this.progress - disruptRate < 0.0f){
+
+    public void attemptDisrupt() {
+        if (this.progress > 0.0 && this.progress < 100.0) {
+            if (this.progress - disruptRate < 0.0f) {
                 this.progress = 0.0f;
-            }else{
+            } else {
                 this.progress -= 0.1f;
             }
         }
         this.progress = Math.round(this.progress * 10.0f) / 10.0f;
     }
 
-    public void captureDecay(){
+    public void captureDecay() {
 
-        if(this.progress < 50.0f && this.progress > 0.0f){
+        if (this.progress < 50.0f && this.progress > 0.0f) {
             this.progress -= decayRate;
-        }else if(this.progress >= 50.0f && this.progress < 100.0f){
-            if(this.progress == 50.0f){
+        } else if (this.progress >= 50.0f && this.progress < 100.0f) {
+            if (this.progress == 50.0f) {
 
-            }else if(this.progress - (decayRate * 2f) < 50.0f){
+            } else if (this.progress - (decayRate * 2f) < 50.0f) {
                 this.progress = 50.0f;
-            }else{
+            } else {
 
                 this.progress -= decayRate * 2f;
             }
-        }else{
+        } else {
 
         }
 

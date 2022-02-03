@@ -86,6 +86,7 @@ public class EventListener extends Listener {
             final ServerPlayer serverPlayer = PlayerHandler.INSTANCE.getPlayerByUsername(playerUpdateEvent.username);
             serverPlayer.setHealth(playerUpdateEvent.health);
             serverPlayer.setLastHit(playerUpdateEvent.lastHit);
+            serverPlayer.setDmgMultiplier(playerUpdateEvent.dmgMultiplier);
             serverPlayer.setX(playerUpdateEvent.x);
             serverPlayer.setY(playerUpdateEvent.y);
             serverPlayer.setServerState(Player.getStateByInt(playerUpdateEvent.state));
@@ -93,6 +94,7 @@ public class EventListener extends Listener {
             final Player player = com.mygdx.game.handlers.PlayerHandler.INSTANCE.getPlayerByUsername(serverPlayer.getUsername());
             player.setHealth(serverPlayer.getHealth());
             player.setLastHit(serverPlayer.getLastHit());
+            player.setDmgMultiplier(serverPlayer.getDmgMultiplier());
             player.getServerPosition().x = serverPlayer.getX();
             player.getServerPosition().y = serverPlayer.getY();
             player.setCurrentState(serverPlayer.getServerState());

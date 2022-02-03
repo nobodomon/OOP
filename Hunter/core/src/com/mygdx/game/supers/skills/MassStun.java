@@ -16,15 +16,15 @@ public class MassStun extends Skill {
         setSkillDescription("Hunter only skill that stuns all ghosts for " + skillDuration + " seconds.");
     }
 
-    public MassStun(ServerPlayer skillUser){
-        super(Skills.MASSSTUN,30,3, skillUser);
+    public MassStun(ServerPlayer skillUser) {
+        super(Skills.MASSSTUN, 30, 3, skillUser);
         setSkillDescription("Hunter only skill that stuns all ghosts for " + 3 + " seconds.");
     }
 
     @Override
     public void useSkill() {
         super.useSkill();
-        if(System.currentTimeMillis() > getNextAvailableUsage()) {
+        if (System.currentTimeMillis() > getNextAvailableUsage()) {
             for (int i = 0; i < PlayerHandler.INSTANCE.getPlayers().size(); i++) {
                 ServerPlayer player = PlayerHandler.INSTANCE.getPlayers().get(i);
                 if (Player.getIntByType(player.getPlayerType()) < 3) {

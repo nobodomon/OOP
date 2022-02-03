@@ -15,7 +15,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.Null;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.handlers.CapturePointHandler;
 import com.mygdx.game.handlers.LabelHandler;
@@ -27,11 +26,8 @@ import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.Skill;
 import com.mygdx.game.supers.Skills;
 import com.mygdx.global.GameRestartEvent;
-import com.mygdx.server.supers.ServerPlayer;
 
 import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.concurrent.TimeUnit;
 
 public class GameInProgressScreen implements Screen {
@@ -68,26 +64,26 @@ public class GameInProgressScreen implements Screen {
         this.stage = new Stage();
         this.stage.getViewport().setCamera(MyGdxGame.getInstance().getCamera());
         this.rootStack = new Stack();
-        this.rootStack.setBounds(0,0,1200,800);
+        this.rootStack.setBounds(0, 0, 1200, 800);
         this.root = new Table().top().left();
         this.root.setBounds(0, 0, 1200, 800);
         this.endMsg = new Table().center();
-        this.endMsg.setBounds(0,0,1200,800);
+        this.endMsg.setBounds(0, 0, 1200, 800);
         this.skillBar = new Table().right().bottom();
-        this.skillBar.setBounds(0,0,1200,800);
+        this.skillBar.setBounds(0, 0, 1200, 800);
         this.gameState = GameState.RUNNING;
         this.gameEndTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5);
         this.gameProgressTime = LabelHandler.INSTANCE.createLabel("0", 24, Color.RED);
-        this.blinkCooldown = LabelHandler.INSTANCE.createLabel(null,16,Color.BLACK);
+        this.blinkCooldown = LabelHandler.INSTANCE.createLabel(null, 16, Color.BLACK);
 
         this.survivorsWinLabel = LabelHandler.INSTANCE.createLabel(null, 32, Color.GREEN);
         this.huntersWinLabel = LabelHandler.INSTANCE.createLabel(null, 32, Color.RED);
 
         this.skillIcon = Skill.getSkillIcon(Skills.DASH, false);
 
-        final Skin skin = new Skin (Gdx.files.internal("uiskin.json"));
+        final Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         this.restart_button = new TextButton("Back to lobby", skin);
-        this.restart_button.addListener(new ClickListener(){
+        this.restart_button.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 CapturePointHandler.instance.resetCapturePoints();
@@ -122,7 +118,7 @@ public class GameInProgressScreen implements Screen {
             }
         }
         long minutes, seconds;
-        if(gameState != GameState.ENDED){
+        if (gameState != GameState.ENDED) {
             gameCurrentTime = gameEndTime - System.currentTimeMillis();
         }
         minutes = (gameCurrentTime / 1000) / 60;
@@ -138,27 +134,26 @@ public class GameInProgressScreen implements Screen {
         PlayerHandler.INSTANCE.update(delta);
 
 
-
-        if(gameCurrentTime > 0){
-            if(PlayerHandler.INSTANCE.areAllSurvivorsDead()){
+        if (gameCurrentTime > 0) {
+            if (PlayerHandler.INSTANCE.areAllSurvivorsDead()) {
                 gameState = GameState.HUNTERSWIN;
-                showEndMsg(gameState,"All survivors are dead!");
-            }else if(CapturePointHandler.instance.isAllCapturePointsCaptured()){
+                showEndMsg(gameState, "All survivors are dead!");
+            } else if (CapturePointHandler.instance.isAllCapturePointsCaptured()) {
                 gameState = GameState.SURVIVORSWIN;
-                showEndMsg(gameState,"All capture points secured!");
-            }else if(PlayerHandler.INSTANCE.getPlayerByUsername(playingPlayer).getHealth() == 0.0){
+                showEndMsg(gameState, "All capture points secured!");
+            } else if (PlayerHandler.INSTANCE.getPlayerByUsername(playingPlayer).getHealth() == 0.0) {
                 showDeadMsg();
             }
-        }else if(gameCurrentTime <= 0 ){
-            if(CapturePointHandler.instance.isAllCapturePointsCaptured() == false){
+        } else if (gameCurrentTime <= 0) {
+            if (CapturePointHandler.instance.isAllCapturePointsCaptured() == false) {
                 gameState = GameState.HUNTERSWIN;
-                showEndMsg(gameState,"Time's up!");
+                showEndMsg(gameState, "Time's up!");
             }
-        }else{
+        } else {
             gameState = GameState.RUNNING;
         }
 
-        if(gameState == GameState.HUNTERSWIN || gameState == GameState.SURVIVORSWIN){
+        if (gameState == GameState.HUNTERSWIN || gameState == GameState.SURVIVORSWIN) {
             gameState = GameState.ENDED;
         }
 
@@ -178,50 +173,50 @@ public class GameInProgressScreen implements Screen {
         this.root.add(blinkCooldown);
     }
 
-    public void showEndMsg(GameState state, String endCause){
-        switch(state){
+    public void showEndMsg(GameState state, String endCause) {
+        switch (state) {
             case SURVIVORSWIN:
                 this.survivorsWinLabel.setText("SURVIVORS WIN!");
                 this.endMsg.clear();
                 this.endMsg.add(survivorsWinLabel).row();
-                this.endMsg.add(LabelHandler.INSTANCE.createLabel(endCause,24,Color.GREEN)).row();
+                this.endMsg.add(LabelHandler.INSTANCE.createLabel(endCause, 24, Color.GREEN)).row();
                 this.endMsg.add(restart_button);
                 break;
             case HUNTERSWIN:
                 this.huntersWinLabel.setText("HUNTERS WIN!");
                 this.endMsg.clear();
                 this.endMsg.add(huntersWinLabel).row();
-                this.endMsg.add(LabelHandler.INSTANCE.createLabel(endCause,24,Color.RED)).row();
+                this.endMsg.add(LabelHandler.INSTANCE.createLabel(endCause, 24, Color.RED)).row();
                 this.endMsg.add(restart_button);
                 break;
         }
     }
 
-    public void showBlinkCdTimer(){
+    public void showBlinkCdTimer() {
         Player player = PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer);
         Image skillImage = new Image(skillIcon);
         skillImage.setAlign(Align.center);
         skillBar.clear();
         Stack stack = new Stack();
-        float blinkCdSeconds = (player.getSkillCD() - System.currentTimeMillis())/ 1000;
+        float blinkCdSeconds = (player.getSkillCD() - System.currentTimeMillis()) / 1000;
         float milliseconds = (player.getSkillCD() - System.currentTimeMillis()) % 1000;
         blinkCdSeconds += milliseconds / 1000;
         DecimalFormat format = new DecimalFormat("#.##");
-        if(blinkCdSeconds <= 0){
+        if (blinkCdSeconds <= 0) {
             blinkCooldown.setText("");
-            skillIcon = Skill.getSkillIcon(player.getSkill(),false);
-        }else{
+            skillIcon = Skill.getSkillIcon(player.getSkill(), false);
+        } else {
             blinkCooldown.setText(format.format(blinkCdSeconds));
-            skillIcon = Skill.getSkillIcon(player.getSkill(),true);
+            skillIcon = Skill.getSkillIcon(player.getSkill(), true);
         }
         stack.add(new Image(skillIcon));
         stack.add(new Image(ResourceHandler.INSTANCE.skill_frame));
         blinkCooldown.setAlignment(Align.center);
         stack.add(blinkCooldown);
-        skillBar.add(stack).pad(15,15,15,15);
+        skillBar.add(stack).pad(15, 15, 15, 15);
     }
 
-    public void showDeadMsg(){
+    public void showDeadMsg() {
         this.huntersWinLabel.setText("YOU ARE DEAD");
         this.endMsg.clear();
         this.endMsg.add(huntersWinLabel);
@@ -252,7 +247,7 @@ public class GameInProgressScreen implements Screen {
 
     }
 
-    public void resetGame(){
+    public void resetGame() {
         this.gameState = GameState.RUNNING;
         this.gameEndTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5);
         this.endMsg.clear();

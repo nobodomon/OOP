@@ -19,40 +19,41 @@ public class CapturePointHandler implements EntityHandler {
 
     public CapturePoint getCapturePointByVector(final float x, final float y) {
         //System.out.printf("There are %d capture points", this.capturePoints.size());
-        for(int i = 0; i < this.capturePoints.size(); i++){
+        for (int i = 0; i < this.capturePoints.size(); i++) {
             final CapturePoint capturePoint = this.capturePoints.get(i);
-            if(capturePoint.getPosition().x == x && capturePoint.getPosition().y == y){
+            if (capturePoint.getPosition().x == x && capturePoint.getPosition().y == y) {
                 return capturePoint;
             }
         }
         return null;
     }
-    public void addCapturePoint(CapturePoint capturePoint){
+
+    public void addCapturePoint(CapturePoint capturePoint) {
         this.capturePoints.add(capturePoint);
     }
 
-    public void removeCapturePoint(CapturePoint capturePoint){
+    public void removeCapturePoint(CapturePoint capturePoint) {
         this.capturePoints.remove(capturePoint);
     }
 
     @Override
-    public void render(final Batch batch){
+    public void render(final Batch batch) {
         LinkedList<Player> players = PlayerHandler.INSTANCE.getPlayers();
         //System.out.printf("There are %d players", players.size());
         double now = System.currentTimeMillis();
-        for(int i = 0; i < capturePoints.size();i++){
+        for (int i = 0; i < capturePoints.size(); i++) {
             CapturePoint currPoint = capturePoints.get(i);
-            for(int j = 0; j < players.size(); j++){
-                if(Player.getIntByType(players.get(j).getPlayerType()) > 2){
-                    if(players.get(j).getPlayerHitBox().overlaps(currPoint.getCapturePointHitBox()) && players.get(j).getCurrentState() == PlayerState.ATTACKING){
+            for (int j = 0; j < players.size(); j++) {
+                if (Player.getIntByType(players.get(j).getPlayerType()) > 2) {
+                    if (players.get(j).getPlayerHitBox().overlaps(currPoint.getCapturePointHitBox()) && players.get(j).getCurrentState() == PlayerState.ATTACKING) {
                         capturePoints.get(i).attemptDisrupt();
                         break;
                     }
-                }else{
-                    if(players.get(j).getPlayerHitBox().overlaps(currPoint.getCapturePointHitBox()) && players.get(j).getCurrentState() == PlayerState.ATTACKING){
-                        if(this.isLastCapturePoint()){
+                } else {
+                    if (players.get(j).getPlayerHitBox().overlaps(currPoint.getCapturePointHitBox()) && players.get(j).getCurrentState() == PlayerState.ATTACKING) {
+                        if (this.isLastCapturePoint()) {
                             capturePoints.get(i).attemptCapture(1.5f);
-                        }else{
+                        } else {
                             capturePoints.get(i).attemptCapture();
                         }
                     }
@@ -60,8 +61,8 @@ public class CapturePointHandler implements EntityHandler {
             }
         }
 
-        while(now - decayDelay > lastDecay){
-            for(int i = 0; i < capturePoints.size(); i++) {
+        while (now - decayDelay > lastDecay) {
+            for (int i = 0; i < capturePoints.size(); i++) {
                 CapturePoint currPoint = capturePoints.get(i);
                 if ((currPoint.getProgress() != 0.0) && currPoint.getProgress() != 50.0 && currPoint.getProgress() != 100.0) {
                     capturePoints.get(i).captureDecay();
@@ -71,21 +72,21 @@ public class CapturePointHandler implements EntityHandler {
         }
 
 
-        for(int i = 0; i < capturePoints.size(); i++) {
+        for (int i = 0; i < capturePoints.size(); i++) {
             capturePointUpdate(capturePoints.get(i));
             capturePoints.get(i).render(batch);
         }
     }
 
     @Override
-    public void update(final float delta){
-        for(int i = 0; i < this.capturePoints.size(); i++){
+    public void update(final float delta) {
+        for (int i = 0; i < this.capturePoints.size(); i++) {
             this.capturePoints.get(i).update(delta);
         }
     }
 
-    public void resetCapturePoints(){
-        for(int i = 0; i < this.capturePoints.size(); i++){
+    public void resetCapturePoints() {
+        for (int i = 0; i < this.capturePoints.size(); i++) {
             CapturePoint capturePoint = capturePoints.get(i);
             capturePoint.setProgress(0.0f);
 
@@ -93,11 +94,11 @@ public class CapturePointHandler implements EntityHandler {
         }
     }
 
-    public void clearCapturePoints(){
+    public void clearCapturePoints() {
         this.capturePoints = new LinkedList<>();
     }
 
-    public void capturePointUpdate(final CapturePoint capturePoint){
+    public void capturePointUpdate(final CapturePoint capturePoint) {
         CapturePointUpdateEvent capturePointUpdateEvent = new CapturePointUpdateEvent();
         capturePointUpdateEvent.x = capturePoint.getPosition().x;
         capturePointUpdateEvent.y = capturePoint.getPosition().y;
@@ -105,33 +106,33 @@ public class CapturePointHandler implements EntityHandler {
         MyGdxGame.getInstance().getClient().sendTCP(capturePointUpdateEvent);
     }
 
-    public boolean isAllCapturePointsCaptured(){
+    public boolean isAllCapturePointsCaptured() {
         boolean allCaptured = true;
-        for(int i = 0; i < this.capturePoints.size(); i++){
-            if(this.capturePoints.get(i).getProgress() != 100){
+        for (int i = 0; i < this.capturePoints.size(); i++) {
+            if (this.capturePoints.get(i).getProgress() != 100) {
                 allCaptured = false;
             }
         }
         return allCaptured;
     }
 
-    public boolean isLastCapturePoint(){
+    public boolean isLastCapturePoint() {
         int fullyCappedPoints = 0;
-        for(int i = 0; i < this.capturePoints.size(); i++){
-            if(this.capturePoints.get(i).getProgress() == 100){
+        for (int i = 0; i < this.capturePoints.size(); i++) {
+            if (this.capturePoints.get(i).getProgress() == 100) {
                 fullyCappedPoints++;
             }
         }
-        if(capturePoints.size() - fullyCappedPoints == 1){
+        if (capturePoints.size() - fullyCappedPoints == 1) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public boolean doesNewCapturePointOverlap(float x, float y){
-        for(int i = 0; i< this.capturePoints.size(); i++){
-            if(capturePoints.get(i).getPosition().x == x && capturePoints.get(i).getPosition().y == y){
+    public boolean doesNewCapturePointOverlap(float x, float y) {
+        for (int i = 0; i < this.capturePoints.size(); i++) {
+            if (capturePoints.get(i).getPosition().x == x && capturePoints.get(i).getPosition().y == y) {
                 return true;
             }
         }

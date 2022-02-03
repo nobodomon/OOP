@@ -3,32 +3,40 @@ package com.mygdx.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.utils.Align;
 import com.esotericsoftware.kryonet.Client;
-import com.mygdx.game.handlers.ResourceHandler;
-import com.mygdx.game.supers.PlayerState;
-import com.mygdx.global.*;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.handlers.LabelHandler;
 import com.mygdx.game.network.ConnectionStateListener;
 import com.mygdx.game.network.EventListener;
+import com.mygdx.global.CapturePointCreateEvent;
+import com.mygdx.global.CapturePointDeleteEvent;
+import com.mygdx.global.CapturePointUpdateEvent;
+import com.mygdx.global.GameRestartEvent;
+import com.mygdx.global.GameStartEvent;
+import com.mygdx.global.JoinRequestEvent;
+import com.mygdx.global.JoinResponseEvent;
+import com.mygdx.global.MoveUpdateEvent;
+import com.mygdx.global.PlayerAddEvent;
+import com.mygdx.global.PlayerCapturingEvent;
+import com.mygdx.global.PlayerCharacterChangeEvent;
+import com.mygdx.global.PlayerHPupdateEvent;
+import com.mygdx.global.PlayerHitEvent;
+import com.mygdx.global.PlayerKilledEvent;
+import com.mygdx.global.PlayerReadyEvent;
+import com.mygdx.global.PlayerRemoveEvent;
+import com.mygdx.global.PlayerTransferEvent;
+import com.mygdx.global.PlayerUpdateEvent;
 import com.mygdx.server.ServerFoundation;
-import com.mygdx.server.handlers.CapturePointHandler;
-import com.mygdx.server.handlers.PlayerHandler;
-import com.mygdx.server.supers.ServerCapturePoint;
-import com.mygdx.server.supers.ServerPlayer;
-
-import java.util.LinkedList;
 
 
 public class ConnectScreen implements Screen {
@@ -52,13 +60,13 @@ public class ConnectScreen implements Screen {
 
     private final Label errorLabel;
 
-    public ConnectScreen(){
+    public ConnectScreen() {
         this.stage = new Stage();
         this.batch = new SpriteBatch();
         this.stage.getViewport().setCamera(MyGdxGame.getInstance().getCamera());
 
         this.root = new Table();
-        this.root.setBounds(0,0,1200, 800);
+        this.root.setBounds(0, 0, 1200, 800);
 
         final Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         this.rootGroup = new HorizontalGroup();
@@ -68,14 +76,14 @@ public class ConnectScreen implements Screen {
         this.usernameLabel = new TextField("", skin);
         this.horizontalGroup = new HorizontalGroup().expand();
         this.hostButton = new TextButton("Host", skin);
-        this.hostButton.addListener(new ClickListener(){
+        this.hostButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                try{
+                try {
                     ServerFoundation.main(Integer.parseInt(portLabel.getText()), Integer.parseInt(portLabel.getText()));
-                }catch (Exception e){
+                } catch (Exception e) {
                     errorLabel.setText(e.getMessage());
-                    return super.touchDown(event,x,y,pointer,button);
+                    return super.touchDown(event, x, y, pointer, button);
                 }
                 final Client client = new Client();
 
@@ -108,7 +116,7 @@ public class ConnectScreen implements Screen {
                     client.connect(15000, ipAddressLabel.getText(), Integer.parseInt(portLabel.getText()), Integer.parseInt(portLabel.getText()));
                 } catch (Exception e) {
                     errorLabel.setText(e.getMessage());
-                    return super.touchDown(event,x,y,pointer,button);
+                    return super.touchDown(event, x, y, pointer, button);
                 }
                 // Success
                 MyGdxGame.getInstance().setClient(client);
@@ -122,7 +130,7 @@ public class ConnectScreen implements Screen {
             }
         });
         this.connectButton = new TextButton("Connect", skin);
-        this.connectButton.addListener(new ClickListener(){
+        this.connectButton.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 final Client client = new Client();
@@ -156,7 +164,7 @@ public class ConnectScreen implements Screen {
                     client.connect(15000, ipAddressLabel.getText(), Integer.parseInt(portLabel.getText()), Integer.parseInt(portLabel.getText()));
                 } catch (Exception e) {
                     errorLabel.setText(e.getMessage());
-                    return super.touchDown(event,x,y,pointer,button);
+                    return super.touchDown(event, x, y, pointer, button);
                 }
                 // Success
                 MyGdxGame.getInstance().setClient(client);
@@ -177,20 +185,20 @@ public class ConnectScreen implements Screen {
         this.setToDefault();
     }
 
-    public void setToDefault(){
+    public void setToDefault() {
         this.root.clear();
-        Label ipAddressLabel = LabelHandler.INSTANCE.createLabel("IP address",24,Color.WHITE);
+        Label ipAddressLabel = LabelHandler.INSTANCE.createLabel("IP address", 24, Color.WHITE);
         this.inputGroup.add(ipAddressLabel).left().row();
         this.inputGroup.add(this.ipAddressLabel).fillX().colspan(2).row();
-        Label portLabel = LabelHandler.INSTANCE.createLabel("Port number",24,Color.WHITE);
+        Label portLabel = LabelHandler.INSTANCE.createLabel("Port number", 24, Color.WHITE);
         this.inputGroup.add(portLabel).left().row();
         this.inputGroup.add(this.portLabel).fillX().colspan(2).row();
-        Label usernameLabel = LabelHandler.INSTANCE.createLabel("Username",24,Color.WHITE);
+        Label usernameLabel = LabelHandler.INSTANCE.createLabel("Username", 24, Color.WHITE);
         this.inputGroup.add(usernameLabel).left().row();
         this.inputGroup.add(this.usernameLabel).fillX().colspan(2).row();
-        this.inputGroup.add(this.hostButton).size(250,50).padTop(25);
-        this.inputGroup.add(this.connectButton).size(250,50).padTop(25);
-       // this.inputGroup.add(this.horizontalGroup).size(250,50).padTop(100);
+        this.inputGroup.add(this.hostButton).size(250, 50).padTop(25);
+        this.inputGroup.add(this.connectButton).size(250, 50).padTop(25);
+        // this.inputGroup.add(this.horizontalGroup).size(250,50).padTop(100);
 //        this.root.add(this.hostButton).size(250,50).padTop(100).row();
 //        this.root.add(this.connectButton).size(250,50).padTop(25).row();
         this.rootGroup.addActor(inputGroup);
@@ -234,7 +242,7 @@ public class ConnectScreen implements Screen {
 
     }
 
-    public Label getErrorLabel(){
+    public Label getErrorLabel() {
         return errorLabel;
     }
 }

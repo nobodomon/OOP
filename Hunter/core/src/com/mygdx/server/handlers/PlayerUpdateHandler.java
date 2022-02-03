@@ -43,6 +43,7 @@ public class PlayerUpdateHandler implements Runnable{
             playerUpdateEvent.skillDescription = serverPlayer.getSkill().getSkillDescription();
             playerUpdateEvent.skillCD = serverPlayer.getSkill().getNextAvailableUsage();
             playerUpdateEvent.health = serverPlayer.getHealth();
+            playerUpdateEvent.dmgMultiplier = serverPlayer.getDmgMultiplier();
             playerUpdateEvent.x = serverPlayer.getX();
             playerUpdateEvent.y = serverPlayer.getY();
 

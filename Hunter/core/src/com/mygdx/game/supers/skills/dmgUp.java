@@ -6,27 +6,23 @@ import com.mygdx.server.supers.ServerPlayer;
 
 import java.util.concurrent.TimeUnit;
 
-public class SpeedBoostSkill extends Skill {
-    float prevSpeed;
+public class dmgUp extends Skill {
 
-    public SpeedBoostSkill(Skills skillName, int skillCooldown, int skillDuration, ServerPlayer skillUser) {
+    public dmgUp(Skills skillName, int skillCooldown, int skillDuration, ServerPlayer skillUser) {
         super(skillName, skillCooldown, skillDuration, skillUser);
-        this.prevSpeed = skillUser.getSpeed();
-
-        setSkillDescription("Grants the player a speed boost of 2.5x for " + skillDuration + " seconds.");
+        setSkillDescription("Grants the player a damage boost of 1.7x for " + skillDuration + " seconds.");
     }
 
-    public SpeedBoostSkill(ServerPlayer skillUser) {
-        super(Skills.SPEEDBOOST, 15, 3, skillUser);
-        this.prevSpeed = skillUser.getSpeed();
-        setSkillDescription("Grants the player a speed boost of 2.5x for " + 3 + " seconds.");
+    public dmgUp(ServerPlayer skillUser) {
+        super(Skills.DMGUP, 20, 3, skillUser);
+        setSkillDescription("Grants the hunter a damage boost of 1.7x for " + 3 + " seconds.");
     }
 
     @Override
     public void useSkill() {
         super.useSkill();
         if (System.currentTimeMillis() > getNextAvailableUsage()) {
-            skillUser.setSpeed(skillUser.getSpeed() * 2.5f);
+            skillUser.setDmgMultiplier(2);
             setSkillEndDuration(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(getSkillDuration()));
             setNextAvailableUsage(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(getSkillDuration()) + TimeUnit.SECONDS.toMillis(getSkillCooldown()));
         }
@@ -35,6 +31,6 @@ public class SpeedBoostSkill extends Skill {
     @Override
     public void revertSkill() {
         super.revertSkill();
-        skillUser.setSpeed(prevSpeed);
+        skillUser.setDmgMultiplier(1);
     }
 }

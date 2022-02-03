@@ -25,6 +25,8 @@ public class Player implements Entity {
 
     private boolean alive;
 
+
+    private double dmgMultiplier;
     private final String username;
     private double health;
     private boolean ready;
@@ -63,10 +65,9 @@ public class Player implements Entity {
         this.alive = true;
         this.ready = false;
         this.playerHitBox = new Rectangle();
-
         this.animLock = false;
         this.animationTime = 0;
-
+        this.dmgMultiplier = 1;
         this.layout = new GlyphLayout();
         this.font = FontSizeHandler.INSTANCE.getFont(18, Color.BLACK);
 
@@ -108,11 +109,11 @@ public class Player implements Entity {
                 animLock = true;
                 this.lockedState = this.currentState;
             }
-        } else if (currentState == PlayerState.DEAD ) {
+        } else if (currentState == PlayerState.DEAD) {
             if (animLock) {
                 if (!generalFrame.isAnimationFinished(animationTime)) {
                 } else {
-                    if(lockedState != PlayerState.DEAD){
+                    if (lockedState != PlayerState.DEAD) {
                         animationTime = 0;
                     }
                     //animLock = false;
@@ -138,11 +139,7 @@ public class Player implements Entity {
                     this.lockedState = PlayerState.MOVING_DOWN;
                 }
             } else {
-                if (!generalFrame.isAnimationFinished(animationTime)) {
-                    animLock = true;
-                } else {
-                    animLock = false;
-                }
+                animLock = !generalFrame.isAnimationFinished(animationTime);
             }
         } else if (currentState == PlayerState.IDLE) {
             if (!animLock) {
@@ -178,10 +175,10 @@ public class Player implements Entity {
         this.playerHitBox = new Rectangle(this.position.x, this.position.y, frame.getRegionWidth(), frame.getRegionHeight());
 
         //Make player blink on hit
-        if(this.lastHit - System.currentTimeMillis() > 0 && this.lastHit != 0){
-            if((this.lastHit - System.currentTimeMillis()) % 2> 0){
+        if (this.lastHit - System.currentTimeMillis() > 0 && this.lastHit != 0) {
+            if ((this.lastHit - System.currentTimeMillis()) % 2 > 0) {
                 batch.setColor(Color.GRAY);
-            }else{
+            } else {
 
             }
         }
@@ -223,7 +220,7 @@ public class Player implements Entity {
         return currentState;
     }
 
-    public static PlayerStatus getStatusByInt(int i){
+    public static PlayerStatus getStatusByInt(int i) {
         switch (i) {
             case 0:
                 return PlayerStatus.NONE;
@@ -234,8 +231,8 @@ public class Player implements Entity {
         }
     }
 
-    public static int getIntByStatus(PlayerStatus status){
-        switch(status){
+    public static int getIntByStatus(PlayerStatus status) {
+        switch (status) {
             case NONE:
                 return 0;
             case STUNNED:
@@ -505,7 +502,7 @@ public class Player implements Entity {
         }
     }
 
-    public void skillUsed(){
+    public void skillUsed() {
     }
 
     public PlayerType getPlayerType() {
@@ -540,10 +537,10 @@ public class Player implements Entity {
         this.lastHit = lastHit;
     }
 
-    public void hit() {
+    public void hit(double dmgMultiplier) {
         if (health > 0.0) {
             this.lastHit = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(3);
-            this.health -= 5;
+            this.health -= 5 * dmgMultiplier;
         } else {
             this.alive = false;
             this.currentState = PlayerState.DEAD;
@@ -592,5 +589,12 @@ public class Player implements Entity {
 
     public void setSkillDescription(String skillDescription) {
         this.skillDescription = skillDescription;
+    }
+
+    public double getDmgMultiplier() { return dmgMultiplier;
+    }
+
+    public void setDmgMultiplier(double dmgMultiplier) {
+        this.dmgMultiplier = dmgMultiplier;
     }
 }

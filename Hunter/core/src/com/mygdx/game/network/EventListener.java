@@ -6,9 +6,11 @@ import com.esotericsoftware.kryonet.Connection;
 import com.esotericsoftware.kryonet.Listener;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.handlers.CapturePointHandler;
+import com.mygdx.game.handlers.PlayerHandler;
 import com.mygdx.game.screens.GameInProgressScreen;
 import com.mygdx.game.screens.LobbyScreen;
 import com.mygdx.game.supers.CapturePoint;
+import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.PlayerState;
 import com.mygdx.game.supers.PlayerStatus;
 import com.mygdx.game.supers.PlayerType;
@@ -23,8 +25,6 @@ import com.mygdx.global.PlayerCharacterChangeEvent;
 import com.mygdx.global.PlayerReadyEvent;
 import com.mygdx.global.PlayerRemoveEvent;
 import com.mygdx.global.PlayerUpdateEvent;
-import com.mygdx.game.handlers.PlayerHandler;
-import com.mygdx.game.supers.Player;
 
 public class EventListener extends Listener {
     @Override
@@ -38,8 +38,7 @@ public class EventListener extends Listener {
                     MyGdxGame.getInstance().setScreen(LobbyScreen.INSTANCE);
                 }
             });
-        }
-        else if(object instanceof GameStartEvent){
+        } else if (object instanceof GameStartEvent) {
             Gdx.app.postRunnable(new Runnable() {
                 @Override
                 public void run() {
@@ -47,7 +46,7 @@ public class EventListener extends Listener {
                     MyGdxGame.getInstance().setScreen(GameInProgressScreen.INSTANCE);
                 }
             });
-        }else if (object instanceof GameRestartEvent){
+        } else if (object instanceof GameRestartEvent) {
             PlayerHandler.INSTANCE.unreadyAll();
             LobbyScreen.INSTANCE.reset();
             CapturePointHandler.instance.resetCapturePoints();
@@ -59,8 +58,7 @@ public class EventListener extends Listener {
                     MyGdxGame.getInstance().setScreen(LobbyScreen.INSTANCE);
                 }
             });
-        }
-        else if (object instanceof PlayerAddEvent) {
+        } else if (object instanceof PlayerAddEvent) {
 
             Gdx.app.postRunnable(new Runnable() {
                 @Override
@@ -78,27 +76,27 @@ public class EventListener extends Listener {
                     PlayerHandler.INSTANCE.addPlayer(player);
                 }
             });
-        }else if(object instanceof CapturePointCreateEvent){
+        } else if (object instanceof CapturePointCreateEvent) {
             Gdx.app.postRunnable(new Runnable() {
                 @Override
                 public void run() {
                     CapturePointCreateEvent capturePointCreateEvent = (CapturePointCreateEvent) object;
                     Vector2 position = new Vector2();
-                    position.set(capturePointCreateEvent.x,capturePointCreateEvent.y);
+                    position.set(capturePointCreateEvent.x, capturePointCreateEvent.y);
                     final CapturePoint capturePoint = new CapturePoint(position);
 
                     CapturePointHandler.instance.addCapturePoint(capturePoint);
                 }
             });
-        }else if(object instanceof CapturePointDeleteEvent){
+        } else if (object instanceof CapturePointDeleteEvent) {
             CapturePointDeleteEvent capturePointDeleteEvent = (CapturePointDeleteEvent) object;
-            CapturePointHandler.instance.removeCapturePoint(CapturePointHandler.instance.getCapturePointByVector(capturePointDeleteEvent.x,capturePointDeleteEvent.y));
+            CapturePointHandler.instance.removeCapturePoint(CapturePointHandler.instance.getCapturePointByVector(capturePointDeleteEvent.x, capturePointDeleteEvent.y));
 
         } else if (object instanceof PlayerRemoveEvent) {
 
             PlayerHandler.INSTANCE.removePlayer(PlayerHandler.INSTANCE.getPlayerByUsername(((PlayerRemoveEvent) object).username));
 
-        }else if (object instanceof PlayerUpdateEvent) {
+        } else if (object instanceof PlayerUpdateEvent) {
             final PlayerUpdateEvent playerUpdateEvent = (PlayerUpdateEvent) object;
 
             final Player player = PlayerHandler.INSTANCE.getPlayerByUsername(playerUpdateEvent.username);
@@ -109,6 +107,7 @@ public class EventListener extends Listener {
             PlayerStatus status = Player.getStatusByInt(playerUpdateEvent.status);
             player.setStatus(status);
             player.setHealth(playerUpdateEvent.health);
+            player.setDmgMultiplier(playerUpdateEvent.dmgMultiplier);
             player.setLastHit(playerUpdateEvent.lastHit);
             player.setSkillCD(playerUpdateEvent.skillCD);
             player.setSkill(Skills.valueOf(playerUpdateEvent.skillname));

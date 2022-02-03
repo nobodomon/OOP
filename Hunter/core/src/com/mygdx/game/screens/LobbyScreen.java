@@ -1,9 +1,7 @@
 package com.mygdx.game.screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.ai.steer.behaviors.Alignment;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -30,16 +28,8 @@ import com.mygdx.game.supers.Skills;
 import com.mygdx.global.GameStartEvent;
 import com.mygdx.global.PlayerCharacterChangeEvent;
 import com.mygdx.global.PlayerReadyEvent;
-import com.mygdx.server.ServerFoundation;
-import com.mygdx.server.handlers.GameHandler;
-import com.mygdx.server.supers.ServerPlayer;
 
 import java.text.DecimalFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 public class LobbyScreen implements Screen {
@@ -77,43 +67,43 @@ public class LobbyScreen implements Screen {
     private long gameStartingTime;
     private int charSelectionIndex;
 
-    public LobbyScreen(){
+    public LobbyScreen() {
         this.playingPlayer = "";
         this.batch = new SpriteBatch();
         this.stage = new Stage();
         this.stage.getViewport().setCamera(MyGdxGame.getInstance().getCamera());
         this.gameState = GameState.LOBBY;
         this.rootStack = new Stack();
-        this.rootStack.setBounds(0,0,1200,800);
+        this.rootStack.setBounds(0, 0, 1200, 800);
         this.root = new Table().left().top();
-        this.root.setBounds(0,0,1200,800);
+        this.root.setBounds(0, 0, 1200, 800);
         this.deadMsg = new Table();
-        this.deadMsg.setBounds(0,0,1200,800);
+        this.deadMsg.setBounds(0, 0, 1200, 800);
         this.skillBar = new Table().right().bottom();
-        this.skillBar.setBounds(0,0,1200,800);
+        this.skillBar.setBounds(0, 0, 1200, 800);
 
 
         this.playerCount = LabelHandler.INSTANCE.createLabel("0", 16, Color.BLACK);
         this.totalPlayerCount = LabelHandler.INSTANCE.createLabel("0", 16, Color.BLACK);
         this.deadMsgLabel = LabelHandler.INSTANCE.createLabel(null, 34, Color.RED);
-        this.startingCountdown = LabelHandler.INSTANCE.createLabel(null,34, Color.RED);
-        this.blinkCooldown = LabelHandler.INSTANCE.createLabel(null,24,Color.RED);
-        this.skillDescription = LabelHandler.INSTANCE.createLabel(null,16,Color.BLACK);
-        this.charSelectionLabel = LabelHandler.INSTANCE.createLabel(charSelectionText[charSelectionIndex],16,Color.BLACK);
+        this.startingCountdown = LabelHandler.INSTANCE.createLabel(null, 34, Color.RED);
+        this.blinkCooldown = LabelHandler.INSTANCE.createLabel(null, 24, Color.RED);
+        this.skillDescription = LabelHandler.INSTANCE.createLabel(null, 16, Color.BLACK);
+        this.charSelectionLabel = LabelHandler.INSTANCE.createLabel(charSelectionText[charSelectionIndex], 16, Color.BLACK);
 
         this.skillIcon = Skill.getSkillIcon(Skills.DASH, false);
         this.ready = false;
         this.countdownTimerLock = false;
         this.charSelectionIndex = 0;
 
-        final Skin skin = new Skin (Gdx.files.internal("uiskin.json"));
+        final Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
         this.previous = new TextButton("<", skin);
-        this.previous.addListener(new ClickListener(){
+        this.previous.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if(charSelectionIndex == 0){
+                if (charSelectionIndex == 0) {
                     charSelectionIndex = 5;
-                }else{
+                } else {
                     charSelectionIndex--;
                 }
                 charSelectionLabel.setText(charSelectionText[charSelectionIndex]);
@@ -126,13 +116,13 @@ public class LobbyScreen implements Screen {
         });
 
         this.next = new TextButton(">", skin);
-        this.next.addListener(new ClickListener(){
+        this.next.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
 
-                if(charSelectionIndex == 5){
+                if (charSelectionIndex == 5) {
                     charSelectionIndex = 0;
-                }else{
+                } else {
                     charSelectionIndex++;
                 }
                 charSelectionLabel.setText(charSelectionText[charSelectionIndex]);
@@ -145,7 +135,7 @@ public class LobbyScreen implements Screen {
         });
 
         this.ready_button = new TextButton("Ready", skin);
-        this.ready_button.addListener(new ClickListener(){
+        this.ready_button.addListener(new ClickListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 final PlayerReadyEvent playerReadyEvent = new PlayerReadyEvent();
@@ -168,27 +158,27 @@ public class LobbyScreen implements Screen {
         this.setToDefault();
     }
 
-    public void setToDefault(){
+    public void setToDefault() {
         Player player = PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer);
         this.root.clear();
-        switch(gameState){
+        switch (gameState) {
             case LOBBY:
-                this.root.add(previous).width(25).pad(5,5,5,5);
+                this.root.add(previous).width(25).pad(5, 5, 5, 5);
                 this.root.add(charSelectionLabel).fillX();
-                this.root.add(next).width(25).pad(5,5,5,5).row();
-                this.root.add(playerCount).pad(5,5,5,5).colspan(3).row();
-                this.root.add(totalPlayerCount).pad(5,5,5,5).colspan(3).row();
-                this.root.add(ready_button).pad(5,5,5,5).colspan(3).row();
+                this.root.add(next).width(25).pad(5, 5, 5, 5).row();
+                this.root.add(playerCount).pad(5, 5, 5, 5).colspan(3).row();
+                this.root.add(totalPlayerCount).pad(5, 5, 5, 5).colspan(3).row();
+                this.root.add(ready_button).pad(5, 5, 5, 5).colspan(3).row();
                 this.root.add(skillDescription).colspan(3);
                 break;
             case READY:
-                this.root.add(ready_button).pad(5,5,5,5);
+                this.root.add(ready_button).pad(5, 5, 5, 5);
                 this.root.add(playerCount).padLeft(15).row();
                 this.root.add(totalPlayerCount).padLeft(15).row();
                 startingCountdown.remove();
                 break;
             case ALLPLAYERSREADY:
-                this.root.add(ready_button).pad(5,5,5,5);
+                this.root.add(ready_button).pad(5, 5, 5, 5);
                 this.root.add(playerCount).padLeft(15).row();
                 this.root.add(totalPlayerCount).padLeft(15).row();
                 this.deadMsg.clear();
@@ -211,11 +201,11 @@ public class LobbyScreen implements Screen {
     public void render(float delta) {
         this.batch.begin();
         // x axis render
-        for(int x = 0; x< Gdx.graphics.getWidth() / 100; x++){
+        for (int x = 0; x < Gdx.graphics.getWidth() / 100; x++) {
             // y axis render
-            for(int y = 0; y< Gdx.graphics.getHeight() / 100; y++){
+            for (int y = 0; y < Gdx.graphics.getHeight() / 100; y++) {
                 Texture mapTexture = ResourceHandler.INSTANCE.grass_one;
-                this.batch.draw(mapTexture, mapTexture.getWidth() * x,  mapTexture.getHeight() * y);
+                this.batch.draw(mapTexture, mapTexture.getWidth() * x, mapTexture.getHeight() * y);
             }
         }
         int[] players = PlayerHandler.INSTANCE.getPlayerCount();
@@ -223,32 +213,32 @@ public class LobbyScreen implements Screen {
         int[] totalPlayers = PlayerHandler.INSTANCE.getReadyCount();
         this.totalPlayerCount.setText(totalPlayers[0] + "/" + totalPlayers[1] + " Players are ready");
         this.skillDescription.setText(PlayerHandler.INSTANCE.getPlayerByUsername(playingPlayer).getSkillDescription());
-        if(totalPlayers[0] == totalPlayers[1] && (players[0] > 0 && players[0] <= players[1])){
+        if (totalPlayers[0] == totalPlayers[1] && (players[0] > 0 && players[0] <= players[1])) {
             gameState = GameState.ALLPLAYERSREADY;
-            if(countdownTimerLock){
+            if (countdownTimerLock) {
 
-            }else{
+            } else {
                 gameStartingTime = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(5);
                 countdownTimerLock = true;
             }
-            long seconds = ((gameStartingTime - System.currentTimeMillis())/1000) % 60;
-            startingCountdown.setText("Game starting in " +  seconds);
-            if(seconds <= 0){
-                gameState  = GameState.STARTED;
+            long seconds = ((gameStartingTime - System.currentTimeMillis()) / 1000) % 60;
+            startingCountdown.setText("Game starting in " + seconds);
+            if (seconds <= 0) {
+                gameState = GameState.STARTED;
             }
-        }else{
-            if(ready){
+        } else {
+            if (ready) {
                 this.ready_button.setText("Unready");
                 gameState = GameState.READY;
 
-            }else{
+            } else {
                 this.ready_button.setText("Ready");
                 startingCountdown.setText(null);
                 countdownTimerLock = false;
                 gameState = GameState.LOBBY;
             }
         }
-        if(gameState == GameState.STARTED){
+        if (gameState == GameState.STARTED) {
             System.out.println("game starting");
             CapturePointHandler.instance.resetCapturePoints();
             PlayerHandler.INSTANCE.resetPlayerHP();
@@ -297,39 +287,35 @@ public class LobbyScreen implements Screen {
         return deadMsgLabel;
     }
 
-    public void toggleReady(){
-        if(this.ready == false){
-            this.ready = true;
-        }else{
-            this.ready = false;
-        }
+    public void toggleReady() {
+        this.ready = this.ready == false;
     }
 
-    public void showBlinkCdTimer(){
+    public void showBlinkCdTimer() {
         Player player = PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer);
         Image skillImage = new Image(skillIcon);
         skillImage.setAlign(Align.center);
         skillBar.clear();
         Stack stack = new Stack();
-        float blinkCdSeconds = (player.getSkillCD() - System.currentTimeMillis())/ 1000;
+        float blinkCdSeconds = (player.getSkillCD() - System.currentTimeMillis()) / 1000;
         float milliseconds = (player.getSkillCD() - System.currentTimeMillis()) % 1000;
         blinkCdSeconds += milliseconds / 1000;
         DecimalFormat format = new DecimalFormat("#.##");
-        if(blinkCdSeconds <= 0){
+        if (blinkCdSeconds <= 0) {
             blinkCooldown.setText("");
-            skillIcon = Skill.getSkillIcon(player.getSkill(),false);
-        }else{
+            skillIcon = Skill.getSkillIcon(player.getSkill(), false);
+        } else {
             blinkCooldown.setText(format.format(blinkCdSeconds));
-            skillIcon = Skill.getSkillIcon(player.getSkill(),true);
+            skillIcon = Skill.getSkillIcon(player.getSkill(), true);
         }
         stack.add(new Image(skillIcon));
         stack.add(new Image(ResourceHandler.INSTANCE.skill_frame));
         blinkCooldown.setAlignment(Align.center);
         stack.add(blinkCooldown);
-        skillBar.add(stack).pad(15,15,15,15);
+        skillBar.add(stack).pad(15, 15, 15, 15);
     }
 
-    public void reset(){
+    public void reset() {
         this.ready = false;
     }
 

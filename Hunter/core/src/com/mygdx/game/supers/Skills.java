@@ -1,8 +1,9 @@
 package com.mygdx.game.supers;
 
-public enum Skills{
+public enum Skills {
     DASH,
     SPEEDBOOST,
     BLINKTOPOINT,
-    MASSSTUN;
+    MASSSTUN,
+    DMGUP
 }

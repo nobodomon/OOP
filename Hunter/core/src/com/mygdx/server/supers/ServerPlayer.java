@@ -11,6 +11,7 @@ import com.mygdx.game.supers.Skill;
 import com.mygdx.game.supers.Skills;
 import com.mygdx.game.supers.skills.MassStun;
 import com.mygdx.game.supers.skills.SpeedBoostSkill;
+import com.mygdx.game.supers.skills.dmgUp;
 
 public class ServerPlayer {
 
@@ -38,6 +39,7 @@ public class ServerPlayer {
     public boolean shift;
 
     private float speed;
+    private double dmgMultiplier;
 
     private float x;
     private float y;
@@ -50,6 +52,7 @@ public class ServerPlayer {
         this.playerType = PlayerType.GHOST_ONE;
         this.health = 25.0;
         this.speed = 4.5F;
+        this.dmgMultiplier = 1;
         this.skill = new DashSkill(this);
     }
 
@@ -180,6 +183,11 @@ public class ServerPlayer {
                 this.skill = new MassStun(this);
                 break;
             case MINOTAUR_TWO:
+                this.speed = 4.5F;
+                this.dmgMultiplier = 1;
+                this.status = PlayerStatus.NONE;
+                this.skill = new dmgUp(this);
+                break;
             case MINOTAUR_THREE:
                 this.speed = 4.5F;
                 this.status = PlayerStatus.NONE;
@@ -214,6 +222,11 @@ public class ServerPlayer {
 
     public void setSpeed(float speed) {
         this.speed = speed;
+    }
+
+    public double getDmgMultiplier() {return dmgMultiplier;}
+
+    public void setDmgMultiplier(double dmgMultiplier) {this.dmgMultiplier = dmgMultiplier;
     }
 
     public Skill getSkill() {

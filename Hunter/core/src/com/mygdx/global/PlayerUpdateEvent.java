@@ -14,6 +14,7 @@ public class PlayerUpdateEvent {
     public int status;
     public double health;
     public long lastHit;
+    public double dmgMultiplier;
 
     public String skillname;
     public String skillDescription;

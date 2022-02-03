@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.mygdx.game.supers.PlayerType;
 
 public class ResourceHandler {
 
@@ -94,14 +93,14 @@ public class ResourceHandler {
     public final Animation<TextureAtlas.AtlasRegion> minotaur_three_attack =
             new Animation<>(1 / 30F, new TextureAtlas(Gdx.files.internal("minotaur_3_attack.atlas")).getRegions());
 
-    public final float getHunterAttackDuration(){
-        return (minotaur_one_attack.getAnimationDuration() + minotaur_two_attack.getAnimationDuration() + minotaur_three_attack.getAnimationDuration())/3;
+    public final float getHunterAttackDuration() {
+        return (minotaur_one_attack.getAnimationDuration() + minotaur_two_attack.getAnimationDuration() + minotaur_three_attack.getAnimationDuration()) / 3;
     }
 
 
-    public Texture getRandomMapTexture(int i){
+    public Texture getRandomMapTexture(int i) {
 
-        switch(i){
+        switch (i) {
             case 0:
                 return grass_one;
             case 1:

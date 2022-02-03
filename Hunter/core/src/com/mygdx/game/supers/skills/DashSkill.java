@@ -14,8 +14,8 @@ public class DashSkill extends Skill {
         setSkillDescription("Allows the player to dash towards a direction.");
     }
 
-    public DashSkill(ServerPlayer skillUser){
-        super(Skills.DASH,5,1, skillUser);
+    public DashSkill(ServerPlayer skillUser) {
+        super(Skills.DASH, 5, 1, skillUser);
         setSkillDescription("Allows the player to dash towards a direction.");
     }
 
@@ -63,7 +63,7 @@ public class DashSkill extends Skill {
                 if (skillUser.getY() - blinkSpeed < 0) {
                     skillUser.setY(0);
                 } else {
-                    skillUser.setY(skillUser.getY() -  blinkSpeed);
+                    skillUser.setY(skillUser.getY() - blinkSpeed);
                 }
                 setNextAvailableUsage(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(getSkillCooldown()));
             }

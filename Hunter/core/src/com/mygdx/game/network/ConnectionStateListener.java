@@ -10,7 +10,7 @@ import com.mygdx.game.screens.ConnectScreen;
 public class ConnectionStateListener extends Listener {
 
     @Override
-    public void disconnected(Connection connection){
+    public void disconnected(Connection connection) {
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
