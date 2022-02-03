@@ -74,7 +74,7 @@ public class GameInProgressScreen implements Screen {
         this.gameState = GameState.RUNNING;
         this.gameEndTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5);
         this.gameProgressTime = LabelHandler.INSTANCE.createLabel("0", 24, Color.RED);
-        this.blinkCooldown = LabelHandler.INSTANCE.createLabel(null, 16, Color.BLACK);
+        this.blinkCooldown = LabelHandler.INSTANCE.createLabel(null, 24, Color.RED);
 
         this.survivorsWinLabel = LabelHandler.INSTANCE.createLabel(null, 32, Color.GREEN);
         this.huntersWinLabel = LabelHandler.INSTANCE.createLabel(null, 32, Color.RED);

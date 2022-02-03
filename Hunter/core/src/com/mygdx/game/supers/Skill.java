@@ -86,7 +86,9 @@ public class Skill {
                 case SPEEDBOOST:
                     return new Texture(Gdx.files.internal("speedboost.png"));
                 case MASSSTUN:
-                    return new Texture(Gdx.files.internal("speedboost.png"));
+                    return new Texture(Gdx.files.internal("massstun.png"));
+                case DMGUP:
+                    return new Texture(Gdx.files.internal("dmgUp.png"));
                 default:
                     return new Texture(Gdx.files.internal("dash.png"));
             }
@@ -99,7 +101,9 @@ public class Skill {
                 case SPEEDBOOST:
                     return new Texture(Gdx.files.internal("speedboost-cd.png"));
                 case MASSSTUN:
-                    return new Texture(Gdx.files.internal("speedboost-cd.png"));
+                    return new Texture(Gdx.files.internal("massstun-cd.png"));
+                case DMGUP:
+                    return new Texture(Gdx.files.internal("dmgUp-cd.png"));
                 default:
                     return new Texture(Gdx.files.internal("dash-cd.png"));
             }
