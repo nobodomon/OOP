@@ -48,6 +48,7 @@ public class ServerPlayer {
         this.username = username;
         this.connection = connection;
         this.status = PlayerStatus.NONE;
+        this.serverState = PlayerState.IDLE;
         this.ready = false;
         this.playerType = PlayerType.GHOST_ONE;
         this.health = 25.0;
@@ -61,60 +62,62 @@ public class ServerPlayer {
         if(System.currentTimeMillis() > skill.getSkillEndDuration()){
             skill.revertSkill();
         }
-        if (health > 0.0) {
-            if(status != PlayerStatus.STUNNED){
-                if (this.attack || this.hit || this.moveLeft || this.moveRight || this.moveUp || this.moveDown || this.shift) {
-                    if (this.attack) {
-                        this.serverState = PlayerState.ATTACKING;
-                    } else if (this.hit) {
-                        this.serverState = PlayerState.HIT;
-                        this.hit = false;
-                    } else if (this.shift && (this.moveLeft || this.moveRight || this.moveUp || this.moveDown || this.shift)) {
-                        skill.useSkill();
-                    } else {
-                        if (this.moveLeft) {
+        if (health <= 0.0){
+            this.serverState = PlayerState.DEAD;
+            return;
+        }
+        if(status == PlayerStatus.STUNNED){
+            this.serverState = PlayerState.HIT;
+            return;
+        }
+        if(hit == true){
+            this.serverState = PlayerState.HIT;
+            hit = false;
+            return;
+        }
+        if(attack == true){
+            this.serverState = PlayerState.ATTACKING;
+            return;
+        }
+        if(shift == true){
+            skill.useSkill();
+            return;
+        }
+        if(this.moveLeft || this.moveRight || this.moveUp || this.moveDown){
+            if (this.moveLeft) {
 
-                            if (this.x - this.speed < 0) {
-
-                            } else {
-                                this.x -= this.speed;
-                            }
-                            this.serverState = PlayerState.MOVING_LEFT;
-                        } else if (this.moveRight) {
-                            if (this.x + this.speed > 1150) {
-
-                            } else {
-                                this.x += this.speed;
-                            }
-                            this.serverState = PlayerState.MOVING_RIGHT;
-                        }
-
-                        if (this.moveUp) {
-                            if (this.y + this.speed > 720) {
-                                this.y = 720;
-                            } else {
-                                this.y += this.speed;
-                            }
-                            this.serverState = PlayerState.MOVING_UP;
-                        } else if (this.moveDown) {
-                            if (this.y - this.speed < 0) {
-                                this.y = 0;
-                            } else {
-                                this.y -= this.speed;
-                            }
-                            this.serverState = PlayerState.MOVING_DOWN;
-                        }
-                    }
-
+                if (this.x - this.speed < 0) {
 
                 } else {
-                    this.serverState = PlayerState.IDLE;
+                    this.x -= this.speed;
                 }
-            } else {
-                this.serverState = PlayerState.HIT;
+                this.serverState = PlayerState.MOVING_LEFT;
+            } else if (this.moveRight) {
+                if (this.x + this.speed > 1150) {
+
+                } else {
+                    this.x += this.speed;
+                }
+                this.serverState = PlayerState.MOVING_RIGHT;
+            }
+
+            if (this.moveUp) {
+                if (this.y + this.speed > 720) {
+                    this.y = 720;
+                } else {
+                    this.y += this.speed;
+                }
+                this.serverState = PlayerState.MOVING_UP;
+            } else if (this.moveDown) {
+                if (this.y - this.speed < 0) {
+                    this.y = 0;
+                } else {
+                    this.y -= this.speed;
+                }
+                this.serverState = PlayerState.MOVING_DOWN;
             }
         }else{
-            this.serverState = PlayerState.DEAD;
+            this.serverState = PlayerState.IDLE;
         }
     }
 
