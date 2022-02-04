@@ -3,10 +3,12 @@ package com.mygdx.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.HorizontalGroup;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -16,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.esotericsoftware.kryonet.Client;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.handlers.LabelHandler;
+import com.mygdx.game.handlers.ResourceHandler;
 import com.mygdx.game.network.ConnectionStateListener;
 import com.mygdx.game.network.EventListener;
 import com.mygdx.global.CapturePointCreateEvent;
@@ -188,6 +191,7 @@ public class ConnectScreen implements Screen {
     public void setToDefault() {
         this.root.clear();
         Label ipAddressLabel = LabelHandler.INSTANCE.createLabel("IP address", 24, Color.WHITE);
+        this.inputGroup.add(new Image(ResourceHandler.INSTANCE.title)).row();
         this.inputGroup.add(ipAddressLabel).left().row();
         this.inputGroup.add(this.ipAddressLabel).fillX().colspan(2).row();
         Label portLabel = LabelHandler.INSTANCE.createLabel("Port number", 24, Color.WHITE);
@@ -213,6 +217,15 @@ public class ConnectScreen implements Screen {
 
     @Override
     public void render(float delta) {
+        this.batch.begin();
+        for (int x = 0; x < Gdx.graphics.getWidth() / 100; x++) {
+            // y axis render
+            for (int y = 0; y < Gdx.graphics.getHeight() / 100; y++) {
+                Texture mapTexture = ResourceHandler.INSTANCE.grass_one;
+                this.batch.draw(mapTexture, mapTexture.getWidth() * x, mapTexture.getHeight() * y);
+            }
+        }
+        this.batch.end();
         this.stage.draw();
         this.stage.act(delta);
     }
