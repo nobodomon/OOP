@@ -128,6 +128,7 @@ public class PlayerHandler implements EntityHandler {
         playerUpdateEvent.username = player.getUsername();
         playerUpdateEvent.health = player.getHealth();
         playerUpdateEvent.lastHit = 0;
+        playerUpdateEvent.dmgMultiplier = 1;
         playerUpdateEvent.x = player.getServerPosition().x;
         playerUpdateEvent.y = player.getServerPosition().y;
         playerUpdateEvent.state = Player.getIntByState(player.getCurrentState());

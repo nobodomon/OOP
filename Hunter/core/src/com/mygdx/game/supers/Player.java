@@ -538,6 +538,7 @@ public class Player implements Entity {
     }
 
     public void hit(double dmgMultiplier) {
+        System.out.println(dmgMultiplier + "dmg multiplier");
         if (health > 0.0) {
             this.lastHit = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(3);
             this.health -= 5 * dmgMultiplier;
