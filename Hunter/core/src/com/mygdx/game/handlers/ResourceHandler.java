@@ -11,6 +11,8 @@ public class ResourceHandler {
 
     public final Texture title = new Texture(Gdx.files.internal("title.png"));
 
+    public final Texture scoreboardBG = new Texture(Gdx.files.internal("scoreboard-bg.png"));
+
     public final Texture mud_one = new Texture(Gdx.files.internal("Ground_Tile_01_C.png"));
     public final Texture mud_two = new Texture(Gdx.files.internal("Ground_Tile_02_C.png"));
     public final Texture gravel_one = new Texture(Gdx.files.internal("Ground_Tile_01_A.png"));

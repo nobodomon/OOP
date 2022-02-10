@@ -42,7 +42,7 @@ public class GameInProgressScreen implements Screen {
     private final SpriteBatch batch;
     private final Stage stage;
     private final Table root;
-    private final Table scoreboard;
+    private final Stack scoreboard;
     private final Table endMsg;
     private final Table skillBar;
     private final Stack rootStack;
@@ -101,7 +101,7 @@ public class GameInProgressScreen implements Screen {
         });
 
         this.scoreboardToggle = false;
-        this.scoreboard = Scoreboard.INSTANCE.getTable();
+        this.scoreboard = Scoreboard.INSTANCE.getScoreboard();
         this.stage.addActor(this.root);
 
         this.setToDefault();
