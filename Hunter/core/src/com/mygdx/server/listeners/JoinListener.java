@@ -27,7 +27,6 @@ public class JoinListener extends Listener {
 
             serverPlayer.setX(random.nextInt(1100));
             serverPlayer.setY(random.nextInt(700));
-            serverPlayer.setPlayerType(PlayerType.GHOST_ONE);
 
             final ServerCapturePoint serverCapturePoint = new ServerCapturePoint(connection);
 

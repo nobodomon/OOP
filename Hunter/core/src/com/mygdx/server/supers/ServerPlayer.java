@@ -50,11 +50,10 @@ public class ServerPlayer {
         this.status = PlayerStatus.NONE;
         this.serverState = PlayerState.IDLE;
         this.ready = false;
-        this.playerType = PlayerType.GHOST_ONE;
         this.health = 25.0;
         this.speed = 4.5F;
         this.dmgMultiplier = 1;
-        this.skill = new DashSkill(this);
+        setPlayerType(PlayerType.GHOST_ONE);
     }
 
 

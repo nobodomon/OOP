@@ -7,11 +7,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.handlers.LabelHandler;
 import com.mygdx.game.handlers.PlayerHandler;
 import com.mygdx.game.handlers.ResourceHandler;
 import com.mygdx.game.supers.Player;
+
+import sun.tools.jstat.Alignment;
 
 public class Scoreboard extends Table {
     public static Scoreboard INSTANCE = new Scoreboard();
@@ -23,19 +26,37 @@ public class Scoreboard extends Table {
     private Table ghostBoard;
 
     public Scoreboard() {
-        scoreboard = new Table();
-        scoreboardBgTable = new Table();
-        Image scoreboardBg = new Image(ResourceHandler.INSTANCE.scoreboardBG);
         scoreboardStack = new Stack();
+
+        Image scoreboardBg = new Image(ResourceHandler.INSTANCE.scoreboardBG);
+        scoreboardBgTable = new Table();
+
+        scoreboard = new Table();
         hunterBoard = new Table();
         ghostBoard = new Table();
 
         scoreboardStack.setBounds(0,0,1000,600);
+
+        scoreboardStack.setSize(1000,600);
+
         scoreboardBgTable.setBounds(0,0,1000,600);
         scoreboardBgTable.add(scoreboardBg).size(1000,600);
+
         scoreboard.setBounds(0, 0, 1000, 600);
         hunterBoard.setBounds(0, 0, 1000, 300);
         ghostBoard.setBounds(0, 0, 1000, 300);
+
+
+        scoreboardStack.add(scoreboardBgTable);
+        scoreboardStack.add(scoreboard);
+
+        hunterBoard.top().left();
+        ghostBoard.top().left();
+        //scoreboard.align(Align.topLeft);
+
+        //scoreboard.debug();
+        scoreboard.add(hunterBoard).expand().size(1000,150).pad(50,50,50,50).bottom().row();
+        scoreboard.add(ghostBoard).expand().size(1000,450).pad(50,50,50,50).top();
     }
 
     public Stack getScoreboard() {
@@ -43,30 +64,30 @@ public class Scoreboard extends Table {
     }
 
     public void update() {
-        scoreboardStack.clear();
-        scoreboard.clear();
         hunterBoard.clear();
         ghostBoard.clear();
         Gdx.app.postRunnable(new Runnable() {
             @Override
             public void run() {
-                scoreboardStack.add(scoreboardBgTable);
-                scoreboardStack.add(scoreboard);
-                scoreboard.add(hunterBoard).row();
                 Label hunterLabel = LabelHandler.INSTANCE.createLabel("HUNTERS", 26, Color.RED);
-                hunterBoard.add(hunterLabel).row();
-                scoreboard.add(ghostBoard);
+                hunterBoard.add(hunterLabel).colspan(2).align(Align.left).row();
                 Label ghostLabel = LabelHandler.INSTANCE.createLabel("GHOSTS", 26, Color.GREEN);
-                ghostBoard.add(ghostLabel).row();
+                ghostBoard.add(ghostLabel).colspan(2).align(Align.left).row();
+                Label playerLabel;
                 for (int i = 0; i < PlayerHandler.INSTANCE.getPlayers().size(); i++) {
                     final Player currPlayer = PlayerHandler.INSTANCE.getPlayers().get(i);
-                    final Label playerLabel = LabelHandler.INSTANCE.createLabel(currPlayer.getUsername() + " " + currPlayer.getHealth(), 24, Color.BLACK);
                     if (Player.getIntByType(currPlayer.getPlayerType()) > 2) {
-                        hunterBoard.add(new Image(Player.getPlayerIcon(currPlayer.getPlayerType()))).size(50, 50);
-                        hunterBoard.add(playerLabel).row();
+                        hunterBoard.add(new Image(Player.getPlayerIcon(currPlayer.getPlayerType()))).size(50, 50).align(Align.left);
+                        playerLabel = LabelHandler.INSTANCE.createLabel(currPlayer.getUsername() + " " + currPlayer.getHealth() + "HP", 24, Color.BLACK);
+                        hunterBoard.add(playerLabel).align(Align.left).expandX().row();
                     } else {
-                        ghostBoard.add(new Image(Player.getPlayerIcon(currPlayer.getPlayerType()))).size(50, 50);
-                        ghostBoard.add(playerLabel).row();
+                        if(currPlayer.getHealth() == 0.0){
+                            playerLabel = LabelHandler.INSTANCE.createLabel(currPlayer.getUsername() + " DEAD", 24, Color.RED);
+                        }else{
+                            playerLabel = LabelHandler.INSTANCE.createLabel(currPlayer.getUsername() + " " + currPlayer.getHealth() + "HP", 24, Color.BLACK);
+                        }
+                        ghostBoard.add(new Image(Player.getPlayerIcon(currPlayer.getPlayerType()))).size(50, 50).align(Align.left);
+                        ghostBoard.add(playerLabel).align(Align.left).expandX().row();
                     }
                 }
             }

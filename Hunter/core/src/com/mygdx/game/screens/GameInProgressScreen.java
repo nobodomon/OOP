@@ -240,8 +240,10 @@ public class GameInProgressScreen implements Screen {
     }
 
     public void hideScoreBoard(){
-        scoreboard.remove();
-        scoreboardToggle = false;
+        if(scoreboardToggle == true){
+            scoreboard.remove();
+            scoreboardToggle = false;
+        }
     }
 
     @Override
