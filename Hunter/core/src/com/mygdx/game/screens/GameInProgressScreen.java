@@ -16,11 +16,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.elements.Scoreboard;
 import com.mygdx.game.handlers.CapturePointHandler;
 import com.mygdx.game.handlers.LabelHandler;
 import com.mygdx.game.handlers.MoveUpdateHandler;
 import com.mygdx.game.handlers.PlayerHandler;
 import com.mygdx.game.handlers.ResourceHandler;
+import com.mygdx.game.handlers.ScoreboardUpdateHandler;
 import com.mygdx.game.supers.GameState;
 import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.Skill;
@@ -40,6 +42,7 @@ public class GameInProgressScreen implements Screen {
     private final SpriteBatch batch;
     private final Stage stage;
     private final Table root;
+    private final Table scoreboard;
     private final Table endMsg;
     private final Table skillBar;
     private final Stack rootStack;
@@ -53,6 +56,8 @@ public class GameInProgressScreen implements Screen {
     private final Label blinkCooldown;
 
     private Texture skillIcon;
+
+    private boolean scoreboardToggle;
 
     private final TextButton restart_button;
     //private final Label endCauseLabel;
@@ -95,6 +100,8 @@ public class GameInProgressScreen implements Screen {
             }
         });
 
+        this.scoreboardToggle = false;
+        this.scoreboard = Scoreboard.INSTANCE.getTable();
         this.stage.addActor(this.root);
 
         this.setToDefault();
@@ -103,6 +110,7 @@ public class GameInProgressScreen implements Screen {
     @Override
     public void show() {
         MoveUpdateHandler.INSTANCE.start();
+        ScoreboardUpdateHandler.INSTANCE.start();
         Gdx.input.setInputProcessor(this.stage);
     }
 
@@ -222,6 +230,20 @@ public class GameInProgressScreen implements Screen {
         this.endMsg.add(huntersWinLabel);
     }
 
+    public void showScoreBoard(){
+        if(scoreboardToggle == false){
+
+            Scoreboard.INSTANCE.update();
+            rootStack.add(scoreboard);
+            scoreboardToggle = true;
+        }
+    }
+
+    public void hideScoreBoard(){
+        scoreboard.remove();
+        scoreboardToggle = false;
+    }
+
     @Override
     public void resize(int width, int height) {
 
@@ -239,6 +261,7 @@ public class GameInProgressScreen implements Screen {
 
     @Override
     public void hide() {
+        ScoreboardUpdateHandler.INSTANCE.stop();
         MoveUpdateHandler.INSTANCE.stop();
     }
 

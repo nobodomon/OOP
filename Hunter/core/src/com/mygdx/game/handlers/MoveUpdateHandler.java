@@ -3,6 +3,7 @@ package com.mygdx.game.handlers;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.screens.GameInProgressScreen;
 import com.mygdx.global.MoveUpdateEvent;
 
 public class MoveUpdateHandler implements Runnable {
@@ -27,6 +28,8 @@ public class MoveUpdateHandler implements Runnable {
     }
 
     public void tick() {
+
+
         boolean w, s, a, d, e, shift;
 
         w = Gdx.input.isKeyPressed(Input.Keys.W);

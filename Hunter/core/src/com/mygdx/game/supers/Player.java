@@ -1,6 +1,8 @@
 package com.mygdx.game.supers;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -364,6 +366,26 @@ public class Player implements Entity {
         }
         return playerTypeInt;
     }
+
+    public static Texture getPlayerIcon(PlayerType type) {
+        switch (type) {
+            case GHOST_ONE:
+                return new Texture(Gdx.files.internal("ghost_1_face.png"));
+            case GHOST_TWO:
+                return new Texture(Gdx.files.internal("ghost_2_face.png"));
+            case GHOST_THREE:
+                return new Texture(Gdx.files.internal("ghost_3_face.png"));
+            case MINOTAUR_ONE:
+                return new Texture(Gdx.files.internal("minotaur_1_face.png"));
+            case MINOTAUR_TWO:
+                return new Texture(Gdx.files.internal("minotaur_2_face.png"));
+            case MINOTAUR_THREE:
+                return new Texture(Gdx.files.internal("minotaur_3_face.png"));
+            default:
+                return new Texture(Gdx.files.internal("ghost_1_face.png"));
+        }
+    }
+
 
     public void setFrames(PlayerState state) {
         switch (this.playerType) {
