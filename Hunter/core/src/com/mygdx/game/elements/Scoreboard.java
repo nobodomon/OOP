@@ -55,8 +55,8 @@ public class Scoreboard extends Table {
         //scoreboard.align(Align.topLeft);
 
         //scoreboard.debug();
-        scoreboard.add(hunterBoard).expand().size(1000,150).pad(50,50,50,50).bottom().row();
-        scoreboard.add(ghostBoard).expand().size(1000,450).pad(50,50,50,50).top();
+        scoreboard.add(hunterBoard).expand().size(1000,150).bottom().row();
+        scoreboard.add(ghostBoard).expand().size(1000,450).top();
     }
 
     public Stack getScoreboard() {
@@ -70,24 +70,24 @@ public class Scoreboard extends Table {
             @Override
             public void run() {
                 Label hunterLabel = LabelHandler.INSTANCE.createLabel("HUNTERS", 26, Color.RED);
-                hunterBoard.add(hunterLabel).colspan(2).align(Align.left).row();
+                hunterBoard.add(hunterLabel).colspan(2).align(Align.left).pad(25,25,0,0).row();
                 Label ghostLabel = LabelHandler.INSTANCE.createLabel("GHOSTS", 26, Color.GREEN);
-                ghostBoard.add(ghostLabel).colspan(2).align(Align.left).row();
+                ghostBoard.add(ghostLabel).colspan(2).align(Align.left).pad(25,25,0,0).row();
                 Label playerLabel;
                 for (int i = 0; i < PlayerHandler.INSTANCE.getPlayers().size(); i++) {
                     final Player currPlayer = PlayerHandler.INSTANCE.getPlayers().get(i);
                     if (Player.getIntByType(currPlayer.getPlayerType()) > 2) {
-                        hunterBoard.add(new Image(Player.getPlayerIcon(currPlayer.getPlayerType()))).size(50, 50).align(Align.left);
+                        hunterBoard.add(new Image(Player.getPlayerIcon(currPlayer.getPlayerType()))).size(50, 50).align(Align.left).pad(25,25,0,0);
                         playerLabel = LabelHandler.INSTANCE.createLabel(currPlayer.getUsername() + " " + currPlayer.getHealth() + "HP", 24, Color.BLACK);
-                        hunterBoard.add(playerLabel).align(Align.left).expandX().row();
+                        hunterBoard.add(playerLabel).align(Align.left).expandX().pad(25,25,0,0).row();
                     } else {
                         if(currPlayer.getHealth() == 0.0){
                             playerLabel = LabelHandler.INSTANCE.createLabel(currPlayer.getUsername() + " DEAD", 24, Color.RED);
                         }else{
                             playerLabel = LabelHandler.INSTANCE.createLabel(currPlayer.getUsername() + " " + currPlayer.getHealth() + "HP", 24, Color.BLACK);
                         }
-                        ghostBoard.add(new Image(Player.getPlayerIcon(currPlayer.getPlayerType()))).size(50, 50).align(Align.left);
-                        ghostBoard.add(playerLabel).align(Align.left).expandX().row();
+                        ghostBoard.add(new Image(Player.getPlayerIcon(currPlayer.getPlayerType()))).size(50, 50).align(Align.left).pad(25,25,0,0);
+                        ghostBoard.add(playerLabel).align(Align.left).expandX().pad(25,25,0,0).row();
                     }
                 }
             }
