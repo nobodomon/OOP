@@ -20,7 +20,6 @@ public class dmgUp extends Skill {
 
     @Override
     public void useSkill() {
-        super.useSkill();
         if (System.currentTimeMillis() > getNextAvailableUsage()) {
             skillUser.setDmgMultiplier(2);
             setSkillEndDuration(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(getSkillDuration()));
@@ -30,7 +29,6 @@ public class dmgUp extends Skill {
 
     @Override
     public void revertSkill() {
-        super.revertSkill();
         skillUser.setDmgMultiplier(1);
     }
 }

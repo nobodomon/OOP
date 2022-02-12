@@ -23,7 +23,6 @@ public class MassStun extends Skill {
 
     @Override
     public void useSkill() {
-        super.useSkill();
         if (System.currentTimeMillis() > getNextAvailableUsage()) {
             for (int i = 0; i < PlayerHandler.INSTANCE.getPlayers().size(); i++) {
                 ServerPlayer player = PlayerHandler.INSTANCE.getPlayers().get(i);
@@ -39,7 +38,6 @@ public class MassStun extends Skill {
 
     @Override
     public void revertSkill() {
-        super.revertSkill();
         for (int i = 0; i < PlayerHandler.INSTANCE.getPlayers().size(); i++) {
             ServerPlayer player = PlayerHandler.INSTANCE.getPlayers().get(i);
             if (Player.getIntByType(player.getPlayerType()) < 3) {

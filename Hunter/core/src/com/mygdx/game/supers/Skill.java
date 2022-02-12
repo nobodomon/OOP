@@ -4,7 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.server.supers.ServerPlayer;
 
-public class Skill {
+public abstract class Skill {
     private Skills skillName;
     private int skillCooldown;
     private int skillDuration;
@@ -43,13 +43,9 @@ public class Skill {
         this.skillName = skillName;
     }
 
-    public void useSkill() {
+    public abstract void useSkill();
 
-    }
-
-    public void revertSkill() {
-
-    }
+    public abstract void revertSkill();
 
     public int getSkillCooldown() {
         return skillCooldown;

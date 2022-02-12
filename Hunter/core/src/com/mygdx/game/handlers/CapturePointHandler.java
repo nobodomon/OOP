@@ -1,24 +1,26 @@
 package com.mygdx.game.handlers;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.supers.CapturePoint;
 import com.mygdx.game.supers.Player;
 import com.mygdx.game.supers.PlayerState;
 import com.mygdx.global.CapturePointUpdateEvent;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.Random;
+import java.util.Vector;
 
 public class CapturePointHandler implements EntityHandler {
     private double decayDelay = 1200;
     private double lastDecay = 0;
-    private boolean isLastDecaySet = false;
 
     public static final CapturePointHandler instance = new CapturePointHandler();
     public LinkedList<CapturePoint> capturePoints = new LinkedList<>();
 
     public CapturePoint getCapturePointByVector(final float x, final float y) {
-        //System.out.printf("There are %d capture points", this.capturePoints.size());
         for (int i = 0; i < this.capturePoints.size(); i++) {
             final CapturePoint capturePoint = this.capturePoints.get(i);
             if (capturePoint.getPosition().x == x && capturePoint.getPosition().y == y) {
@@ -39,7 +41,6 @@ public class CapturePointHandler implements EntityHandler {
     @Override
     public void render(final Batch batch) {
         LinkedList<Player> players = PlayerHandler.INSTANCE.getPlayers();
-        //System.out.printf("There are %d players", players.size());
         double now = System.currentTimeMillis();
         for (int i = 0; i < capturePoints.size(); i++) {
             CapturePoint currPoint = capturePoints.get(i);
@@ -89,7 +90,6 @@ public class CapturePointHandler implements EntityHandler {
         for (int i = 0; i < this.capturePoints.size(); i++) {
             CapturePoint capturePoint = capturePoints.get(i);
             capturePoint.setProgress(0.0f);
-
             capturePointUpdate(capturePoint);
         }
     }

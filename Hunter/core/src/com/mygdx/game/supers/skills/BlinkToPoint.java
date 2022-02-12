@@ -21,7 +21,6 @@ public class BlinkToPoint extends Skill {
 
     @Override
     public void useSkill() {
-        super.useSkill();
         if (getNextAvailableUsage() < System.currentTimeMillis()) {
 
             double nearestPoint;
@@ -47,6 +46,11 @@ public class BlinkToPoint extends Skill {
             skillUser.setY(y);
             setNextAvailableUsage(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(getSkillDuration()) + TimeUnit.SECONDS.toMillis(getSkillCooldown()));
         }
+
+    }
+
+    @Override
+    public void revertSkill() {
 
     }
 }

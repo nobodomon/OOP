@@ -24,7 +24,6 @@ public class SpeedBoostSkill extends Skill {
 
     @Override
     public void useSkill() {
-        super.useSkill();
         if (System.currentTimeMillis() > getNextAvailableUsage()) {
             skillUser.setSpeed(skillUser.getSpeed() * 2.5f);
             setSkillEndDuration(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(getSkillDuration()));
@@ -34,7 +33,6 @@ public class SpeedBoostSkill extends Skill {
 
     @Override
     public void revertSkill() {
-        super.revertSkill();
         skillUser.setSpeed(prevSpeed);
     }
 }

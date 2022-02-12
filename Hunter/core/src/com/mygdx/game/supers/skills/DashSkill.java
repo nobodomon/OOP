@@ -21,7 +21,6 @@ public class DashSkill extends Skill {
 
     @Override
     public void useSkill() {
-        super.useSkill();
         float blinkSpeed = skillUser.getSpeed() * 50;
         long now = System.currentTimeMillis();
         if (skillUser.moveLeft) {
@@ -69,5 +68,10 @@ public class DashSkill extends Skill {
             }
             skillUser.setServerState(PlayerState.MOVING_DOWN);
         }
+    }
+
+    @Override
+    public void revertSkill() {
+
     }
 }
