@@ -11,6 +11,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.handlers.FontSizeHandler;
 import com.mygdx.game.handlers.ResourceHandler;
+import com.mygdx.game.handlers.SoundEffect;
+
 
 public class CapturePoint implements Entity {
     private Vector2 position;
@@ -29,6 +31,12 @@ public class CapturePoint implements Entity {
     private Texture frame;
     private final GlyphLayout layout;
     private final BitmapFont font;
+
+    private boolean capturing = false;
+    private long soundID = 0;
+    private SoundEffect fixSound = new SoundEffect("fixSound");
+    private SoundEffect fixDoneSound = new SoundEffect("fixDoneSound");
+    
 
     public Vector2 getPosition() {
         return position;
@@ -84,8 +92,10 @@ public class CapturePoint implements Entity {
         if (this.progress < 100.0f) {
             if (this.progress + captureRate > 100.0f) {
                 this.progress = 100.0f;
+                setCapturing(false);
             } else {
                 this.progress += captureRate;
+                setCapturing(true);
             }
         }
         this.progress = Math.round(this.progress * 10.0f) / 10.0f;
@@ -95,8 +105,10 @@ public class CapturePoint implements Entity {
         if (this.progress < 100.0f) {
             if (this.progress + (captureRate * captureRateMultiplier) > 100.0f) {
                 this.progress = 100.0f;
+                setCapturing(true);
             } else {
                 this.progress += (captureRate * captureRateMultiplier);
+                setCapturing(true);
             }
         }
         this.progress = Math.round(this.progress * 10.0f) / 10.0f;
@@ -117,14 +129,15 @@ public class CapturePoint implements Entity {
 
         if (this.progress < 50.0f && this.progress > 0.0f) {
             this.progress -= decayRate;
+            setCapturing(false);
         } else if (this.progress >= 50.0f && this.progress < 100.0f) {
             if (this.progress == 50.0f) {
 
             } else if (this.progress - (decayRate * 2f) < 50.0f) {
                 this.progress = 50.0f;
             } else {
-
                 this.progress -= decayRate * 2f;
+                setCapturing(false);
             }
         } else {
 
@@ -140,5 +153,26 @@ public class CapturePoint implements Entity {
     public void setProgress(float progress) {
         this.progress = progress;
     }
+
+    public void setCapturing(boolean cap){
+        boolean temp = this.capturing;
+        this.capturing = cap;
+        if (this.soundID == 0){
+            fixSound.soundPlayLoop();
+            this.soundID = fixSound.getSoundID();
+        }
+        if (this.capturing == true && temp == false){
+            fixSound.soundResume();
+            fixSound.soundResume();
+        } else if (this.capturing == false && temp == true){
+            fixSound.soundPause();
+        } else {
+
+        }
+        if (this.progress == 100.0f){
+            fixDoneSound.soundPlay();
+            fixSound.soundPause();
+        }
+    } 
 
 }

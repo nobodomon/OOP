@@ -45,6 +45,8 @@ public class BlinkToPoint extends Skill {
             skillUser.setX(x);
             skillUser.setY(y);
             setNextAvailableUsage(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(getSkillDuration()) + TimeUnit.SECONDS.toMillis(getSkillCooldown()));
+            
+            super.playSkillSound();
         }
 
     }

@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.mygdx.game.handlers.FontSizeHandler;
 import com.mygdx.game.handlers.ResourceHandler;
+import com.mygdx.game.handlers.SoundEffect;
 
 import java.util.concurrent.TimeUnit;
 
@@ -48,6 +49,9 @@ public class Player implements Entity {
     private final BitmapFont font;
 
     private Rectangle playerHitBox;
+
+    private SoundEffect attackSound = new SoundEffect("attackSound");
+    private SoundEffect hurtSound = new SoundEffect("hurtSound");
 
 
     public Player(final String username) {
@@ -99,6 +103,9 @@ public class Player implements Entity {
             } else {
                 animLock = true;
                 this.lockedState = this.currentState;
+                if (this.playerType == PlayerType.MINOTAUR_ONE || this.playerType == PlayerType.MINOTAUR_TWO || this.playerType == PlayerType.MINOTAUR_THREE ){
+                    this.attackSound.soundPlay();
+                }
             }
         } else if (currentState == PlayerState.HIT) {
             animationTime = 0;
@@ -564,6 +571,7 @@ public class Player implements Entity {
         if (health > 0.0) {
             this.lastHit = System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(3);
             this.health -= 5 * dmgMultiplier;
+            this.hurtSound.soundPlay();
         } else {
             this.alive = false;
             this.currentState = PlayerState.DEAD;

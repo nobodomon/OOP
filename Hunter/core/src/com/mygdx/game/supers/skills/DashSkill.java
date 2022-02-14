@@ -32,6 +32,7 @@ public class DashSkill extends Skill {
                     skillUser.setX(skillUser.getX() - blinkSpeed);
                 }
                 setNextAvailableUsage(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(getSkillCooldown()));
+                super.playSkillSound();
             }
             skillUser.setServerState(PlayerState.MOVING_LEFT);
         } else if (skillUser.moveRight) {
@@ -43,6 +44,7 @@ public class DashSkill extends Skill {
                     skillUser.setX(skillUser.getX() + blinkSpeed);
                 }
                 setNextAvailableUsage(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(getSkillCooldown()));
+                super.playSkillSound();
             }
             skillUser.setServerState(PlayerState.MOVING_RIGHT);
         }
@@ -54,6 +56,7 @@ public class DashSkill extends Skill {
                     skillUser.setY(skillUser.getY() + blinkSpeed);
                 }
                 setNextAvailableUsage(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(getSkillCooldown()));
+                super.playSkillSound();
             }
             skillUser.setServerState(PlayerState.MOVING_UP);
         } else if (skillUser.moveDown) {
@@ -65,6 +68,7 @@ public class DashSkill extends Skill {
                     skillUser.setY(skillUser.getY() - blinkSpeed);
                 }
                 setNextAvailableUsage(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(getSkillCooldown()));
+                super.playSkillSound();
             }
             skillUser.setServerState(PlayerState.MOVING_DOWN);
         }

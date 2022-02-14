@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.elements.Scoreboard;
+import com.mygdx.game.handlers.BackgroundMusic;
 import com.mygdx.game.handlers.CapturePointHandler;
 import com.mygdx.game.handlers.LabelHandler;
 import com.mygdx.game.handlers.MoveUpdateHandler;
@@ -62,6 +63,8 @@ public class GameInProgressScreen implements Screen {
     private final TextButton restart_button;
     //private final Label endCauseLabel;
 
+    private BackgroundMusic bgm = new BackgroundMusic("gameplayMusic");
+    private BackgroundMusic endMusic = new BackgroundMusic("endMusic");
 
     public GameInProgressScreen() {
         this.batch = new SpriteBatch();
@@ -112,6 +115,7 @@ public class GameInProgressScreen implements Screen {
         MoveUpdateHandler.INSTANCE.start();
         ScoreboardUpdateHandler.INSTANCE.start();
         Gdx.input.setInputProcessor(this.stage);
+        this.bgm.playMusic();
     }
 
     @Override
@@ -156,6 +160,7 @@ public class GameInProgressScreen implements Screen {
             if (CapturePointHandler.instance.isAllCapturePointsCaptured() == false) {
                 gameState = GameState.HUNTERSWIN;
                 showEndMsg(gameState, "Time's up!");
+                this.endMusic.playOnce();
             }
         } else {
             gameState = GameState.RUNNING;
@@ -265,6 +270,7 @@ public class GameInProgressScreen implements Screen {
     public void hide() {
         ScoreboardUpdateHandler.INSTANCE.stop();
         MoveUpdateHandler.INSTANCE.stop();
+        this.bgm.stopMusic();
     }
 
     @Override
@@ -276,6 +282,7 @@ public class GameInProgressScreen implements Screen {
         this.gameState = GameState.RUNNING;
         this.gameEndTime = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(5);
         this.endMsg.clear();
+        this.endMusic.resetPlayOnce();
     }
 
     public void setPlayingPlayer(String playingPlayer) {

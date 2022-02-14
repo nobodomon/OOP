@@ -2,6 +2,7 @@ package com.mygdx.game.supers;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
+import com.mygdx.game.handlers.SoundEffect;
 import com.mygdx.server.supers.ServerPlayer;
 
 public abstract class Skill {
@@ -104,5 +105,31 @@ public abstract class Skill {
                     return new Texture(Gdx.files.internal("dash-cd.png"));
             }
         }
+    }
+
+    public void playSkillSound(){
+        String skillname;
+        switch(skillName){
+            case DASH:
+                skillname = "skillDash";
+                break;
+            case BLINKTOPOINT:
+                skillname = "skillBlink";
+                break;
+            case SPEEDBOOST:
+                skillname = "skillSpeed";
+                break;
+            case MASSSTUN:
+                skillname = "skillStun";
+                break;
+            case DMGUP:
+                skillname = "skillAttack";
+                break;
+            default:
+                skillname = "skillDash";
+                break;
+        }
+        SoundEffect skillSound = new SoundEffect(skillname);
+        skillSound.soundPlay();
     }
 }

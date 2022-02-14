@@ -16,6 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.mygdx.game.MyGdxGame;
+import com.mygdx.game.handlers.BackgroundMusic;
 import com.mygdx.game.handlers.CapturePointHandler;
 import com.mygdx.game.handlers.LabelHandler;
 import com.mygdx.game.handlers.MoveUpdateHandler;
@@ -66,6 +67,8 @@ public class LobbyScreen implements Screen {
     private boolean countdownTimerLock;
     private long gameStartingTime;
     private int charSelectionIndex;
+
+    private BackgroundMusic bgm = new BackgroundMusic("lobbyMusic");
 
     public LobbyScreen() {
         this.playingPlayer = "";
@@ -195,6 +198,7 @@ public class LobbyScreen implements Screen {
     public void show() {
         MoveUpdateHandler.INSTANCE.start();
         Gdx.input.setInputProcessor(this.stage);
+        this.bgm.playMusic();
     }
 
     @Override
@@ -276,6 +280,7 @@ public class LobbyScreen implements Screen {
     @Override
     public void hide() {
         MoveUpdateHandler.INSTANCE.stop();
+        this.bgm.stopMusic();
     }
 
     @Override

@@ -32,6 +32,7 @@ public class MassStun extends Skill {
             }
             setSkillEndDuration(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(getSkillDuration()));
             setNextAvailableUsage(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(getSkillDuration()) + TimeUnit.SECONDS.toMillis(getSkillCooldown()));
+            super.playSkillSound();
         }
         skillUser.setServerState(PlayerState.ATTACKING);
     }

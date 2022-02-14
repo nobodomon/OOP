@@ -28,6 +28,7 @@ public class SpeedBoostSkill extends Skill {
             skillUser.setSpeed(skillUser.getSpeed() * 2.5f);
             setSkillEndDuration(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(getSkillDuration()));
             setNextAvailableUsage(System.currentTimeMillis() + TimeUnit.SECONDS.toMillis(getSkillDuration()) + TimeUnit.SECONDS.toMillis(getSkillCooldown()));
+            super.playSkillSound();
         }
     }
 
