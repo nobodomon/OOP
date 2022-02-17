@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -50,6 +51,8 @@ public class LobbyScreen implements Screen {
     private final Table skillBar;
     private final TextButton previous;
     private final TextButton next;
+    private final Table controlsGuide;
+
 
     private final TextButton ready_button;
 
@@ -60,7 +63,14 @@ public class LobbyScreen implements Screen {
     private final Label startingCountdown;
     private final Label blinkCooldown;
     private final Label skillDescription;
-
+    private final Label controlsLabel;
+    private final Label movement;
+    private final Label skill;
+    private final Label interact;
+    private final Label scoreboard;
+    private final TextButton skillShift;
+    private final TextButton interactSpacebar;
+    private final TextButton scoreboardTab;
     private Texture skillIcon;
 
     private boolean ready;
@@ -84,6 +94,8 @@ public class LobbyScreen implements Screen {
         this.deadMsg.setBounds(0, 0, 1200, 800);
         this.skillBar = new Table().right().bottom();
         this.skillBar.setBounds(0, 0, 1200, 800);
+        this.controlsGuide = new Table().right().top();
+        this.controlsGuide.setBounds(0, 0, 1200, 800);
 
 
         this.playerCount = LabelHandler.INSTANCE.createLabel("0", 16, Color.BLACK);
@@ -93,13 +105,23 @@ public class LobbyScreen implements Screen {
         this.blinkCooldown = LabelHandler.INSTANCE.createLabel(null, 24, Color.RED);
         this.skillDescription = LabelHandler.INSTANCE.createLabel(null, 16, Color.BLACK);
         this.charSelectionLabel = LabelHandler.INSTANCE.createLabel(charSelectionText[charSelectionIndex], 16, Color.BLACK);
-
+        this.controlsLabel = LabelHandler.INSTANCE.createLabel("CONTROLS", 26, Color.BLACK);
+        this.movement = LabelHandler.INSTANCE.createLabel("Movement: W,A,S,D", 18, Color.BLACK);
+        this.skill = LabelHandler.INSTANCE.createLabel("Skill: ", 18, Color.BLACK);
+        this.interact = LabelHandler.INSTANCE.createLabel("Interact: ", 18, Color.BLACK);
+        this.scoreboard = LabelHandler.INSTANCE.createLabel("Scoreboard: ", 18, Color.BLACK);
         this.skillIcon = Skill.getSkillIcon(Skills.DASH, false);
         this.ready = false;
         this.countdownTimerLock = false;
         this.charSelectionIndex = 0;
 
         final Skin skin = new Skin(Gdx.files.internal("uiskin.json"));
+        this.skillShift = new TextButton("L-shift", skin);
+        this.skillShift.setTouchable(Touchable.disabled);
+        this.scoreboardTab = new TextButton("tab", skin);
+        this.scoreboardTab.setTouchable(Touchable.disabled);
+        this.interactSpacebar = new TextButton("spacebar", skin);
+        this.interactSpacebar.setTouchable(Touchable.disabled);
         this.previous = new TextButton("<", skin);
         this.previous.addListener(new ClickListener() {
             @Override
@@ -153,14 +175,22 @@ public class LobbyScreen implements Screen {
         this.batch.setProjectionMatrix(MyGdxGame.getInstance().getCamera().combined);
 
         this.stage.addActor(this.rootStack);
-
         this.rootStack.add(this.root);
         this.rootStack.add(this.skillBar);
+        this.rootStack.add(this.controlsGuide);
+        this.controlsGuide.add(controlsLabel).padRight(20).colspan(2).row();
+        this.controlsGuide.add(movement).padRight(20).padBottom(5).padTop(5).colspan(2).row();
+        this.controlsGuide.add(interact).colspan(1);
+        this.controlsGuide.add(interactSpacebar).padRight(20).colspan(1).padBottom(5).padTop(5).row();
+        this.controlsGuide.add(skill).colspan(1);
+        this.controlsGuide.add(skillShift).padRight(20).colspan(1).padBottom(5).padTop(5).row();
+        this.controlsGuide.add(scoreboard).colspan(1);
+        this.controlsGuide.add(scoreboardTab).padRight(20).colspan(1).padBottom(5).padTop(5).row();
+
         this.rootStack.add(this.deadMsg.center());
 
         this.setToDefault();
     }
-
     public void setToDefault() {
         Player player = PlayerHandler.INSTANCE.getPlayerByUsername(this.playingPlayer);
         this.root.clear();
