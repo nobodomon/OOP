@@ -14,7 +14,6 @@ import com.mygdx.game.handlers.PlayerHandler;
 import com.mygdx.game.handlers.ResourceHandler;
 import com.mygdx.game.supers.Player;
 
-import sun.tools.jstat.Alignment;
 
 public class Scoreboard extends Table {
     public static Scoreboard INSTANCE = new Scoreboard();
